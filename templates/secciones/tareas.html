@@ -1,0 +1,126 @@
+{% extends "main.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tareas.css') }}">
+
+{% endblock %}
+
+{% block content %}
+<!-- Ventana modal -->
+{% include "components/modal.html" %}
+<div class="task" id="tareas">
+    <div class="registration__title">
+        <div class="title">
+            <div class="navbar__logo">
+                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                    class="icon material-symbols-outlined toggleBtn">
+                    logout
+                </span>
+                <h2>Asignación Tareas</h2>
+            </div>
+        </div>
+        <div class="icon__return">
+            <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
+                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+            </a>
+        </div>
+    </div>
+    <div class="task__parts">
+        <div class="task__left">
+            <div class="task__group">
+                <div class="group">
+                    <label for="grados-select">Grupo:</label>
+                    <select id="grados-select" name="grados" aria-label="Selecciona un grado">
+                        <option value="">Seleccionar</option>
+                        <option value="601">Grado 601</option>
+                        <option value="602">Grado 602</option>
+                        <option value="603">Grado 603</option>
+                        <option value="604">Grado 604</option>
+                        <option value="605">Grado 605</option>
+                    </select>
+                </div>
+                <div class="subjects">
+                    <label for="grados-select">Asignatura:</label>
+                    <select id="grados-select" name="grados" aria-label="Selecciona una asignatura">
+                        <option value="">Seleccionar</option>
+                        <option value="matematicas">Matemáticas</option>
+                        <option value="catellano">Castellano</option>
+                        <option value="tecnologia">Tecnología</option>
+                        <option value="etica">Ética</option>
+                        <option value="artistica">Artistica</option>
+                    </select>
+                </div>
+                <div class="date__star">
+                    <label for="dateStar">Fecha de inicio:</label>
+                    <input type="date" name="dateStar" id="dateStar">
+                </div>
+                <div class="date__end">
+                    <label for="dateEnd">Fecha de fin:</label>
+                    <input type="date" name="dateEnd" id="dateEnd">
+                </div>
+            </div>
+            <div class="task__topic">
+                <div class="task__theme">
+                    <label for="tema">Tema:</label>
+                    <input type="text" name="tema" id="tema" placeholder="Escribe aquí...">
+                </div>
+                <div class="task__description">
+                    <label for="description">Descripción:</label>
+                    <textarea name="description" id="description" cols="50" placeholder="Escribe aquí..."></textarea>
+                </div>
+                <div class="task__web">
+                    <label for="web">URL:</label>
+                    <input type="url" name="web" id="web" placeholder="Escribe aquí...">
+                </div>
+                <div class="task__attached">
+                    <label for="attached">Adjunto:</label>
+                    <input type="file" name="attached" id="attached">
+                </div>
+            </div>
+            <div class="task__buttons">
+                <button class="btn">Enviar<i class="material-symbols-outlined">schedule_send</i></button>
+            </div>
+        </div>
+        <div class="task__right">
+            <div class="task__students">
+                <div class="task__students-title">
+                    <h3>Seleccionar Estudiantes</h3>
+                </div>
+                <div class="task__students-check">
+                    <label for="students">Todos</label>
+                    <input type="checkbox" name="students" id="students" value="1" aria-checked="false">
+                </div>
+            </div>
+            <div class="task__students-list">
+            </div>
+        </div>
+    </div>
+</div>
+{% block extra_js %}
+<script>
+    /* Funcion modal */
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+
+    function showModal(title, message, action) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerText = message;
+        window.modalAction = action;
+
+        const modal = document.getElementById("confirmModal");
+        modal.style.display = "flex";
+    }
+    document.getElementById("modalConfirm").addEventListener("click", function () {
+        if (typeof modalAction === 'function') {
+            modalAction();
+        }
+        document.getElementById("confirmModal").style.display = "none";
+    });
+
+    document.getElementById("modalCancel").addEventListener("click", function () {
+        document.getElementById("confirmModal").style.display = "none";
+    });
+</script>
+{% endblock %}
+{% endblock %}

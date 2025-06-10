@@ -1,0 +1,258 @@
+@import url("variables.css");
+@import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+body {
+    font-family: 'Poppins', sans-serif;    
+    background-image:url('/static/img/comida_1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;  
+    margin: 0;
+    padding: 0;    
+}
+
+.events__title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  text-align: start;
+  padding: 10px;
+  height: 60px;
+  background: var(--color-title);
+  color: var(--color-white);
+}
+
+.events__title .title{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  gap: 20px;
+} 
+
+.events__title .icon__return i{
+  font-size: var(--fs-2xl);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.navbar__logo {
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;  
+    margin-left:25px;  
+    gap: var(--spacing-md);
+}
+
+.navbar__logo .icon, 
+.nav-item span {
+    font-size:var(--size-title-medium);
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+.navbar__logo .icon{
+    transform: rotate(180deg);
+}
+
+.navbar__logo .icon:hover{
+    color: var(--color-white);
+    transform: scale(1.2);   
+    transition: all 0.3s ease;
+}
+
+
+.navbar__logo .title {
+    font-size: var(--fs-base);
+    color: var(--color-white);
+    font-weight: var(--fw-bold); 
+    font-size:var(--size-title-medium-small);
+    text-decoration: none;
+}
+
+.navbar__logo .danger {
+    color: var(--color-danger);
+    font-weight: var(--fw-bold);
+}
+
+.navbar__logo h2{
+  letter-spacing: 2px;
+}
+
+
+.menu__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    max-width: 1200px;
+    padding: 20px;
+    margin: 80px auto;
+    position: relative; 
+    height: auto; 
+}
+
+
+.left {
+    position: sticky;
+    top: 100px; 
+    width: 25%;
+    align-self: flex-start; 
+    height: 100vh; 
+    overflow-y: auto; 
+    padding-right: 15px;
+    height: fit-content; 
+    max-height: 100vh; 
+    overflow-y: auto;
+    
+}
+
+.left__title{
+    text-align:center;
+    margin-top:20px;
+    border-bottom: 3px solid rgb(242, 242, 8);
+}
+
+.left__title h1{
+    font-size: var(--size-text-xl);    
+    color:#000;
+}
+
+.left__title p{
+    font-size: var(--size-title-medium);
+    text-align:center;
+    font-weight: var(--fw-bold);
+    color:#000;
+}
+
+.right {
+    width: 80%;
+    height: auto;
+}
+
+.right__card {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background:rgba(248, 249, 250, 0.5);
+    margin-bottom: 30px;
+}
+
+.right__card h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color:var(--color-dark);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 15px;
+}
+
+.menu-card {
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    min-height: 150px; 
+    background: #e6f7ff;
+}
+
+.card__subtitle-title{
+   font-size:35px;
+}
+
+.menu-vegetariano {
+    background: #e6f7ff;
+}
+
+.menu-alternativo {
+    background: #f0ffe6;
+}
+
+.complementos {
+    background: #ffe6f2;
+}
+
+.card__subtitle {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.card__subtitle .sub__title {
+    display: inline-block;
+    padding: 8px 15px;
+    color: white;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width:90%;
+    background-color:#e74c3c;
+}
+
+.menu-vegetariano .card__subtitle span {
+    background: #2ecc71;
+}
+
+.menu-alternativo .card__subtitle span {
+    background: #3498db;
+}
+
+.complementos .card__subtitle span {
+    background: #9b59b6;
+}
+
+.menu-items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    min-width: 100px;
+    flex: 1 1 0;    
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;   
+}
+
+
+
+.menu-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.menu-item span {
+    font-size: 1.0rem;
+    color: #333;
+    text-align: center;
+    font-weight: 500;
+}
+
+

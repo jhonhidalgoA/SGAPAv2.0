@@ -1,0 +1,242 @@
+@import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import url("variables.css");
+
+
+.planning {
+    width: 90%; 
+    margin: 0 auto;  
+}  
+    
+.registration__title{
+  display: flex;  
+  justify-content: space-between;
+  align-items: center;  
+  gap: 20px;
+  text-align: start;
+  margin: 10px 1px 10px 2px;
+  padding: 10px;
+  height: 50px;
+  border-radius: var(--border-radius);  
+  border: 1px solid var(--color-green-card);
+  background: var(--color-green-card);
+  color:var(--color-white);
+}
+
+.registration__title .title{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  gap: 20px;
+} 
+
+.registration__title .icon__return i{
+  font-size: var(--fs-2xl);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.navbar__logo .icon, 
+.nav-item span {
+    font-size:var(--size-title-medium);
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+.navbar__logo .icon{
+    transform: rotate(180deg);
+}
+
+.navbar__logo .icon:hover{
+    color: var(--color-white);
+    transform: scale(1.2);   
+    transition: all 0.3s ease;
+}
+
+
+.navbar__logo .title {
+    font-size: var(--fs-base);
+    color: var(--color-white);
+    font-weight: var(--fw-bold); 
+    font-size:var(--size-title-medium-small);
+    text-decoration: none;
+}
+
+.navbar__logo .danger {
+    color: var(--color-danger);
+    font-weight: var(--fw-bold);
+}
+
+.navbar__logo {
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;  
+    margin-left:25px;  
+    gap: var(--spacing-md);
+}
+
+  
+.planning__title {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-align: start;
+    margin: -30px 10px 10px 10px;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: 2px 0 24px var(--color-shadow);
+    border: 1px solid var(--color-shadow);
+    background:var(--color-green-emerald);
+    color: var(--color-white);
+    height: 50px;
+}
+  
+.planinng__title i {
+    font-size: var(--font-size-large);
+    cursor: pointer;
+}
+
+.planning__group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: auto;
+    padding-top: 40px;
+}
+
+.report__group div,
+.ratings__group div,
+.report__type div,
+.planning__group div,
+.planning__date div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.report__group label,
+.ratings__group label,
+.report__type label,
+.planning__group label,
+.planning__date label {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;    
+    margin-bottom: 10px;
+}
+
+.planning__group .date__star input{
+    width: 350px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;  
+}
+
+
+
+.report__group select,
+.planning__group select {
+width: 90%;
+padding: 8px;
+font-size: 16px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+
+.planning__group textarea {
+    height: 150px;
+    resize: vertical;
+    width: 70%;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.skills textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 93%;
+}
+
+.skills textarea::placeholder {
+    padding-left: 5px;
+    color: #888;
+}
+
+.planning__buttons {
+display: flex;
+justify-content: center;
+gap: 50px;
+margin-top: 40px;
+}
+
+.planning__buttons .btn,
+.task__buttons .btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 15px;
+    width: 140px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+
+.planning__buttons .btn:first-child {
+    background: var(--color-button-load);
+
+}
+
+.planning__buttons .btn:nth-child(1):hover {
+    background: var(--color-button-load-hover);
+    transform: scale(1.10);
+    color: var(--color-hover-btn-2);
+}
+
+.planning__buttons .btn:nth-child(2) {
+    background: var(--color-button-save);
+
+}
+
+.planning__buttons .btn:nth-child(2):hover {
+    background: var(--color-button-save-hover);
+    transform: scale(1.10);
+    color: var(--color-hover-btn-2);
+}
+
+.planning__buttons .btn:nth-child(3) {
+    background: var(--color-button-delete);
+}
+
+.planning__buttons .btn:nth-child(3):hover {
+    background: var(--color-button-delete-hover);
+    transform: scale(1.10);
+    color: var(--color-hover-btn-2);
+}
+
+.planning__buttons .btn:nth-child(4) {
+    background: var(--color-button-print);
+}
+
+.planning__buttons .btn:nth-child(4):hover {
+    background: var(--color-button-print-hover);
+    transform: scale(1.10);
+    color: var(--color-hover-btn-2);
+
+}
+
+.planning__buttons .btn:nth-child(5) {
+    background: var(--color-button-view);
+}
+
+.planning__buttons .btn:nth-child(5):hover {
+    background: var(--color-button-view-hover);
+    transform: scale(1.10);
+    color: var(--color-hover-btn-2);
+}

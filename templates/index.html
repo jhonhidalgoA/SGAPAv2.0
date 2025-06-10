@@ -1,0 +1,359 @@
+{% extends "main.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block content %}
+<!--barra de navegacion-->
+<header class="navbar">
+    <div class="navbar__brand">
+        <a href="#" class="navbar__link">SGAPA</a>
+    </div>
+    <span class="icon material-symbols-outlined">menu_open </span>
+    <ul class="navbar__list">
+        <li class="navbar__item"><a href="#">Inicio</a></li>
+        <li class="navbar__item">
+            <div class="navbar__menu">
+                <a href="#institucional" class="submenu__toggle">Institucional
+                </a>
+            </div>
+            <div class="navbar__submenu">
+                <ul class="navbar__list">
+                    <li><a href="#noticias">Noticias</a></li>
+                    <li><a href="#eventos">Eventos</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="navbar__item"><a href="#nosotros">Nosotros</a></li>
+        <li class="navbar__item"><a href="#contacto">Contacto</a></li>
+    </ul>
+    <ul class="navbar__btn">
+        <li><a href="{{ url_for('auth.login') }}">Ingresar</a></li>
+    </ul>
+</header>
+
+<!--iconos de redes sociales-->
+<div class="buttons-network">
+    <a class="buttons-network__button" href="" target="_blank">
+        <i class="fa-brands fa-facebook-f"></i>
+        <p>Facebook</p>
+    </a>
+    <a class="buttons-network__button" href="" target="_blank">
+        <i class="fa-brands fa-instagram"></i>
+        <p>Instagram</p>
+    </a>
+    <a class="buttons-network__button" href="" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i>
+        <p>Whatsapp</p>
+    </a>
+    <a class="buttons-network__button" href="" target="_blank">
+        <i class="fa-brands fa-linkedin-in"></i>
+        <p>Linkedin</p>
+    </a>
+</div>
+<!-- Sección de noticias destacadas -->
+<section class="news__content">
+    <div class="news__title">
+        <span class="title">Matrículas</span>
+        <span class="subtitle">Abiertas</span>
+        <span class="year">2025</span>
+        <span class="paragraph">Enfoque Educativo Steam</span>
+    </div>
+    <a href="#" class="btn">Conoce más aquí...</a>
+</section>
+
+<section class="feed__container" id="noticias">
+    <p>Lo más <span class="resaltar">Reciente...</span> </p>
+    <div class="card__container">
+        <div class="card">
+            <img src="../static/img/pexels-karolina-grabowska-8106679.jpg" alt="graduacion">
+            <div class="card__content">
+                <h4>Colegio la presentación</h4>
+                <hr class="custom-hr">
+                <h2>Graduación Bachilleres 2024</h2>
+                <div class="class__button">
+                    <span>6-Dic-2024 </span>
+                    <a href="#" class="btn__card">Saber más</a>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <img src="../static/img/kindergarten-graduation-7257180_1920.jpg" alt="primaria">
+            <div class="card__content">
+                <h4>Colegio la presentación</h4>
+                <hr class="custom-hr">
+                <h2>Grados Primaria 2024</h2>
+                <div class="class__button">
+                    <span>2-Dic-2024 </span>
+                    <a href="#" class="btn__card">Saber más</a>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <img src="../static/img/family-7257182_1920.jpg" alt="familia">
+            <div class="card__content">
+                <h4>Colegio la presentación</h4>
+                <hr class="custom-hr">
+                <h2>Día de la Familia 2024</h2>
+                <div class="class__button">
+                    <span>8-Feb-2024 </span>
+                    <a href="#" class="btn__card">Saber más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="event__button">
+        <button class="event__btn">
+            <span class="material-symbols-outlined">double_arrow</span>
+            <span class="event__sub">Ver todas las noticias</span>
+        </button>
+    </div>
+</section>
+
+<!-- Sección de eventos -->
+<section class="event__container" id="eventos">
+    <h1 class="event__title">Eventos</h1>
+    <div class="event__card">
+        <div class="event__date">
+            <p class="event__day">20</p>
+            <span class="event__month">ENERO</span>
+            <p class="event__year">2025</p>
+        </div>
+        <div class="event__details">
+            <span class="event__time">8:00 AM - 12:00 PM </span>
+            <h3 class="event__name">Inicio de clases 2025</h3>
+            <p class="event__location">Lugar: Sede Principal I.E La Presentación </p>
+        </div>
+    </div>
+
+    <div class="event__card">
+        <div class="event__date">
+            <p class="event__day">07</p>
+            <span class="event__month">MARZO</span>
+            <p class="event__year">2025</p>
+        </div>
+        <div class="event__details">
+            <span class="event__time">8:00 AM - 10:00 AM </span>
+            <h3 class="event__name">Día internacional de la mujer</h3>
+            <p class="event__location">Lugar: Coliseo Municipal </p>
+        </div>
+    </div>
+
+    <div class="event__button">
+        <a href="{{ url_for('secciones.eventos') }}" class="event__btn">
+            <span class="material-symbols-outlined">double_arrow</span>
+            <span class="event__sub">Ver todos los eventos</span>
+        </a>
+    </div>
+</section>
+
+<!-- Sección "Nosotros" con diferentes servicios e información -->
+<section class="schedule" id="nosotros">
+    <h1>Nosotros</h1>
+    <div class="schedule__container">
+        <div class="schedule__card">
+            <div class="schedule_icon">
+                <span class="icon material-symbols-outlined">family_restroom</span>
+            </div>
+            <h4 class="schedule__calendar">Atención a Padres</h4>
+            <p class="schedule__link">Saber más...</p>
+        </div>
+        <div class="schedule__card" data-url="{{url_for('secciones.circulares')}}">
+            <div class="schedule_icon">
+                <span class="icon material-symbols-outlined">news</span>
+            </div>
+            <h4 class="schedule__calendar">Circulares</h4>
+            <p class="schedule__link">Saber más...</p>
+        </div>
+        <div class="schedule__card">
+            <div class="schedule_icon">
+                <span class="icon material-symbols-outlined">folded_hands</span>
+            </div>
+            <h4 class="schedule__calendar">Devocional</h4>
+            <p class="schedule__link">Saber más...</p>
+        </div>
+        <div class="schedule__card" data-pdf="{{ url_for('static', filename='pdfs/manualConvivencia.pdf') }}">
+            <div class="schedule_icon">
+                <span class="icon material-symbols-outlined">menu_book</span>
+            </div>
+            <h4 class="schedule__calendar">Manual de convivencia</h4>
+            <p class="schedule__link">Saber más...</p>
+        </div>
+        <div class="schedule__card" data-pdf="{{ url_for('static', filename='pdfs/PEI.pdf') }}">
+            <div class="schedule_icon">
+                <span class="icon material-symbols-outlined">note_alt</span>
+            </div>
+            <h4 class="schedule__calendar">PEI</h4>
+            <p class="schedule__link">Saber más...</p>
+        </div>
+        <div class="schedule__card">
+            <div class="schedule_icon">
+                <span class="icon material-symbols-outlined">note_stack</span>
+            </div>
+            <h4 class="schedule__calendar">Publicaciones</h4>
+            <p class="schedule__link">Saber más...</p>
+        </div>
+        <div class="schedule__card" data-url="{{url_for('secciones.restaurante')}}">
+            <div class="schedule_icon">
+                <span class="icon material-symbols-outlined">restaurant</span>
+            </div>
+            <h4 class="schedule__calendar">Restaurante</h4>
+            <p class="schedule__link">Saber más...</p>
+        </div>
+        <div class="schedule__card" data-pdf="{{ url_for('static', filename='pdfs/transporte.pdf') }}">
+            <div class="schedule_icon">
+                <span class="icon material-symbols-outlined">directions_bus</span>
+            </div>
+            <h4 class="schedule__calendar">Transporte</h4>
+            <p class="schedule__link">Saber más...</p>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de contacto -->
+<section class="contact" id="contacto">
+    <h1>Contáctanos</h1>
+    <div class="contact__container">
+        <div class="contact__form">
+            <h2>Envíanos un mensaje</h2>
+            <form action="/send-message" class="form" method="post">
+                <div class="form-group">
+                    <input type="text" name="name" id="name" required>
+                    <label for="name">Nombre completo</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" id="email" required>
+                    <label for="email">Correo electrónico</label>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" id="message" required></textarea>
+                    <label for="message">Mensaje</label>
+                </div>
+                <button class="btn" type="submit">Enviar</button>
+            </form>
+        </div>
+        <!-- Derecha: Mapa -->
+        <div class="contact__map">
+            <p>Nos encontramos <span class="resaltar">Aquí</span></p>
+            <div class="map__google">
+                <embed
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3974.241397543408!2d-75.49834002545299!3d5.064578438396578!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e476f891e4fd2f3%3A0x610f57f34d16e212!2sCra.%2022%20%2351E-56%20%2F%20201%2C%20Manizales%2C%20Caldas!5e0!3m2!1sen!2sco!4v1735354095885!5m2!1sen!2sco"
+                    allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                </embed>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="footer">
+    <div class="footer__content">
+        <div class="footer__column">
+            <img src="../../static/img/logoColegio.png" alt="Logo del Colegio">
+        </div>
+        <div class="footer__column">
+            <h3>HORIZONTE INSTITUCIONAL</h3>
+            <ul>
+                <li><a href="#">Contacto</a></li>
+                <li><a href="#">Misión</a></li>
+                <li><a href="#">Visión</a></li>
+                <li><a href="#">Historia</a></li>
+                <li><a href="#">Organigrama</a></li>
+                <li><a href="#">Política de calidad</a></li>
+            </ul>
+        </div>
+        <div class="footer__column">
+            <h3>NOSOTROS</h3>
+            <p>Somos estudiantes del SENA desarrollando SGAPA.</p>
+            <div class="team">
+                <div class="team__member">
+                    <img src="../../static/img/perfil3.png" alt="Nombre 1">
+                    <p>Emmanuel Medina</p>
+                </div>
+                <div class="team__member">
+                    <img src="../../static/img/perfil2.png" alt="Nombre 2">
+                    <p>Juan E. Giraldo</p>
+                </div>
+                <div class="team__member">
+                    <img src="../../static/img/perfil.png" alt="Nombre 3">
+                    <p>Jhon F. Hidalgo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Modal -->
+<div id="pdfModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Documentos SGAPA</h3>
+        <iframe id="pdfViewer" src="" width="100%" height="500px" aria-label="pdf"></iframe>
+        <a id="downloadLink" download href="#" class="btn-download">Descargar PDF</a>
+    </div>
+</div>
+
+<!--Spinner-->
+<div class="loading" id="loading">
+    <span class="spinner"></span>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    window.addEventListener("scroll", function () {
+        var header = document.querySelector("header");
+        var submenu = document.querySelector(".navbar__submenu");
+        header.classList.toggle("down", window.scrollY > 0);
+        submenu.classList.toggle("down", window.scrollY > 0);
+    });
+</script>
+<script>
+    /*Spinner*/
+    const cards = document.querySelectorAll('.schedule__card');
+    const modal = document.getElementById('pdfModal');
+    const pdfViewer = document.getElementById('pdfViewer');
+    const downloadLink = document.getElementById('downloadLink');
+    const closeModal = document.querySelector('.modal .close');
+
+    cards.forEach(card => {
+        card.addEventListener('click', (event) => {
+            const pdfUrl = card.getAttribute('data-pdf');
+            const pageUrl = card.getAttribute('data-url');
+            const loading = document.getElementById('loading');
+
+            if (pdfUrl) {
+                // Mostrar spinner antes de abrir el modal
+                loading.style.display = 'flex';
+
+                setTimeout(() => {
+                    loading.style.display = 'none'; // Ocultar spinner
+                    pdfViewer.src = pdfUrl;
+                    downloadLink.href = pdfUrl;
+                    modal.style.display = 'block';
+                }, 300); // Tiempo del spinner
+
+            } else if (pageUrl) {
+                // Redirigir después del spinner
+                event.stopPropagation();
+                loading.style.display = 'flex';
+
+                setTimeout(() => {
+                    window.location.href = pageUrl;
+                }, 300);
+            }
+        });
+    });
+
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+        pdfViewer.src = '';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            pdfViewer.src = '';
+        }
+    });
+</script>
+{% endblock %}

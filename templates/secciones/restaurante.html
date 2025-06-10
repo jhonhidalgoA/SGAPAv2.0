@@ -1,0 +1,74 @@
+{% extends "main.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/restaurante.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Ventana modal -->
+{% include "components/modal.html" %}
+<div class="events__title">
+    <div class="title">
+        <div class="navbar__logo">
+            <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                class="icon material-symbols-outlined toggleBtn">
+                logout
+            </span>
+            <h2>Restaurante Escolar</h2>
+        </div>
+    </div>
+    <div class="icon__return">
+        <a href="{{ url_for('index') }}" class="icon__link">
+            <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+        </a>
+    </div>
+</div>
+<div class="menu__container">
+    <div class="left">
+        <div class="left__title">
+            <h1>Menú Escolar</h1>
+            <p id="semana">{{ semana }}</p>
+        </div>
+    </div>
+    <div class="right">
+        <div class="right__menu">
+            {% for dia, categorias in menus.items() %}
+            <div class="right__card">
+                <div class="card__day">
+                    <h1>{{ dia }}</h1>
+                    <div class="menu-grid">
+                        {% for tipo, items in categorias.items() %}
+                        {% set clase = tipo|lower
+                        |replace('ú', 'u')|replace('í', 'i')
+                        |replace('é', 'e')|replace('ó', 'o')
+                        |replace('á', 'a')|replace('ñ', 'n')
+                        |replace(' ', '-') %}
+                        <div class="menu-card {{ clase }}">
+                            <div class="card__subtitle">
+                                <span class="sub__title">{{ tipo }}</span>
+                            </div>
+                            <div class="menu-items">
+                                {% for item in items %}
+                                <div class="menu-item">
+                                    <img src="{{ url_for('static', filename='img/' + item.img) }}"
+                                        alt="{{ item.nombre }}">
+                                    <span>{{ item.nombre }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>  
+
+</script>
+{% endblock %}

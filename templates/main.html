@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- ====================================
+        Proyecto: SGAPA - Software de Gestión Escolar
+        Empresa: SGAPA
+        Descripción: Plantilla base del sistema SGAPA
+        Autores: [Emmanuel Medina, Juan Esteban Giraldo, Jhon F. Hidalgo]
+        Última actualización: [12-Feb-2025]
+    ==================================== -->
+
+    <!-- Metadatos esenciales -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="SGAPA - Software de Gestión Escolar">
+    <meta name="description"
+        content="SGAPA es un software de gestión escolar que optimiza la administración educativa.">
+    <meta name="keywords" content="SGAPA, software escolar, gestión académica, administración educativa">
+
+    <!-- Open Graph (para compartir en redes sociales) -->
+    <meta property="og:title" content="SGAPA - Software de Gestión Escolar">
+    <meta property="og:description" content="Optimiza la administración educativa con SGAPA.">
+    <meta property="og:image" content="{{ url_for('static', filename='images/logo.png') }}">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:type" content="website">
+
+    <title>{% block title %}SGAPA Python | Flask v 2.0{% endblock %}</title>
+
+    <!--calendar-->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+
+
+
+    <!-- Estilos generales -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+
+
+
+    <!-- Fuentes e íconos -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Estilos adicionales específicos de cada página -->
+    {% block extra_css %}{% endblock %}
+
+
+    {% block head_js %}{% endblock %}
+
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block extra_js %}
+    
+
+    {% endblock %}
+</body>
+
+</html>

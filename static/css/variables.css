@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+
+:root {
+    /* Colores principales */
+    --color-primary-blue: #0d6efd;
+    --color-primary: #332ab5;
+    --color-secondary: #007bff;
+    --color-accent: #ff6f00;
+    --color-danger: #fb2b01;
+    --color-hover: #3f33a1;
+    --color-text: #616161;
+    --color-text-light: #b3b3b3;
+    --color-text-btn: #ffffff;
+    --color-hover-light: #d3d3d7;
+    --color-background: #fff;
+    --color-background-dark: #282727;
+    --color-shadow: #000000;
+  
+    /* Colores adicionales */
+    --color-blue-light: #4c9aff;
+    --color-blue-aqua: #00b0ff;
+    --color-blue-deep: #2d2382;
+    --color-blue-midnight: #000239;
+    --color-blue-navy: #0c2161;
+    --color-green-emerald: #28a745;
+    --color-green-lime: #7cfc00;
+    --color-green-dark: #194726;
+    --color-orange-burnt: #ff6f00;
+    --color-orange-sunset: #ffa726;
+    --color-yellow-golden: #e2a926;
+    --color-yellow-bright: #ffeb3b;
+    --color-white: #ffffff;
+    --color-white-pearl: #f2f2f2;
+    --color-grey-light: #e0e0e0;
+    --color-black-charcoal: #333333;
+    --color-black-transparent: #0000;
+    --color-dark: #333333;
+    --color-brown: #866046;
+    --color-purple: #7f5d8f;
+    --color-pink: #ce698e;
+    --background-dark: #11101c;
+    --color-grey: #c9c4b5;
+  
+    /* Botones */
+    --color-button-load: #ff9800;
+    --color-button-save: #28a745;
+    --color-button-delete: #f4293d;
+    --color-button-view: #1fd6f3;
+    --color-button-print: #616161;
+    --color-button-generate: #9c27b0;
+    --color-button-send: #6a00ff;  
+    --color-button-load-hover: #e68900;
+    --color-button-save-hover: #218838;
+    --color-button-delete-hover:#d4152c;
+    --color-button-edit: #FFC107;
+    --color-button-edit-hover: #e0a800;
+    --color-button-view-hover: #17c2e3;
+    --color-button-print-hover: #3b3939;
+    --color-button-generate-hover: #7b1fa2;
+    --color-button-send-hover: #6204e6;
+    
+    --color-hover-btn: #0000;
+    --color-hover-btn-2: #d2d4d6;
+
+    /*card*/
+    --color-blue-card: #2980B9;
+    --color-orange-card: #E67E22;
+    --color-purple-card: #9B59B6;
+    --color-grey-card: #34495E;
+    --color-red-card: #C0392B;
+    --color-green-card: #27AE60;
+       
+ 
+
+    /* tipografias*/
+    --color-title:#e1a93b;
+  
+    /* fuentes */
+    --font-family-primary: "Montserrat", serif;
+    --font-family-secondary: "Nunito", sans-serif;
+  
+    /* Tamaños de fuente */
+    --fs-2xs: 0.5rem; /* 8px */
+    --fs-xs: 0.75rem; /* 12px */
+    --fs-sm: 1rem; /* 16px */
+    --fs-base: 1.15rem; /* 18.4px */
+    --fs-md: 1.25rem; /* 20px */
+    --fs-lg: 1.5rem; /* 24px */
+    --fs-xl: 1.75rem; /* 28px */
+    --fs-2xl: 2rem; /* 32px */
+  
+    /* Pesos de fuente */
+    --fw-regular: 400;
+    --fw-bold: 600;
+  
+    /* Espaciado */
+    --spacing-xxs: 0.25rem;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+  
+    /* Bordes */
+    --border-radius: 8px;
+    --border-radius-circle: 50%;
+  
+    /* Tamaños de íconos y enlaces */
+    --size-icon-large: 2.0rem;
+    --size-icon-small: 1.5rem;
+    --size-link: 2rem;
+    --size-link-submenu: 1.2rem;
+    --size-text-medium: 18px;
+    --size-text-large: 20px;
+    --size-text-xl: 28px;
+    --size-title-mini: 14px;
+    --size-title-small: 18px;
+    --size-title-medium-small: 20px;
+    --size-title-medium: 32px;
+    --size-title-large: 40px;
+  
+    /* Transiciones */
+    --transition-duration: 0.3s;
+    --transition-ease: ease;
+  }
+
+
+  * {
+    border: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+  }
+
+  label {
+    font-weight: bold;
+    margin-bottom: 5px; 
+  }
+  

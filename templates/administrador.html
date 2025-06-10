@@ -1,0 +1,92 @@
+{% extends "main.html" %}
+{% block title %} MODULO ADMINISTRADOR | SGAPA{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/administrador.css') }}">
+{% endblock %}
+{% include "components/modal.html" %}
+
+{% block content %}
+
+<!-- Navbar -->
+{% block navbar %}
+{% include "layouts/navbar.html" with context %}
+{% endblock %}
+
+<!-- Contenedor de cards -->
+<div class="card__container">
+    <div class="home__title">
+        <h1 class="card__title">Bienvenido Administrador</h1>
+        <span class="date">{{ fecha_actual }}</span>
+    </div>
+    <ul class="card__group">
+        <li class="card__item">
+            <a href="{{ url_for('secciones.matricula') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">how_to_reg</i>
+                    <h2>Matricula Estudiante</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="{{url_for('secciones.registro_docente')}}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">app_registration</i>
+                    <h2>Registro Docente</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="{{ url_for('secciones.horario') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">hourglass_bottom</i>                    
+                    <h2>Horario Grupos</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">send_time_extension</i>
+                    <h2>Horario Docentes</h2>
+                </div>                
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="{{ url_for('secciones.usuarios') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">person_search</i>
+                    <h2>Usuarios</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="{{ url_for('secciones.calendario') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">calendar_month</i>
+                    <h2>Calendario</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="{{ url_for('secciones.editar_menu') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">restaurant</i>
+                    <h2>Restaurante</h2>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>
+
+{% block extra_js %}
+<script>
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+</script>
+<script src="{{ url_for('static', filename='js/administrador.js') }}"></script>
+{% endblock %}
+
+
+{% endblock %}

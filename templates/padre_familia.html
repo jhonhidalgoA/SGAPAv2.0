@@ -1,0 +1,58 @@
+{% extends "main.html" %}
+{% block title %} ESTUDIANTE| SGAPA{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/padre_familia.css') }}">
+{% endblock %}
+{% include "components/modal.html" %}
+
+{% block content %}
+<!-- Navbar -->
+{% block navbar %}
+{% include "layouts/navbar.html" with context %}
+{% endblock %}
+
+|
+<div class="home__student">
+    <div class="home__title">
+        <h2 class="title">Bienvenido(a) Padre de Familia</h2>        
+        <span class="date">{{ fecha_actual }}</span>
+    </div>
+    <div class="student__row">
+        <div class="stat"> 
+            <img src="{{ url_for('static', filename='img/calendarioE.png') }}" alt="horario">        
+            <h3>Horario</h3>
+        </div>
+        <div class="stat">
+            <img src="{{ url_for('static', filename='img/actividadesE.png') }}" alt="actividades">            
+            <h3>Actividades</h3>
+        </div>
+        <div class="stat">
+            <img src="{{ url_for('static', filename='img/padre-e-hija.png') }}" alt="evaluaciones">            
+            <h3>Atención a Padres</h3>
+        </div>
+        <div class="stat"> 
+            <img src="{{ url_for('static', filename='img/reportesE.png') }}" alt="reportes">            
+            <h3>Reportes</h3>
+        </div>
+    </div>
+    <div class="stat">
+        <h2>Próximas Actividades Institucionales</h2>
+        <ul class="activite__list">
+            <li><strong>Reunión Cepro</strong> - 30 mayo, 10:00 AM</li>
+            <li><strong>Entrega boletines</strong> - 05 junio, 2:00 PM</li>
+            <li><strong>Capacitación TIC</strong> - 10 junio, 8:00 AM - Docentes Primaria</li>
+        </ul>
+    </div>    
+</div>
+
+{% block extra_js %}
+<script>
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+</script>
+<script src="{{ url_for('static', filename='js/administrador.js') }}"></script>
+{% endblock %}
+
+{% endblock %}

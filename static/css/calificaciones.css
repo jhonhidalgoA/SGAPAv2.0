@@ -1,0 +1,275 @@
+@import url("variables.css");
+@import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.ratings{
+  width: 90%;
+  margin: 0 auto;
+}
+
+.registration__title{
+  font-family: 'Coming Soon', cursive;
+  display: flex;  
+  justify-content: space-between;
+  align-items: center;  
+  gap: 20px;
+  text-align: start;
+  margin: 10px 1px 10px 2px;
+  padding: 10px;
+  height: 50px;
+  border-radius: var(--border-radius);  
+  border: 1px solid var(--color-blue-card);
+  background: var(--color-blue-card);
+  color:var(--color-white);
+}
+
+.registration__title .title{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  gap: 20px;
+} 
+
+.registration__title .icon__return i{
+  font-size: var(--fs-2xl);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.navbar__logo {
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;  
+    margin-left:25px;  
+    gap: var(--spacing-md);
+}
+
+.navbar__logo .icon, 
+.nav-item span {
+    font-size:var(--size-title-medium);
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+.navbar__logo .icon{
+    transform: rotate(180deg);
+}
+
+.navbar__logo .icon:hover{
+    color: var(--color-white);
+    transform: scale(1.2);   
+    transition: all 0.3s ease;
+}
+
+
+.navbar__logo .title {
+    font-size: var(--fs-base);
+    color: var(--color-white);
+    font-weight: var(--fw-bold); 
+    font-size:var(--size-title-medium-small);
+    text-decoration: none;
+}
+
+.navbar__logo .danger {
+    color: var(--color-danger);
+    font-weight: var(--fw-bold);
+}
+
+.navbar__logo h2{
+  letter-spacing: 2px;
+}
+
+.ratings__group {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+.ratings__group select {
+  display:flex;
+  flex-direction:column;
+  padding: 5px;
+  border-radius: 5px;
+  width: 300px; 
+  font-size: 16px;  
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top:10px;
+}
+
+
+.ratings__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin-top: 30px;
+}
+
+.ratings__buttons .btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 15px;
+  width: 140px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ratings__buttons .btn:first-child {
+  background-color: var(--color-button-load);
+}
+
+.ratings__buttons .btn:nth-child(1):hover {
+  background-color: var(--color-button-load-hover);
+  transform: scale(1.10);
+  color: var(--color-hover-btn-2);
+}
+
+.ratings__buttons .btn:nth-child(2) {
+  background: var(--color-button-save);
+}
+
+.ratings__buttons .btn:nth-child(2):hover {
+  background-color: var(--color-button-save-hover);
+  transform: scale(1.10);
+  color: var(--color-hover-btn-2);
+}
+
+
+.ratings__buttons .btn:nth-child(3) {
+  background-color: var(--color-button-delete);
+}
+
+.ratings__buttons .btn:nth-child(3):hover {
+  background-color: var(--color-button-delete-hover);
+  transform: scale(1.10);
+  color: var(--color-hover-btn-2);
+}
+
+.ratings__buttons .btn:nth-child(4) {
+  background-color: var(--color-button-print);
+}
+
+.ratings__buttons .btn:nth-child(4):hover {
+  background-color: var(--color-button-print-hover);
+  transform: scale(1.10);
+  color: var(--color-hover-btn-2);
+}
+
+.ratings__buttons .btn:last-child {
+  background-color: var(--color-button-view);
+}
+
+.ratings__buttons .btn:last-child:hover {
+  background-color: var(--color-button-view-hover);
+  transform: scale(1.10);
+  color: var(--color-hover-btn-2);
+}
+
+
+.alerta {
+  width:55%;
+  margin: 30px auto 0 auto;
+  background-color: #ffc107;
+  color: #000;
+  padding: 12px 20px;
+  
+  border-radius: 5px;  
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+  min-height: 50px;
+  visibility: visible;
+}
+
+.ocultar {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* table*/
+
+.container__table{
+  display: flex;
+  justify-content: center;
+  margin-top:50px;
+ 
+ }
+
+ .container__table .table{
+  width: 1200px;
+  margin-top: 10px;
+  
+  color: red;
+ }
+
+ .htCore td, .htCore th {
+  font-size: 18px !important;  
+  height: 40px !important;    
+  padding: 8px !important;
+}
+
+.ht_master {
+  width: auto !important; 
+  max-width: 100%;         
+}
+
+ .nombre-apellido {
+  font-size: 18px;   
+  color: #fff;
+}
+
+.nota-final {
+    background-color:rgb(18, 130, 227);
+    color: #333;
+}
+
+/* Estilos para la tabla */
+.htCore td {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+/* Estilo para nombres y apellidos */
+.nombre-apellido {
+    font-weight: 500;
+    color: #333;
+}
+
+/* Estilo para nota final */
+.nota-final {
+    background-color: #f9f9f9;
+    font-weight: bold;
+}
+
+/* Estilo para spinner de carga */
+.spin {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Estilo para botones deshabilitados */
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Estilo para celdas con error de validación */
+.htInvalid {
+    background-color: #ffdddd;
+}
+
+

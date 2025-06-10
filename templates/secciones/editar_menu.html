@@ -1,0 +1,214 @@
+{% extends "main.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/editar_menu.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Ventana modal -->
+{% include "components/modal.html" %}
+
+<div class="edit__menu">
+    <div class="registration__title">
+        <div class="title">
+            <div class="navbar__logo">
+                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                    class="icon material-symbols-outlined toggleBtn">
+                    logout
+                </span>
+                <h2>Editar Menú Escolar</h2>
+            </div>
+        </div>
+        <div class="icon__return">
+            <a href="{{ url_for('dashboards.dashboard_administrador') }}" class="icon__link">
+                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+            </a>
+        </div>
+    </div>
+
+    <div class="menu__container">
+        <div class="left">
+            <div class="left__title">
+                <h1>Menú Escolar</h1>
+                <p id="semana">{{ semana }}</p>
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="right__menu">
+                {% for dia, categorias in menus.items() %}
+                <div class="right__card">
+                    <div class="card__day">
+                        <h1>{{ dia }}</h1>
+                        <div class="menu-grid">
+                            {% for tipo, items in categorias.items() %}
+                            {% set clase = tipo|lower
+                            |replace('ú', 'u')|replace('í', 'i')
+                            |replace('é', 'e')|replace('ó', 'o')
+                            |replace('á', 'a')|replace('ñ', 'n')
+                            |replace(' ', '-') %}
+                            <div class="menu-card {{ clase }}">
+                                <div class="card__subtitle">
+                                    <span class="sub__title">{{ tipo }}</span>
+                                </div>
+                                <div class="menu-items">
+                                    {% for item in items %}
+                                    <div class="menu-item">
+                                        <img src="{{ url_for('static', filename='img/' + item.img) }}"
+                                            alt="{{ item.nombre }}">
+                                        <span>{{ item.nombre }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar plato -->
+    <div id="editarModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            <h2>Editar Plato</h2>
+            <form id="editarForm">
+                <label for="nombre">Nombre del Plato :</label>
+                <input type="text" id="nombre" name="nombre" required>
+
+                <label for="imagen">Imagen del Plato:</label>
+                <select id="imagen" name="imagen" required>
+                    <option value="">-- Selecciona una imagen --</option>
+                    <option value="arroz.png">Arroz</option>
+                    <option value="pollo.png">Pollo</option>
+                    <option value="ensalada.png">Ensalada</option>
+                    <option value="sopa.png">Sopa</option>
+                    <option value="pan.png">Pan Artesanal</option>
+                    <option value="pasta.png">Pasta</option>
+                    <option value="postre.png">Postre</option>
+                    <option value="frutas.png">Frutas</option>
+                </select>
+
+                <input type="hidden" id="diaActual">
+                <input type="hidden" id="categoriaActual">
+
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>    
+    <input type="hidden" id="platoOriginalNombre">
+    <input type="hidden" id="platoOriginalImg">
+
+</div>
+{% block extra_js %}
+<script>
+    /* Funcion modal */
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+
+    function showModal(title, message, action) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerText = message;
+        window.modalAction = action;
+
+        const modal = document.getElementById("confirmModal");
+        modal.style.display = "flex";
+    }
+
+    document.getElementById("modalConfirm").addEventListener("click", function () {
+        if (typeof modalAction === 'function') {
+            modalAction();
+        }
+        document.getElementById("confirmModal").style.display = "none";
+    });
+
+    document.getElementById("modalCancel").addEventListener("click", function () {
+        document.getElementById("confirmModal").style.display = "none";
+    });
+</script>
+
+<!--  Funcion Modal plato -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const platos = document.querySelectorAll(".menu-item");
+
+        platos.forEach(plato => {
+            plato.addEventListener("click", function () {
+                const nombre = plato.querySelector("span").textContent.trim();
+                const imgSrc = plato.querySelector("img").getAttribute("src");
+                const imgNombre = imgSrc.substring(imgSrc.lastIndexOf('/') + 1);
+
+                const categoriaDiv = plato.closest(".menu-card");
+                const categoriaTitulo = categoriaDiv.querySelector(".sub__title").textContent.trim();
+                const dia = categoriaDiv.closest(".right__card").querySelector("h1").textContent.trim();
+
+                document.getElementById("nombre").value = nombre;
+                document.getElementById("imagen").value = imgNombre;
+
+                document.getElementById("diaActual").value = dia;
+                document.getElementById("categoriaActual").value = categoriaTitulo;
+
+                document.getElementById("platoOriginalNombre").value = nombre;
+                document.getElementById("platoOriginalImg").value = imgNombre;
+
+                document.getElementById("editarModal").style.display = "block";
+            });
+        });
+    });
+
+    
+    document.getElementById("editarForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const nombre = document.getElementById("nombre").value.trim();
+        const imagen = document.getElementById("imagen").value.trim();
+        const dia = document.getElementById("diaActual").value;
+        const categoria = document.getElementById("categoriaActual").value;
+        const originalNombre = document.getElementById("platoOriginalNombre").value;
+        const originalImg = document.getElementById("platoOriginalImg").value;
+
+        fetch("{{ url_for('secciones.guardar_cambios') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                dia,
+                categoria,
+                platoOriginal: { nombre: originalNombre, img: originalImg },
+                platoNuevo: { nombre, img: imagen }
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Plato actualizado");
+                location.reload();
+            } else {
+                alert("No se pudo actualizar");
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            alert("Hubo un problema al guardar");
+        });
+    });
+
+    function cerrarModal() {
+        document.getElementById("editarModal").style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        const modal = document.getElementById("editarModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+{% endblock %}
+
+{% endblock %}

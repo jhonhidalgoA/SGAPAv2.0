@@ -1,0 +1,135 @@
+{% extends "main.html" %}
+{% block title %} USUARIOS | SGAPA{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios.css') }}">
+{% endblock %}
+{% include "components/modal.html" %}
+
+{% block content %}
+<div class="tabs">
+    <div class="registration__title">
+        <div class="title">
+            <div class="navbar__logo">
+                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                    class="icon material-symbols-outlined toggleBtn">
+                    logout
+                </span>
+                <h2>Usuarios</h2>
+            </div>
+        </div>
+        <div class="icon__return">
+            <a href="{{ url_for('dashboards.dashboard_administrador') }}" class="icon__link">
+                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+            </a>
+        </div>
+    </div>
+    <ul class="tab-nav">
+        <li class="active" data-tab="tab1">Estudiantes</li>
+        <li data-tab="tab2">Docentes</li>
+        <li data-tab="tab3">Administradores</li>
+        <li data-tab="tab4">Acudientes</li>
+    </ul>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <script>
+        showModal("{{ category | title }}", "{{ message | safe}}", null);
+    </script>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="tab-content active" id="tab1">
+        <div class="search__container">
+            <form class="search__box" action="" method="GET">
+                <input type="text" name="buscar" id="buscar" placeholder="Buscar...">
+            </form>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-id">ID</th>
+                    <th class="col-nombre">Nombres</th>
+                    <th class="col-apellido">Apellidos</th>
+                    <th class="col-acciones">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Juan</td>
+                    <td>Pérez</td>
+                    <td class="td__buttons">
+                        <button class="btn">Editar<i class="material-symbols-outlined">edit</i></button>
+                        <button class="btn">Eliminar<i class="material-symbols-outlined">delete</i></button>
+                        <button class="btn">Ver<i class="material-symbols-outlined">folder_eye</i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Juan</td>
+                    <td>Pérez</td>
+                    <td class="td__buttons">
+                        <button class="btn">Editar<i class="material-symbols-outlined">edit</i></button>
+                        <button class="btn">Eliminar<i class="material-symbols-outlined">delete</i></button>
+                        <button class="btn">Ver<i class="material-symbols-outlined">folder_eye</i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Juan</td>
+                    <td>Pérez</td>
+                    <td class="td__buttons">
+                        <button class="btn">Editar<i class="material-symbols-outlined">edit</i></button>
+                        <button class="btn">Eliminar<i class="material-symbols-outlined">delete</i></button>
+                        <button class="btn">Ver<i class="material-symbols-outlined">folder_eye</i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Juan</td>
+                    <td>Pérez</td>
+                    <td class="td__buttons">
+                        <button class="btn">Editar<i class="material-symbols-outlined">edit</i></button>
+                        <button class="btn">Eliminar<i class="material-symbols-outlined">delete</i></button>
+                        <button class="btn">Ver<i class="material-symbols-outlined">folder_eye</i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Juan</td>
+                    <td>Pérez</td>
+                    <td class="td__buttons">
+                        <button class="btn">Editar<i class="material-symbols-outlined">edit</i></button>
+                        <button class="btn">Eliminar<i class="material-symbols-outlined">delete</i></button>
+                        <button class="btn">Ver<i class="material-symbols-outlined">folder_eye</i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Juan</td>
+                    <td>Pérez</td>
+                    <td class="td__buttons">
+                        <button class="btn">Editar<i class="material-symbols-outlined">edit</i></button>
+                        <button class="btn">Eliminar<i class="material-symbols-outlined">delete</i></button>
+                        <button class="btn">Ver<i class="material-symbols-outlined">folder_eye</i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="tab-content tab-2" id="tab2">
+    </div>
+    <div class="tab-content tab-3" id="tab3">
+    </div>
+    <div class="tab-content tab-4" id="tab4">
+    </div>
+</div>
+
+
+{% block extra_js %}
+<script src="{{url_for('static', filename='js/tabs-modal.js') }}"></script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "main.html" %}
+
+{% block title %}Recuperar contraseña{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contrasena.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form action="{{ url_for('auth.enviar_correo') }}" method="post" class="form">
+        <div class="title">
+            <h1>¿No recuerdas tú contraseña?</h1>
+            <h4>¡No te preocupes! <span> Nos sucede a todos.</span> Ingresa Tú Email y te ayudaremos </h4>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+
+
+
+        <div class="input_group">
+            <label for="username">Email:</label>
+            <div class="input_wrapper">
+                <i class="material-symbols-outlined icon_left" aria-label="Icono de usuario">mail</i>
+                <input type="text" name="username" id="username" value="{{ request.form.username }}">
+            </div>
+
+            <div class="input__btn">
+                <button type="submit" class="btn">Enviar Instrucciones</button>
+            </div>
+        </div>
+        <div class="social__photo">
+            <p class="author">Image by: Vinicius Imbroisi</a> from <a
+                    href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5541099">Pixabay</a>
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}

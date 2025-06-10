@@ -1,0 +1,39 @@
+from flask import Blueprint, session, render_template
+from datetime import datetime
+import locale
+
+dashboards = Blueprint('dashboards', __name__)
+
+try:
+    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  
+except locale.Error:
+    locale.setlocale(locale.LC_TIME, 'Spanish_Spain.1252')
+
+@dashboards.route('/dashboard_administrador')
+def dashboard_administrador():
+    nombre = session.get('nombre', 'Usuario')
+    cargo = session.get('cargo', 'Administrador')  
+    fecha_actual = datetime.now().strftime('%A, %d de %B de %Y').capitalize()   
+    return render_template('administrador.html', nombre=nombre, cargo=cargo, fecha_actual=fecha_actual)
+
+@dashboards.route('/docente')
+def docente():
+    nombre = session.get('nombre', 'Usuario')
+    cargo = session.get('cargo', 'docenter') 
+    fecha_actual = datetime.now().strftime('%A, %d de %B de %Y').capitalize()   
+    return render_template('docente.html', nombre=nombre, cargo=cargo, fecha_actual=fecha_actual)
+    
+
+@dashboards.route('/dashboard_estudiante')
+def dashboard_estudiante():
+    nombre = session.get('nombre', 'Usuario')
+    cargo = session.get('cargo', 'Estudiante') 
+    fecha_actual = datetime.now().strftime('%A, %d de %B de %Y').capitalize()   
+    return render_template('estudiante.html', nombre=nombre, cargo=cargo, fecha_actual=fecha_actual)  
+
+@dashboards.route('/dashboard_padre')
+def dashboard_padre():
+    nombre = session.get('nombre', 'Usuario')
+    cargo = session.get('cargo', 'Padre') 
+    fecha_actual = datetime.now().strftime('%A, %d de %B de %Y').capitalize()   
+    return render_template('padre_familia.html', nombre=nombre, cargo=cargo, fecha_actual=fecha_actual)      

@@ -1,0 +1,102 @@
+{% extends "main.html" %}
+{% block title %} MODULO DOCENTE | SGAPA{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/docente.css') }}">
+{% endblock %}
+{% include "components/modal.html" %}
+
+{% block content %}
+<!-- Ventana modal -->
+{% include "components/modal.html" %}
+
+<!-- Navbar -->
+{% block navbar %}
+{% include "layouts/navbar.html" with context %}
+{% endblock %}
+<div class="card__container">
+    <div class="home__title">
+        <h1 class="card__title">Bienvenido Docente</h1>
+        <span class="date">{{ fecha_actual }}</span>
+    </div>
+    <ul class="card__group">
+        <li class="card__item">
+            <a href="{{ url_for('secciones.calificaciones') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">edit_note</i>
+                    <h2>Calificaciones</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="{{ url_for('secciones.asistencia') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">app_registration</i>
+                    <h2>Asistencia</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="{{ url_for('secciones.reportes') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">table_view</i>
+                    <h2>Reportes</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="{{ url_for('secciones.planeacion') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">checklist_rtl</i>
+                    <h2>Planeación</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="{{ url_for('secciones.tareas') }}">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">format_list_numbered</i>
+                    <h2>Tareas</h2>
+                </div>
+            </a>
+        </li>
+        <li class="card__item">
+            <a href="">
+                <div class="card__content">
+                    <i class="material-symbols-outlined">calendar_month</i>
+                    <h2>Calendario</h2>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>
+
+{% block extra_js %}
+<script>
+    /*funcion modal*/
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+
+    function showModal(title, message, action) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerText = message;
+        window.modalAction = action;
+
+        const modal = document.getElementById("confirmModal");
+        modal.style.display = "flex";
+    }
+    document.getElementById("modalConfirm").addEventListener("click", function () {
+        if (typeof modalAction === 'function') {
+            modalAction();
+        }
+        document.getElementById("confirmModal").style.display = "none";
+    });
+
+    document.getElementById("modalCancel").addEventListener("click", function () {
+        document.getElementById("confirmModal").style.display = "none";
+    });
+</script>
+{% endblock %}
+
+
+{% endblock %}

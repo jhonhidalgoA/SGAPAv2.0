@@ -1,0 +1,377 @@
+[
+  {
+    "id": "evento1",
+    "titulo": "Inicio de Clases",
+    "fecha": "20 Enero",
+    "dia": "20",
+    "mes": "enero",
+    "year": "2025",
+    "hora": "8:00 AM - 12:00 PM",
+    "lugar": "Sede Principal I.E La Presentación",
+    "categoria": "academico"
+  },
+  {
+    "id": "evento2",
+    "titulo": "Reunión Padres de Familia",
+    "fecha": "27 Enero",
+    "dia": "27",
+    "mes": "enero",
+    "year": "2025",
+    "hora": "2:00 PM - 4:00 PM",
+    "lugar": "Sede Principal I.E La Presentación",
+    "categoria": "padres_familia"
+  },
+  {
+    "id": "evento3",
+    "titulo": "Escuela de Padres: Tema Convivencia",
+    "fecha": "21 Febrero",
+    "dia": "21",
+    "mes": "febrero",
+    "year": "2025",
+    "hora": "5:00 PM - 6:30 PM",
+    "lugar": "Auditorio",
+    "categoria": "padres_familia"
+  },
+
+  {
+    "id": "evento4",
+    "titulo": "Izada de Bandera: Día de la Mujer ",
+    "fecha": "7 Marzo",
+    "dia": "7",
+    "mes": "marzo",
+    "year": "2025",
+    "hora": "8:00 am - 10:00 am",
+    "lugar": "Toda la institución",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento5",
+    "titulo": "Entrega de Calificaciones: 1er Periodo",
+    "fecha": "01",
+    "dia": "01",
+    "mes": "abril",
+    "year": "2025",
+    "hora": "2:00 PM - 4:00 PM",
+    "lugar": "Salón del grado correspondiente",
+    "categoria": "padres_familia"
+  },
+  {
+    "id": "evento6",
+    "titulo": "Vacaciones: Semana Santa",
+    "fecha": "14 Abril",
+    "dia": "14",
+    "mes": "abril",
+    "year": "2025",
+    "hora": "Del 14 de abril al 20 de abril",
+    "lugar": "",
+    "categoria": "vacaciones"
+  },
+  
+  {
+    "id": "evento7",
+    "titulo": "Izada de Bandera: Día del Idioma ",
+    "fecha": "23 Abirl",
+    "dia": "23",
+    "mes": "abril",
+    "year": "2025",
+    "hora": "10:20 AM - 12:00 PM",
+    "lugar": "Auditorio",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento8",
+    "titulo": "Dia del niño",
+    "fecha": "30 Abril",
+    "dia": "30",
+    "mes": "abril",
+    "year": "2025",
+    "hora": "08:00 AM - 12:00 PM",
+    "lugar": "Salon del grado correspondiente",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento8",
+    "titulo": "Escuela de Padres: Tema vida saludable",
+    "fecha": "05 Mayo",
+    "dia": "05",
+    "mes": "mayo",
+    "year": "2025",
+    "hora": "5:00 PM - 6:30 PM",
+    "lugar": "Auditorio",
+    "categoria": "padres_familia"
+  },
+  {
+    "id": "evento9",
+    "titulo": "Izada de Bandera: Día del Maestro",
+    "fecha": "15 Mayo",
+    "dia": "15",
+    "mes": "mayo",
+    "year": "2025",
+    "hora": "8:00 PM - 12:30 PM",
+    "lugar": "Auditorio",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento10",
+    "titulo": "Entrega de Calificaciones: 2do Periodo",
+    "fecha": "02",
+    "dia": "02",
+    "mes": "junio",
+    "year": "2025",
+    "hora": "2:00 PM - 4:00 PM",
+    "lugar": "Salón del grado correspondiente",
+    "categoria": "padres_familia"
+  },
+  {
+    "id": "evento11",
+    "titulo": "Escuela de Padres: Tema Tecnología",
+    "fecha": "13 Junio",
+    "dia": "13",
+    "mes": "junio",
+    "year": "2025",
+    "hora": "5:00 PM - 6:30 PM",
+    "lugar": "Auditorio",
+    "categoria": "padres_familia"
+  },
+
+  {
+    "id": "evento12",
+    "titulo": "Vacaciones: Mitad de año Estudiantes",
+    "fecha": "16 Junio",
+    "dia": "16",
+    "mes": "junio",
+    "year": "2025",
+    "hora": "Del 16 de junio al 07 de julio",
+    "lugar": "",
+    "categoria": "vacaciones"
+  },
+  
+  {
+    "id": "evento13",
+    "titulo": "Izada de Bandera: Día de la Independencia",
+    "fecha": "21 Julio",
+    "dia": "21",
+    "mes": "julio",
+    "year": "2025",
+    "hora": "10:20 AM - 12:00 PM",
+    "lugar": "Auditorio",
+    "categoria": "cultural"
+  },
+  
+  {
+    "id": "evento14",
+    "titulo": "Izada de Bandera: Batalla de Boyacá",
+    "fecha": "08 Agosto",
+    "dia": "8",
+    "mes": "agosto",
+    "year": "2025",
+    "hora": "08:00 AM - 10:00 AM",
+    "lugar": "Auditorio",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento31",
+    "titulo": "Aplicación puebas Saber 11",
+    "fecha": "10 Agosto",
+    "dia": "10",
+    "mes": "agosto",
+    "year": "2025",
+    "hora": "07:00 AM - 06:00 PM",
+    "lugar": "Escuela Normal Superior",
+    "categoria": "academico"
+  },
+
+  {
+    "id": "evento15",
+    "titulo": "Escuela de Padres: Tema Salud Mental",
+    "fecha": "20 Agosto",
+    "dia": "20",
+    "mes": "agosto",
+    "year": "2025",
+    "hora": "5:00 PM - 6:30 PM",
+    "lugar": "Auditorio",
+    "categoria": "padres_familia"
+  },
+  {
+    "id": "evento15",
+    "titulo": "Feria de la Ciencia y la Tecnología",
+    "fecha": "22 Agosto",
+    "dia": "22",
+    "mes": "agosto",
+    "year": "2025",
+    "hora": "8:00 AM - 12:00 PM",
+    "lugar": "Sede Principal",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento16",
+    "titulo": "Dia del Estudiante",
+    "fecha": "08 Septiembre",
+    "dia": "08",
+    "mes": "septiembre",
+    "year": "2025",
+    "hora": "8:00 AM - 12:00 AM",
+    "lugar": "Patio Central",
+    "categoria": "deportivo"
+  },
+  {
+    "id": "evento17",
+    "titulo": "Izada de Bandera: Amor y Amistad",
+    "fecha": "12 Septiembre",
+    "dia": "12",
+    "mes": "septiembre",
+    "year": "2025",
+    "hora": "8:00 AM - 10:00 AM",
+    "lugar": "Patio Central",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento18",
+    "titulo": "Entrega de Calificaciones: 3er Periodo",
+    "fecha": "17 Septiembre",
+    "dia": "17",
+    "mes": "septiembre",
+    "year": "2025",
+    "hora": "2:00 PM - 4:00 PM",
+    "lugar": "Salón de grado correspondiente",
+    "categoria": "padres_familia"
+  },
+  {
+    "id": "evento19",
+    "titulo": "Escuela de Padres: Tema Adolescencia",
+    "fecha": "22 Septiembre",
+    "dia": "22",
+    "mes": "septiembre",
+    "year": "2025",
+    "hora": "5:00 PM - 6:30 PM",
+    "lugar": "Auditorio",
+    "categoria": "padres_familia"
+  },
+  {
+    "id": "evento20",
+    "titulo": "Receso Escolar Estudiantes",
+    "fecha": "06 Octubre",
+    "dia": "06",
+    "mes": "octubre",
+    "year": "2025",
+    "hora": "Del 06 de octubre al 14 de octubre",
+    "lugar": "",
+    "categoria": "vacaciones"
+  },
+  {
+    "id": "evento21",
+    "titulo": "Izada de Bandera: Independencia de Cartagena",
+    "fecha": "29 Octubre",
+    "dia": "28",
+    "mes": "octubre",
+    "year": "2025",
+    "hora": "9:00 AM - 11:00 AM",
+    "lugar": "Auditorio",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento22",
+    "titulo": "Dia de María la Parda",
+    "fecha": "31 Octubre",
+    "dia": "31",
+    "mes": "octubre",
+    "year": "2025",
+    "hora": "8:00 AM - 12:00 PM",
+    "lugar": "Auditorio",
+    "categoria": "deportivo"
+  },
+  {
+    "id": "evento23",
+    "titulo": "Entrega de Banderas al grado Décimo",
+    "fecha": "06 Noviembre",
+    "dia": "06",
+    "mes": "noviembre",
+    "year": "2025",
+    "hora": "10:00AM - 12:00 PM",
+    "lugar": "Auditorio",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento24",
+    "titulo": "Nivelaciones del 1ro al 4to periodo",
+    "fecha": "24 Noviembre",
+    "dia": "24",
+    "mes": "noviembre",
+    "year": "2025",
+    "hora": "08:00 AM - 12:00 PM",
+    "lugar": "Toda la institución",
+    "categoria": "academico"
+  },
+  
+  {
+    "id": "evento25",
+    "titulo": "Brindis de Gala grados Décimo - Undécimo ",
+    "fecha": "27 Noviembre",
+    "dia": "27",
+    "mes": "noviembre",
+    "year": "2025",
+    "hora": "7:00 PM - 10:00 PM",
+    "lugar": "Club Campestre",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento26",
+    "titulo": "Graduación Bachilleres 2025",
+    "fecha": "01 Diciembre",
+    "dia": "01",
+    "mes": "diciembre",
+    "year": "2025",
+    "hora": "5:00 PM - 07:00 PM",
+    "lugar": "Sede Principal",
+    "categoria": "cultural"
+  },
+  
+  {
+    "id": "evento27",
+    "titulo": "Graduación Grado Noveno",
+    "fecha": "02 Diciembre",
+    "dia": "02",
+    "mes": "diciembre",
+    "year": "2025",
+    "hora": "8:00 AM - 10:00 AM",
+    "lugar": "Sede Principal",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento28",
+    "titulo": "Graduación Grado Quinto",
+    "fecha": "02 Diciembre",
+    "dia": "02",
+    "mes": "diciembre",
+    "year": "2025",
+    "hora": "10:30 AM - 12:30 PM",
+    "lugar": "Sede Principal",
+    "categoria": "cultural"
+  },
+  {
+    "id": "evento29",
+    "titulo": "Graduación Grado Preescolar",
+    "fecha": "02 Diciembre",
+    "dia": "02",
+    "mes": "diciembre",
+    "year": "2025",
+    "hora": "02:00 PM - 03:00 PM",
+    "lugar": "Sede Principal",
+    "categoria": "cultural"
+  },
+  
+  {
+    "id": "evento30",
+    "titulo": "Acto de Clausura",
+    "fecha": "05 Diciembre",
+    "dia": "05",
+    "mes": "diciembre",
+    "year": "2025",
+    "hora": "9:00 AM - 11:00 AM",
+    "lugar": "Sede Principal",
+    "categoria": "padres_familia"
+  }
+  
+  
+]
+

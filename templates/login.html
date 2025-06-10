@@ -1,0 +1,71 @@
+{% extends "main.html" %}
+
+{% block title %} Login SGAPA {% endblock %}
+
+{% block body_class %}login-page{% endblock %} 
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form action="{{url_for('auth.login')}}" method="post" class="form" id="loginForm">
+
+        <div class="title">
+            <h2>Bienvenido(a)</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} show">{{ message }}</div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert">&nbsp;</div> 
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="input__group">
+            <label for="username">Documento</label>
+            <div class="input__wrapper">
+                <i class="material-symbols-outlined icon__left" aria-label="person">person</i>
+                <input type="text" name="username" id="username" autocomplete="off" required>
+            </div>
+        </div>
+
+        <div class="input__group">
+            <label for="password">Contraseña</label>
+            <div class="input__wrapper">
+                <i class="material-symbols-outlined icon__left" aria-label="Lock open">lock_open</i>
+                <input type="password" name="password" id="password" required>
+                <i class="material-symbols-outlined icon__right" aria-label="visibility"
+                    id="togglePassword">visibility_off</i>
+            </div>
+        </div>
+
+        <div class="input__check">
+            <div class="check">
+                <input type="checkbox" name="checkbox" id="checkbox" placeholder="Recordar">
+                <p>Recordar</p>
+            </div>
+            <a href="{{url_for('auth.contrasena')}}" class="forgot-password">
+                ¿Olvidó la contraseña?
+             </a>
+        </div>
+
+        <div class="input__btn">
+            <button type="submit" aria-label="ingresar">Ingresar</button>
+        </div>
+        <div class="social__photo">
+            <p class="author">Image by <a
+                    href="https://pixabay.com/users/vimbroisi-16343850/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5541099">Vinicius
+                    Imbroisi</a> from <a
+                    href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5541099">Pixabay</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}

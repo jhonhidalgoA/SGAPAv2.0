@@ -1,0 +1,235 @@
+@import url("variables.css");
+@import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+
+.task{
+    width: 90%;     
+    margin: 0 auto; 
+}
+
+.registration__title{
+  display: flex;  
+  justify-content: space-between;
+  align-items: center;  
+  gap: 20px;
+  text-align: start;
+  margin: 10px 1px 10px 2px;
+  padding: 10px;
+  height: 50px;
+  border-radius: var(--border-radius);  
+  border: 1px solid var(--color-grey-card);
+  background: var(--color-grey-card);
+  color:var(--color-white);
+}
+
+.registration__title .title{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  gap: 20px;
+} 
+
+.registration__title .icon__return i{
+  font-size: var(--fs-2xl);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.navbar__logo .icon, 
+.nav-item span {
+    font-size:var(--size-title-medium);
+    color: var(--color-white);
+    cursor: pointer;
+}
+
+.navbar__logo .icon{
+    transform: rotate(180deg);
+}
+
+.navbar__logo .icon:hover{
+    color: var(--color-white);
+    transform: scale(1.2);   
+    transition: all 0.3s ease;
+}
+
+
+.navbar__logo .title {
+    font-size: var(--fs-base);
+    color: var(--color-white);
+    font-weight: var(--fw-bold); 
+    font-size:var(--size-title-medium-small);
+    text-decoration: none;
+}
+
+.navbar__logo .danger {
+    color: var(--color-danger);
+    font-weight: var(--fw-bold);
+}
+
+.navbar__logo {
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;  
+    margin-left:25px;  
+    gap: var(--spacing-md);
+}
+
+
+
+
+.task__parts {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task__left {
+    width: 60%;
+    margin : 30px 0 0 -80px; 
+}
+
+.task__title {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-align: start;
+    margin: -30px 10px 10px 10px;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: 2px 0 24px var(--color-shadow);
+    border: 1px solid var(--color-shadow);
+    height: 50px;
+    background: var(--color-blue-midnight);
+    color: var(--color-white);
+}
+
+.task__group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 700px;
+    margin: auto;
+    padding-top: 10px;
+}
+
+.task__group div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+
+.task__group select,
+.task__group input {
+    width: 90%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.task__topic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding-top: 20px;    
+}
+
+.task__theme,
+.task__description,
+.task__web,
+.task__attached {
+    display: flex;
+    flex-direction: column;
+    width: 112%;
+    margin-left: -20px;
+}
+
+
+.task__topic input,
+.task__topic textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #a9a8a8;
+}
+
+textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+.task__buttons {
+    display: flex;
+    justify-content: start;
+    margin-top: 30px;
+    margin-left: 100px;
+}
+
+.task__buttons .btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 15px;
+    width: 140px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.task__buttons .btn:first-child {
+background: var(--color-button-send);
+
+}
+
+.task__buttons .btn:nth-child(1):hover {
+    background: var(--color-button-send-hover);
+    transform: scale(1.10);
+    color: var(--color-hover-btn-2);
+}
+
+.task__right {
+    width: 40%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-top:30px;
+}
+
+.task__students {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.task__students-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+}
+
+.task__students-check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #ff6f00;
+    cursor: pointer;
+}
+
+.task__students-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 25px 10px 25px;
+    padding: 20px;
+    width: 90%;
+    border: 2px solid red;
+    border-radius: 5px;
+    height: 500px;
+}

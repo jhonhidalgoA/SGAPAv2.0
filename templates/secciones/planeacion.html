@@ -1,0 +1,181 @@
+{% extends "main.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/planeacion.css') }}">
+
+{% endblock %}
+
+{% block content %}
+<!-- Ventana modal -->
+{% include "components/modal.html" %}
+<div class="planning" id="planificacion">
+  <div class="registration__title">
+        <div class="title">
+            <div class="navbar__logo">
+                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                    class="icon material-symbols-outlined toggleBtn">
+                    logout
+                </span>
+                <h2>Planeación Docente</h2>
+            </div>
+        </div>
+        <div class="icon__return">
+            <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
+                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+            </a>
+        </div>
+    </div>       
+    <div class="planning__group">
+      <div class="date__star">
+        <label for="dateStar">Fecha de inicio:</label>
+        <input type="date" name="dateStar" id="dateStar">
+      </div>
+      <div class="date__star">
+        <label for="dateEnd">Fecha de fin:</label>
+        <input type="date" name="dateEnd" id="dateEnd">
+      </div>
+      <div class="period">
+        <label for="grados-select">Periodo:</label>
+        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
+          <option value="primero">Primero</option>
+          <option value="segundo">Segundo</option>
+          <option value="tercero">Terecero</option>
+          <option value="cuarto">Cuarto</option>
+        </select>
+      </div>
+      <div class="group">
+        <label for="grados-select">Grado:</label>
+        <select id="grados-select" name="grados" aria-label="Selecciona un grado">
+          <option value="">Seleccionar</option>
+          <option value="sexto">Grado Sexto</option>
+          <option value="septimo">Grado Séptimo</option>
+          <option value="octavo">Grado Octavo</option>
+          <option value="noveno">Grado Noveno</option>
+          <option value="decimo">Grado Decimo</option>
+          <option value="undecimo5">Grado Undécimo</option>
+        </select>
+      </div>
+      <div class="subjects">
+        <label for="grados-select">Asignatura:</label>
+        <select id="grados-select" name="grados" aria-label="Selecciona una asignatura">
+          <option value="">Seleccionar</option>
+          <option value="ciencias">Ciencias Naturales</option>
+          <option value="sociales">Ciencias Sociales</option>
+          <option value="lenguaje">Lenguaje</option>
+          <option value="matematicas">Matemáticas</option>
+          <option value="ingles">Ingles</option>
+        </select>
+      </div>
+      <div class="type">
+        <label for="estandar">Tipo:</label>
+        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
+          <option value="">Seleccionar</option>
+          <option value="X">Concepto General</option>
+          <option value="Y">Necesidad Especial PIAR</option>
+        </select>
+      </div>
+
+      <div class="estandar">
+        <label for="estandar">Estandar:</label>
+        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
+          <option value="">Seleccionar</option>
+          <option value="a">Pensamiento numérico y los sistemas numéricos </option>
+          <option value="b">Pensamiento espacial y los sistemas geométricos</option>
+          <option value="c">Pensamiento métrico y los sistemas métricos o de medidas</option>
+          <option value="d">Pensamiento aleatorio y los sistemas de datos</option>
+          <option value="e">Pensamiento variacional y los sistemas algebraicos y analíticos</option>
+        </select>
+      </div>
+      <div class="dba">
+        <label for="dba">DBA:</label>
+        <select id="dba" name="grados" aria-label="Selecciona un DBA">
+          <option value="">Seleccionar</option>
+          <option value="primero">1. Identifica los usos de los números (como
+            código, cardinal, medida, ordinal) y las
+            operaciones (suma y resta) en contextos de
+            juego, familiares, económicos, entre otros.</option>
+          <option value="segundo">2. Utiliza diferentes estrategias para contar,
+            realizar operaciones (suma y resta ) y resolver
+            problemas aditivos.</option>
+          <option value="tercero">3. Utiliza las características posicionales del
+            Sistema de Numeración Decimal (SND) para
+            establecer relaciones entre cantidades y
+            comparar números.
+          </option>
+        </select>
+      </div>
+      <div class="evidencia">
+        <label for="evidence">Evidencias de Aprendizaje:</label>
+        <select id="evidence" name="evidence" aria-label="Selecciona una Evidencia">
+          <option value="">Seleccionar</option>
+          <option value="1">1. Construye e interpreta representaciones pictóricas
+            y diagramas para representar relaciones entre
+            cantidades que se presentan en situaciones o
+            fenómenos.</option>
+          <option value="2">2. Explica cómo y por qué es posible hacer una
+            operación (suma o resta) en relación con los
+            usos de los números y el contexto en el cual se
+            presentan.</option>
+          <option value="3">3. Reconoce en sus actuaciones cotidianas
+            posibilidades de uso de los números y las
+            operaciones.</option>
+        </select>
+      </div>
+
+      <div class="skills">
+        <label for="skills">Competencias:</label>
+        <textarea name="skills" id="skills" cols="55" placeholder="Escribe aquí..."></textarea>
+      </div>
+      <div class="skills">
+        <label for="skills">Objetivos:</label>
+        <textarea name="skills" id="skills" cols="55" placeholder="Escribe aquí..."></textarea>
+      </div>
+      <div class="period">
+        <label for="grados-select">Proyectos Pedagógicos Tranversales:</label>
+        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
+          <option value="">Seleccionar</option>
+          <option value="primero">Proyecto para la Educación Sexual</option>
+          <option value="segundo">Educación y Seguridad Vial</option>
+          <option value="tercero">Educación Económica y Financiera</option>
+          <option value="cuarto">Etilos de Vida Saludable</option>
+          <option value="cuarto">Derechos Humanos</option>
+          <option value="cuarto">Cátedra de la Paz</option>
+        </select>
+      </div>
+    </div>
+    <div class="planning__buttons">
+      <button class="btn">Nuevo<i class="material-symbols-outlined">add</i></button>
+      <button class="btn">Guardar<i class="material-symbols-outlined">save</i></button>
+      <button class="btn">Eliminar<i class="material-symbols-outlined">delete</i></button>
+      <button class="btn">Imprimir<i class="material-symbols-outlined">print</i></button>
+      <button class="btn">Ver<i class="material-symbols-outlined">table_eye</i></button>
+    </div>
+  </div>
+{% block extra_js %}
+  <script>
+     /*Ventana modal*/
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+
+    function showModal(title, message, action) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerText = message;
+        window.modalAction = action;
+
+        const modal = document.getElementById("confirmModal");
+        modal.style.display = "flex";
+    }
+    document.getElementById("modalConfirm").addEventListener("click", function () {
+        if (typeof modalAction === 'function') {
+            modalAction();
+        }
+        document.getElementById("confirmModal").style.display = "none";
+    });
+
+    document.getElementById("modalCancel").addEventListener("click", function () {
+        document.getElementById("confirmModal").style.display = "none";
+    });
+</script>
+{% endblock %}
+{% endblock %}

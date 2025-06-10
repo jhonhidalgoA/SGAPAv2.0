@@ -1,0 +1,252 @@
+{
+    "Jueves": {
+        "Complementos": [
+            {
+                "img": "frutas.png",
+                "nombre": "Caviar Italiano"
+            },
+            {
+                "img": "frutas.png",
+                "nombre": "Barra de Frutas4"
+            }
+        ],
+        "Menú alternativo": [
+            {
+                "img": "pasta.png",
+                "nombre": "Pasta en salsa Napolitana"
+            },
+            {
+                "img": "pescado.png",
+                "nombre": "Salmon Ahumado"
+            },
+            {
+                "img": "coliflor.png",
+                "nombre": "Coliflor cocida"
+            }
+        ],
+        "Menú del día": [
+            {
+                "img": "arroz.png",
+                "nombre": "Arroz"
+            },
+            {
+                "img": "pollo.png",
+                "nombre": "Pollo Frito"
+            },
+            {
+                "img": "ensalada.png",
+                "nombre": "Ensalada"
+            }
+        ],
+        "Menú vegetariano": [
+            {
+                "img": "sopa.png",
+                "nombre": "Sopa de Ahuyama"
+            },
+            {
+                "img": "pan.png",
+                "nombre": "Pan artesanal"
+            }
+        ]
+    },
+    "Lunes": {
+        "Complementos": [
+            {
+                "img": "postre.png",
+                "nombre": "Barra de Postres"
+            },
+            {
+                "img": "frutas.png",
+                "nombre": "Barra de Frutas"
+            }
+        ],
+        "Menú alternativo": [
+            {
+                "img": "pasta.png",
+                "nombre": "Pasta en salsa Napolitana"
+            },
+            {
+                "img": "pescado.png",
+                "nombre": "Filete de Salmon a la Plancha"
+            },
+            {
+                "img": "coliflor.png",
+                "nombre": "Coliflor cocida"
+            }
+        ],
+        "Menú del día": [
+            {
+                "img": "quinoa.png",
+                "nombre": "Quinoa"
+            },
+            {
+                "img": "pollo.png",
+                "nombre": "Pollo asado"
+            },
+            {
+                "img": "ensalada.png",
+                "nombre": "Ensalada"
+            }
+        ],
+        "Menú vegetariano": [
+            {
+                "img": "sopa.png",
+                "nombre": "Sopa de Ahuyama"
+            },
+            {
+                "img": "pan.png",
+                "nombre": "Pan artesanal"
+            }
+        ]
+    },
+    "Martes": {
+        "Complementos": [
+            {
+                "img": "postre.png",
+                "nombre": "Barra de Postres"
+            },
+            {
+                "img": "yogurt.png",
+                "nombre": "Yogurt"
+            }
+        ],
+        "Menú alternativo": [
+            {
+                "img": "lasana.png",
+                "nombre": "Lasaña"
+            },
+            {
+                "img": "pollo_teriyaki.png",
+                "nombre": "Pollo Teriyaki"
+            },
+            {
+                "img": "repollo.png",
+                "nombre": "Ensalada de Repollo"
+            }
+        ],
+        "Menú del día": [
+            {
+                "img": "papas.png",
+                "nombre": "Papas criollas en salsa"
+            },
+            {
+                "img": "cerdo.png",
+                "nombre": "Pernil de Cerdo"
+            },
+            {
+                "img": "vegetales_2.png",
+                "nombre": "Vegetales Salteados"
+            }
+        ],
+        "Menú vegetariano": [
+            {
+                "img": "sopa.png",
+                "nombre": "Sopa de Lentejas"
+            },
+            {
+                "img": "aguacate.png",
+                "nombre": "Ensalada de Aguacate"
+            }
+        ]
+    },
+    "Miércoles": {
+        "Complementos": [
+            {
+                "img": "frutas.png",
+                "nombre": "Barra de Frutas"
+            },
+            {
+                "img": "agua.png",
+                "nombre": "Agua Saborizada"
+            }
+        ],
+        "Menú alternativo": [
+            {
+                "img": "tortilla.png",
+                "nombre": "Tortilla de Vegetales"
+            },
+            {
+                "img": "salchicha.png",
+                "nombre": "Salchicha Casera"
+            },
+            {
+                "img": "lechuga.png",
+                "nombre": "Ensalada de Lechuga"
+            }
+        ],
+        "Menú del día": [
+            {
+                "img": "arroz.png",
+                "nombre": "Arroz"
+            },
+            {
+                "img": "bistec.png",
+                "nombre": "Carne en Bistec"
+            },
+            {
+                "img": "berenjena.png",
+                "nombre": "Berenjena Asada"
+            }
+        ],
+        "Menú vegetariano": [
+            {
+                "img": "sopa.png",
+                "nombre": "Sopa de Espinacas"
+            },
+            {
+                "img": "huevos.png",
+                "nombre": "Huevos Cocidos"
+            }
+        ]
+    },
+    "Viernes": {
+        "Complementos": [
+            {
+                "img": "postre.png",
+                "nombre": "Barra de Postres"
+            },
+            {
+                "img": "yogurt.png",
+                "nombre": "Yogurt"
+            }
+        ],
+        "Menú alternativo": [
+            {
+                "img": "lasana.png",
+                "nombre": "Lasaña"
+            },
+            {
+                "img": "pollo_teriyaki.png",
+                "nombre": "Pollo Teriyaki"
+            },
+            {
+                "img": "repollo.png",
+                "nombre": "Ensalada de Repollo"
+            }
+        ],
+        "Menú del día": [
+            {
+                "img": "papas.png",
+                "nombre": "Papas criollas en salsa"
+            },
+            {
+                "img": "cerdo.png",
+                "nombre": "Pernil de Cerdo"
+            },
+            {
+                "img": "vegetales_2.png",
+                "nombre": "Vegetales Salteados"
+            }
+        ],
+        "Menú vegetariano": [
+            {
+                "img": "sopa.png",
+                "nombre": "Sopa de Lentejas"
+            },
+            {
+                "img": "aguacate.png",
+                "nombre": "Ensalada de Aguacate"
+            }
+        ]
+    }
+}

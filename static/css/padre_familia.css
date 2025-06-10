@@ -1,0 +1,165 @@
+@import url("variables.css");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+body{
+     background-color: #e6f7ff;
+}
+
+.home__student {
+    font-family: 'Nunito', sans-serif;
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    color: #333;
+}
+
+.home__title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.home__title .title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.home__title .date {
+    font-size: 1.5rem;
+    color:#f40b0b;
+}
+.student__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.student__row .stat {
+    flex: 1;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: white;
+    min-height: 200px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    padding: 20px;
+    min-height: 150px; 
+    height: 300px; 
+    transition: all var(--transition-duration) var(--transition-ease);    
+}
+
+
+.student__row .stat:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px var(--color-shadow);
+    z-index: 2;
+    cursor: pointer;
+}
+
+.stat img{
+     width: 150px; 
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid(242, 244, 245);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto 15px; 
+    display: block; 
+
+}
+
+.student__row .stat h3 {
+    font-size: 1.5rem;
+    margin-top: 50px;
+    
+}
+
+
+
+.student__row .stat:nth-child(1) {
+  background:#3498db;   
+ 
+}
+
+.student__row .stat:nth-child(2) {
+    background:  #2ecc71;
+    
+}
+
+.student__row .stat:nth-child(3) {
+    background:  #e67e22;
+    
+}
+
+.student__row .stat:nth-child(4) {
+    background: #9b59b6;
+    
+}
+
+.student__row .stat p {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    
+}
+
+
+
+.stat:not(.student__row .stat) {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat h2 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.activite__list {    
+    padding: 0;
+}
+
+.activite__list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ecf0f1;
+    font-size: 1.3rem;
+}
+
+.activite__list li:last-child {
+    border-bottom: none;
+}
+
+.stat a {
+    display: block; 
+    width: 100%; 
+    height: 80px;
+    padding: 12px 20px; 
+    background: linear-gradient(135deg, var(--color-purple), var(--color-blue-deep));
+    color: var(--color-white);    
+    border-radius: var(--border-radius); 
+    font-weight: var(--fw-bold);
+    transition: all var(--transition-duration) var(--transition-ease); 
+    text-align: center;
+    box-shadow: 0 4px 6px var(--color-shadow); 
+    border: none; 
+    font-size: 1.5rem;
+    padding-top: 25px;
+    cursor: pointer;
+}
+
+.stat a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
+}
+

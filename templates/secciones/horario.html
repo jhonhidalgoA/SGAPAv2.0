@@ -1,0 +1,202 @@
+{% extends "main.html" %}
+{% block title %} MODULO ADMINISTRADOR | SGAPA{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/horario.css') }}">
+{% endblock %}
+{% include "components/modal.html" %}
+
+{% block content %}
+<!-- Ventana modal -->
+{% include "components/modal.html" %}
+<main>
+    <section>
+        <div class="registration__title">
+            <div class="title">
+                <div class="navbar__logo">
+                    <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                        class="icon material-symbols-outlined toggleBtn">
+                        logout
+                    </span>
+                    <h2>Horario General</h2>
+                </div>
+            </div>
+            <div class="icon__return">
+                <a href="{{ url_for('dashboards.dashboard_administrador') }}" class="icon__link">
+                    <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+                </a>
+            </div>
+        </div>
+        <section class="container">
+            <div class="horario">
+                <div class="container__title">
+                    <div class="grados">
+                        <label for="grados-select">Grados:</label>
+                        <select id="grados-select" name="grados" aria-label="Selecciona un grado">
+                            <option value="">Seleccionar</option>
+                            <option value="601">Grado 601</option>
+                            <option value="602">Grado 602</option>
+                            <option value="603">Grado 603</option>
+                            <option value="604">Grado 604</option>
+                            <option value="605">Grado 605</option>
+                        </select>
+                    </div>
+                    <div class="docente">
+                        <label for="docente-select">Director de Grupo:</label>
+                        <select id="docente-select" name="docente" aria-label="Selecciona un director de grupo">
+                            <option value="">Seleccionar</option>
+                            <option value="Jhon F. Hidalgo">Jhon F. Hidalgo</option>
+                            <option value="Alejandra Marin">Alejandra Hidalgo</option>
+                            <option value="Sofia Giraldo">Sofia Giraldo</option>
+                            <option value="Amparo Pineda">Amparo Pineda</option>
+                            <option value="Jorge Armando G.">Jorge Armando G.</option>
+                        </select>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr class="horario_dias">
+                            <th>Hora</th>
+                            <th>Lunes</th>
+                            <th>Martes</th>
+                            <th>Miércoles</th>
+                            <th>Jueves</th>
+                            <th>Viernes</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tabla__horario" id="tabla-horario">
+                        <!-- Las filas se generarán dinámicamente -->
+                    </tbody>
+                </table>
+                <div class="planning__buttons">
+                    <button class="btn" id="agregar-hora" aria-label="Agregar nueva hora">Agregar<i
+                            class="material-symbols-outlined">add</i></button>
+                    <button class="btn" id="cargar" aria-label="Guardar horario">Guardar<i
+                            class="material-symbols-outlined">save</i></button>
+                    <button class="btn" id="guardar" aria-label="Guardar horario">Eliminar<i
+                            class="material-symbols-outlined">delete</i></button>
+                    <button class="btn" id="imprimir" aria-label="Imprimir horario">Imprimir<i
+                            class="material-symbols-outlined">print</i></button>
+                </div>
+            </div>
+            <div class="asignacion">
+                <h3>Asignación de Horas</h3>
+                <table id="tablaMaterias">
+                    <thead>
+                        <tr>
+                            <th>Materia</th>
+                            <th>Asignación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="subject">Castellano</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Inglés</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Matemáticas</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Ciencias Sociales</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Historia y Geografía</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Artística</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Biología</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Educación Física</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Tecnología</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">C. Lectora</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Cátedra de la Paz</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Ética</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Estadística</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Física</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Geometría</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Química</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td class="subject">Religión</td>
+                            <td>1</td>
+                        </tr>
+                        <tr class="break">
+                            <td class="subject">Descanso</td>
+                            <td>5</td>
+                        </tr>
+                        <tr class="break">
+                            <td class="subject">Almuerzo</td>
+                            <td>5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>|
+{% block extra_js %}
+<script>
+    /* Funcion modal */
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+    function showModal(title, message, action) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerText = message;
+        window.modalAction = action;
+
+        const modal = document.getElementById("confirmModal");
+        modal.style.display = "flex";
+    }
+    document.getElementById("modalConfirm").addEventListener("click", function () {
+        if (typeof modalAction === 'function') {
+            modalAction();
+        }
+        document.getElementById("confirmModal").style.display = "none";
+    });
+
+    document.getElementById("modalCancel").addEventListener("click", function () {
+        document.getElementById("confirmModal").style.display = "none";
+    });
+</script>
+
+<script src="{{ url_for('static', filename='js/horario.js') }}"></script>
+{% endblock %}
+
+{% endblock %}

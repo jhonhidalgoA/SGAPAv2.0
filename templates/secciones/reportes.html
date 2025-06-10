@@ -1,0 +1,105 @@
+{% extends "main.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reportes.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Ventana modal -->
+{% include "components/modal.html" %}
+
+<div class="report" id="reportes">
+    <div class="registration__title">
+        <div class="title">
+            <div class="navbar__logo">
+                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                    class="icon material-symbols-outlined toggleBtn">
+                    logout
+                </span>
+                <h2>Reportes Estudiantes</h2>
+            </div>
+        </div>
+        <div class="icon__return">
+            <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
+                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+            </a>
+        </div>
+    </div>
+    <div class="report__group">
+      <div class="group">
+        <label for="grados-select">Grupo:</label>
+        <select id="grados-select" name="grados" aria-label="Selecciona un grado">
+          <option value="">Seleccionar</option>
+          <option value="601">Grado 601</option>
+          <option value="602">Grado 602</option>
+          <option value="603">Grado 603</option>
+          <option value="604">Grado 604</option>
+          <option value="605">Grado 605</option>
+        </select>
+      </div>
+      <div class="subjects">
+        <label for="grados-select">Estudiante:</label>
+        <select id="grados-select" name="grados" aria-label="Selecciona una asignatura">
+          <option value="">Seleccionar</option>
+          <option value="matematicas">Agudelo Pérez Ana María</option>
+          <option value="catellano">Alvarez Ríos Camilo Andrés</option>
+          <option value="tecnologia">Arango Vargas Felipe</option>
+          <option value="etica">Benítez Gómez Luisa Fernanda</option>
+          <option value="artistica">Cárdenas López Esteban Daniel</option>
+        </select>
+      </div>
+      <div class="period">
+        <label for="grados-select">Periodo:</label>
+        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
+          <option value="primero">Primero</option>
+          <option value="segundo">Segundo</option>
+          <option value="tercero">Terecero</option>
+          <option value="cuarto">Cuarto</option>
+        </select>
+      </div>
+    </div>
+    <div class="report__type">
+      <label for="grados-select"> Tipo de Reporte:</label>
+      <select id="grados-select" name="grados" aria-label="Reporte">
+        <option value="">Seleccionar</option>
+        <option value="primero">Boletin de Calificaciones</option>
+        <option value="segundo">Plan de Ajuste Razonable PIAR</option>
+        <option value="tercero">Informe de Aprobación y Reprobación</option>
+        <option value="cuarto">Concentrador de Notas por Período</option>
+        <option value="cuarto">Concentrador de Notas todos los Períodos</option>
+      </select>
+    </div>
+    <div class="report__buttons">
+      <button class="btn">Generar<i class="material-symbols-outlined">picture_as_pdf</i></button>
+    </div>
+  </div>
+
+  {% block extra_js %}
+  <script>
+     /*Ventana modal*/
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+
+    function showModal(title, message, action) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerText = message;
+        window.modalAction = action;
+
+        const modal = document.getElementById("confirmModal");
+        modal.style.display = "flex";
+    }
+    document.getElementById("modalConfirm").addEventListener("click", function () {
+        if (typeof modalAction === 'function') {
+            modalAction();
+        }
+        document.getElementById("confirmModal").style.display = "none";
+    });
+
+    document.getElementById("modalCancel").addEventListener("click", function () {
+        document.getElementById("confirmModal").style.display = "none";
+    });
+</script>
+{% endblock %}
+{% endblock %}

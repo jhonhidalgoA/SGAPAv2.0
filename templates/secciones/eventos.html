@@ -1,0 +1,211 @@
+{% extends "main.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/eventos.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<!-- Ventana modal -->
+{% include "components/modal.html" %}
+<div class="events__title">
+    <div class="title">
+        <div class="navbar__logo">
+            <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                class="icon material-symbols-outlined toggleBtn">
+                logout
+            </span>
+            <h2>Eventos 2025</h2>
+        </div>
+    </div>
+    <div class="icon__return">
+        <a href="{{ url_for('index') }}" class="icon__link">
+            <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+        </a>
+    </div>
+</div>
+<section class="events__container">
+    <div class="filters">
+        <div class="filters__mes">
+            <label for="mes">Filtrar por mes:</label>
+            <select id="mes">
+                <option value="todos">Todos</option>
+                <option value="enero">Enero</option>
+                <option value="febrero">Febrero</option>
+                <option value="marzo">Marzo</option>
+                <option value="abril">Abril</option>
+                <option value="mayo">Mayo</option>
+                <option value="junio">Junio</option>
+                <option value="julio">Julio</option>
+                <option value="agosto">Agosto</option>
+                <option value="septiembre">Septiembre</option>
+                <option value="octubre">Octubre</option>
+                <option value="noviembre">Noviembre</option>
+                <option value="diciembre">Diciembre</option>
+            </select>
+        </div>
+        <div class="filters__categoria">
+            <label for="categoria">Filtrar por Categoría:</label>
+            <select id="categoria">
+                <option value="todas">Todas</option>
+                <option value="academico">Académico</option>
+                <option value="deportivo">Deportivo</option>
+                <option value="cultural">Cultural</option>
+                <option value="vacaciones">Vacaciones</option>
+                <option value="padres_familia">Padres de Familia</option>
+            </select>
+        </div>
+    </div>
+    
+    <section class="event-list" id="event-list">
+        <!-- Los eventos se cargan aquí dinámicamente -->
+    </section>
+</section>
+
+
+{% block extra_js %}
+<script>
+    /*Funcion Modal */
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+
+    function showModal(title, message, action) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerText = message;
+        window.modalAction = action;
+
+        const modal = document.getElementById("confirmModal");
+        modal.style.display = "flex";
+    }
+    document.getElementById("modalConfirm").addEventListener("click", function () {
+        if (typeof modalAction === 'function') {
+            modalAction();
+        }
+        document.getElementById("confirmModal").style.display = "none";
+    });
+
+    document.getElementById("modalCancel").addEventListener("click", function () {
+        document.getElementById("confirmModal").style.display = "none";
+    });
+</script>
+
+<script>
+    /*Eventos*/
+    let eventos = [];
+    async function cargarEventos() {
+        const response = await fetch('/static/data/eventos.json');
+        const eventos = await response.json();
+
+        const contenedor = document.getElementById('event-list');
+        contenedor.innerHTML = '';
+
+        const eventosPorMes = {};
+
+        eventos.forEach(evento => {
+            if (!eventosPorMes[evento.mes]) {
+                eventosPorMes[evento.mes] = [];
+            }
+            eventosPorMes[evento.mes].push(evento);
+        });
+
+        for (const mes in eventosPorMes) {
+            const grupoMes = document.createElement('div');
+            grupoMes.className = 'month';
+            grupoMes.setAttribute('data-month', mes);
+
+            const tituloMes = document.createElement('h3');
+            tituloMes.textContent = mes.charAt(0).toUpperCase() + mes.slice(1);
+            grupoMes.appendChild(tituloMes);
+                const categoryColors = {
+                    academico: '#42a5f5',   
+                    deportivo: '#66bb6a',  
+                    cultural: '#ffa726',   
+                    vacaciones: '#ab47bc',
+                    padres_familia: '#ff6f00' 
+                };
+
+            eventosPorMes[mes].forEach(evento => {
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.setAttribute('data-category', evento.categoria);
+                const bgColor = categoryColors[evento.categoria] || '#e0e0e0';
+
+                card.innerHTML = `
+                            <div class="event__container">
+                                <div class="event__card">     
+                                    <div class="event__date">
+                                        <p class="event__day">${evento.dia}</p>
+                                        <span class="event__month">${evento.mes.toUpperCase()}</span>
+                                        <p class="event__year">${evento.year}</p>
+                                    </div>
+                                    <div class="event__details" style="background-color: ${bgColor}; color: white;">
+                                        <h4 class="event__time">${evento.hora}</h4>
+                                        <h4 class="event__name">${evento.titulo}</h3>
+                                        <p class="event__location">Lugar: ${evento.lugar}</p>
+                                    </div>
+                                 </div>
+                            </div>
+                            `;
+
+                grupoMes.appendChild(card);
+            });
+
+            contenedor.appendChild(grupoMes);
+        }
+
+        aplicarFiltros(); 
+    }
+
+    function abrirModal(idEvento) {
+
+        const evento = eventos[idEvento];
+        if (evento) {
+            document.getElementById("modal-title").textContent = evento.titulo;
+            document.getElementById("modal-description").textContent = evento.descripcion;
+            document.getElementById("modal-download").href = evento.pdf;
+            document.getElementById("modal").style.display = "block";
+        }
+    }
+
+    function cerrarModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+
+    function aplicarFiltros() {
+        const mesSeleccionado = document.getElementById('mes').value;
+        const categoriaSeleccionada = document.getElementById('categoria').value;
+
+        document.querySelectorAll('.month').forEach(seccionMes => {
+            const mes = seccionMes.getAttribute('data-month');
+
+            const mostrarMes = mesSeleccionado === 'todos' || mes === mesSeleccionado;
+
+            let tieneEventosVisibles = false;
+
+            seccionMes.querySelectorAll('.event-card').forEach(card => {
+                const categoria = card.getAttribute('data-category');
+
+                const mostrarCategoria = categoriaSeleccionada === 'todas' || categoria === categoriaSeleccionada;
+
+                if (mostrarMes && mostrarCategoria) {
+                    card.style.display = 'block';
+                    tieneEventosVisibles = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            seccionMes.style.display = (mostrarMes && tieneEventosVisibles) ? 'block' : 'none';
+        });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('mes').addEventListener('change', aplicarFiltros);
+        document.getElementById('categoria').addEventListener('change', aplicarFiltros);
+    });
+
+    window.onload = cargarEventos;
+</script>
+{% endblock %}
+
+{% endblock %}
