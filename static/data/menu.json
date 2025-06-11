@@ -2,12 +2,12 @@
     "Jueves": {
         "Complementos": [
             {
-                "img": "frutas.png",
-                "nombre": "Caviar Italiano"
+                "img": "postre.png",
+                "nombre": "Barra de Postres"
             },
             {
                 "img": "frutas.png",
-                "nombre": "Barra de Frutas4"
+                "nombre": "Barra de Frutas"
             }
         ],
         "Menú alternativo": [
@@ -76,16 +76,16 @@
         ],
         "Menú del día": [
             {
-                "img": "quinoa.png",
-                "nombre": "Quinoa"
+                "img": "arroz.png",
+                "nombre": "Arroz con pollo"
             },
             {
                 "img": "pollo.png",
-                "nombre": "Pollo asado"
+                "nombre": "Pollo Apanado Frisby"
             },
             {
                 "img": "ensalada.png",
-                "nombre": "Ensalada"
+                "nombre": "Ensalada de Pollo y Quinua"
             }
         ],
         "Menú vegetariano": [
@@ -95,7 +95,7 @@
             },
             {
                 "img": "pan.png",
-                "nombre": "Pan artesanal"
+                "nombre": "Pan de la Casa"
             }
         ]
     },

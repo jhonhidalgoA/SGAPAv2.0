@@ -15,11 +15,10 @@ secciones = Blueprint('secciones', __name__, url_prefix='/secciones')
 ORDEN_DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
 ORDEN_CATEGORIAS = [
     "Menú del día",
-    "Menú alternativo",
     "Menú vegetariano",
+    "Menú alternativo",    
     "Complementos"
 ]
-
 
 
 @secciones.route('/matricula', methods=['GET', 'POST'])
@@ -451,7 +450,7 @@ def api_estudiantes(grupo):
         }), 500
 
 
-# Endpoint para cargar notas existentes
+# Cargar notas existentes
 @secciones.route('/api/cargar-notas')
 def cargar_notas():
     grupo = request.args.get('grupo')
@@ -568,25 +567,8 @@ def guardar_notas():
             "details": str(e)
         }), 500
     
-@secciones.route("/restaurante")
-def restaurante():
-    ruta_json = os.path.join(current_app.static_folder, "data", "menu.json")
-    with open(ruta_json, "r", encoding="utf-8") as archivo:
-        menus = json.load(archivo)
-    
-    semana = "09 al 13 de junio"  
-    return render_template("secciones/restaurante.html", menus=menus, semana=semana)  
-
-
-@secciones.route('/editar_menu', methods=['GET', 'POST'])
-def editar_menu(): 
-    ruta_json = os.path.join(current_app.static_folder, "data", "menu.json")
-    with open(ruta_json, "r", encoding="utf-8") as archivo:
-        menus = json.load(archivo)  
-    return render_template("secciones/editar_menu.html", menus=menus)
 
 def reordenar_menu(menu):
-    """Reordena el menú según el orden definido"""
     ordered = {}
     for dia in ORDEN_DIAS:
         if dia in menu:
@@ -631,6 +613,25 @@ def guardar_cambios():
         json.dump(menu_ordenado, f, indent=4, ensure_ascii=False)
 
     return jsonify({ "success": True })
+
+
+
+@secciones.route('/editar_menu', methods=['GET', 'POST'])
+def editar_menu(): 
+    ruta_json = os.path.join(current_app.static_folder, "data", "menu.json")
+    with open(ruta_json, "r", encoding="utf-8") as archivo:
+        menus = json.load(archivo) 
+    menus_ordenados = reordenar_menu(menus)     
+    return render_template("secciones/editar_menu.html", menus=menus_ordenados)
+
+@secciones.route("/restaurante")
+def restaurante():
+    ruta_json = os.path.join(current_app.static_folder, "data", "menu.json")
+    with open(ruta_json, "r", encoding="utf-8") as archivo:
+        menus = json.load(archivo)
+    menus_ordenados = reordenar_menu(menus)
+    semana = "09 al 13 de junio"  
+    return render_template("secciones/restaurante.html", menus=menus_ordenados, semana=semana)
 
 def cargar_menu():
     ruta_json = os.path.join(current_app.static_folder, "data", "menu.json")

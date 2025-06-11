@@ -33,7 +33,6 @@
                 <p id="semana">{{ semana }}</p>
             </div>
         </div>
-
         <div class="right">
             <div class="right__menu">
                 {% for dia, categorias in menus.items() %}
@@ -83,22 +82,43 @@
                 <select id="imagen" name="imagen" required>
                     <option value="">-- Selecciona una imagen --</option>
                     <option value="arroz.png">Arroz</option>
-                    <option value="pollo.png">Pollo</option>
+                    <option value="aguacate.png">Aguacate</option>
+                    <option value="berenjena.png">Berenjena</option>
+                    <option value="bistec.png">Bistec</option>
+                    <option value="carne_res.png">Carne</option>
+                    <option value="cerdo.png">Cerdo</option>
+                    <option value="coliflor">Coliflor</option>
                     <option value="ensalada.png">Ensalada</option>
-                    <option value="sopa.png">Sopa</option>
+                    <option value="filete.png">Filete</option>
+                    <option value="pollo.png">Pollo</option>
+                    <option value="frutas.png">Frutas</option>
+                    <option value="huevos.png">Huevos</option>
+                    <option value="jugo.png">Jugos</option>
+                    <option value="lasana.png">Lasaña</option>
+                    <option value="lechuga.png">Lechuga</option>
                     <option value="pan.png">Pan Artesanal</option>
                     <option value="pasta.png">Pasta</option>
+                    <option value="pescado.png">Pescado</option>
+                    <option value="platano.png">Platano</option>
+                    <option value="pollo.png">Pollo</option>
+                    <option value="pollo_teriyaki.png">Pollo Teriyaki</option>
                     <option value="postre.png">Postre</option>
-                    <option value="frutas.png">Frutas</option>
+                    <option value="repollo.png">Repollo</option>
+                    <option value="salchicha.png">Salchcha</option>
+                    <option value="salmon_1.png">Salmon</option>
+                    <option value="sopa.png">Sopa</option>
+                    <option value="tortilla.png">Tortilla</option>
+                    <option value="vegetales.png">Vegetales</option>
+                    <option value="vegetales_2.png">Vegetales</option>
+                    <option value="yogurt.png">Yogurt</option>
+                    <option value="zanahoria.png">Zanahoria</option>
                 </select>
-
                 <input type="hidden" id="diaActual">
                 <input type="hidden" id="categoriaActual">
-
                 <button type="submit">Guardar Cambios</button>
             </form>
         </div>
-    </div>    
+    </div>
     <input type="hidden" id="platoOriginalNombre">
     <input type="hidden" id="platoOriginalImg">
 
@@ -160,7 +180,6 @@
         });
     });
 
-    
     document.getElementById("editarForm").addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -183,19 +202,19 @@
                 platoNuevo: { nombre, img: imagen }
             })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert("Plato actualizado");
-                location.reload();
-            } else {
-                alert("No se pudo actualizar");
-            }
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            alert("Hubo un problema al guardar");
-        });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showModal("Éxito", "Plato actualizado correctamente", function () {
+                        location.reload();
+                    });
+                } else {
+                    showModal("Error", "No se pudo actualizar el plato", null);
+                }
+            })
+            .catch(err => {
+                showModal("Error", "Hubo un problema al guardar los cambios", null);
+            });
     });
 
     function cerrarModal() {
