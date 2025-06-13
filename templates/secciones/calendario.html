@@ -1,80 +1,97 @@
 {% extends "main.html" %}
+{% from "macros/macros.j2" import header %}
+{% block title %} M. ADMINSITRADOR | SGAPA{% endblock %}
+
 
 {% block extra_css %}
-<!-- FullCalendar CSS -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css"  rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/calendario.css') }}">
 {% endblock %}
 
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-<div class="calendar_container">
-    <div class="registration__title">
-        <div class="title">
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-                <h2>Calendario</h2>
+<div class="calendar__container">
+    {{ header(titulo="Calendario Escolar Administrador", color__fondo="var( --color-primary)") }}
+    <div class="container">
+        <div class="header">
+            <h1>📅 Calendario de Eventos</h1>
+            <div class="calendar-nav">
+                <button class="nav-btn" onclick="previousMonth()">← Anterior</button>
+                <div class="current-month" id="currentMonth"></div>
+                <button class="nav-btn" onclick="nextMonth()">Siguiente →</button>
             </div>
         </div>
-        <div class="icon__return">
-            <a href="{{ url_for('dashboards.dashboard_administrador') }}" class="icon__link">
-                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-            </a>
+        <div class="calendar-section">
+            <div class="calendar-grid" id="calendarGrid">
+                <div class="day-header">Dom</div>
+                <div class="day-header">Lun</div>
+                <div class="day-header">Mar</div>
+                <div class="day-header">Mié</div>
+                <div class="day-header">Jue</div>
+                <div class="day-header">Vie</div>
+                <div class="day-header">Sáb</div>
+            </div>
+            <div class="events-display" id="eventsDisplay">
+                <h3>📋 Eventos del Mes</h3>
+                <div id="eventsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">➕ Agregar Evento</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm" onsubmit="saveEvent(event)">
+                    <div class="form-group">
+                        <label for="eventTitle">Título del Evento:</label>
+                        <input type="text" id="eventTitle" required placeholder="Nombre del evento">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventStartDate">Fecha de Inicio:</label>
+                        <input type="date" id="eventStartDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventEndDate">Fecha de Fin:</label>
+                        <input type="date" id="eventEndDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Color del Evento:</label>
+                        <div class="color-selector">
+                            <div class="color-option color-red selected" data-color="red" onclick="selectColor('red')">
+                            </div>
+                            <div class="color-option color-blue" data-color="blue" onclick="selectColor('blue')"></div>
+                            <div class="color-option color-green" data-color="green" onclick="selectColor('green')">
+                            </div>
+                            <div class="color-option color-purple" data-color="purple" onclick="selectColor('purple')">
+                            </div>
+                            <div class="color-option color-orange" data-color="orange" onclick="selectColor('orange')">
+                            </div>
+                            <div class="color-option color-teal" data-color="teal" onclick="selectColor('teal')"></div>
+                            <div class="color-option color-indigo" data-color="indigo" onclick="selectColor('indigo')">
+                            </div>
+                            <div class="color-option color-pink" data-color="pink" onclick="selectColor('pink')"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button type="submit" form="eventForm" class="btn btn-primary" id="saveBtn">Agregar Evento</button>
+            </div>
         </div>
     </div>
 </div>
-
-<!-- Contenedor del calendario -->
-<div id="calendar"></div>
-
-<!-- Modal para agregar/editar evento -->
-<div id="eventModal" class="modal">
-    <h2 id="modalTitle"></h2>
-    <form class="form" id="eventForm">
-        <label for="eventTitle">Actividad:</label>
-        <input type="text" id="eventTitle" required>
-
-        <label for="eventStart">Fecha de Inicio:</label>
-        <input type="date" id="eventStart" required>
-
-        <label for="eventEnd">Fecha de Finalización:</label>
-        <input type="date" id="eventEnd" required>
-
-        <label for="eventDuration">Duración (días):</label>
-        <input type="number" id="eventDuration" min="1" value="1" required readonly>
-
-        <label for="eventColor">Color del evento:</label>
-        <select id="eventColor" required>
-            <option value="#3788d8">Azul</option>
-            <option value="#ff9f89">Rojo claro</option>
-            <option value="#4caf50">Verde</option>
-            <option value="#ffeb3b">Amarillo</option>
-            <option value="#9c27b0">Morado</option>
-            <option value="#ff5722">Naranja</option>
-            <option value="#00bcd4">Turquesa</option>
-            <option value="#8bc34a">Verde claro</option>
-            <option value="#e91e63">Rosa</option>
-            <option value="#795548">Marrón</option>
-        </select>
-
-        <div class="modal__buttons">
-            <button type="submit" class="btn">Guardar<i class="material-symbols-outlined">save</i></button>
-            <button type="button" class="btn" onclick="closeModal()">Cancelar<i class="material-symbols-outlined">delete</i></button>
-        </div>
-    </form>
-</div>
-
-<!-- Fondo oscuro para el modal -->
-<div id="modalOverlay" class="modal-overlay"></div>
-
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script> 
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.min.js"></script> 
-<script src="{{url_for('static', filename= 'js/calendario.js')}}"></script>
+<script src="{{url_for('static', filename = 'js/calendario.js')}}"></script>
+<script>
+ function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+</script>
+
 {% endblock %}
 
 {% endblock %}

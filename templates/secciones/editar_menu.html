@@ -1,31 +1,16 @@
 {% extends "main.html" %}
+{% include "components/modal.html" %}
+{% from "macros/macros.j2" import header %}
+{% block title %} M. ADMINISTRADOR | SGAPA {% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_menu.css') }}">
 {% endblock %}
 
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-
 <div class="edit__menu">
-    <div class="registration__title">
-        <div class="title">
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-                <h2>Editar Menú Escolar</h2>
-            </div>
-        </div>
-        <div class="icon__return">
-            <a href="{{ url_for('dashboards.dashboard_administrador') }}" class="icon__link">
-                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-            </a>
-        </div>
-    </div>
-
+     {{ header(titulo="Editar Ménu Escolar ", color__fondo="var(--color-button-generate)") }}
+    
     <div class="menu__container">
         <div class="left">
             <div class="left__title">
@@ -124,34 +109,13 @@
 
 </div>
 {% block extra_js %}
-<script>
-    /* Funcion modal */
+<script>    
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
-    }
-
-    function showModal(title, message, action) {
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalMessage").innerText = message;
-        window.modalAction = action;
-
-        const modal = document.getElementById("confirmModal");
-        modal.style.display = "flex";
-    }
-
-    document.getElementById("modalConfirm").addEventListener("click", function () {
-        if (typeof modalAction === 'function') {
-            modalAction();
-        }
-        document.getElementById("confirmModal").style.display = "none";
-    });
-
-    document.getElementById("modalCancel").addEventListener("click", function () {
-        document.getElementById("confirmModal").style.display = "none";
-    });
+    }    
 </script>
 
-<!--  Funcion Modal plato -->
+<!--  Funcion editar menu -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const platos = document.querySelectorAll(".menu-item");

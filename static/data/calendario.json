@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Evento de prueba",
+    "start": "2025-06-10",
+    "end": "2025-06-12",
+    "backgroundColor": "#4caf50",
+    "borderColor": "#4caf50",
+    "textColor": "#ffffff"
+  }
+]

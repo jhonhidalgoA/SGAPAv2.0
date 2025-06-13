@@ -7,7 +7,7 @@
         Empresa: SGAPA
         Descripción: Plantilla base del sistema SGAPA
         Autores: [Emmanuel Medina, Juan Esteban Giraldo, Jhon F. Hidalgo]
-        Última actualización: [12-Feb-2025]
+        Última actualización: [12-Jun-2025]
     ==================================== -->
 
     <!-- Metadatos esenciales -->
@@ -25,17 +25,12 @@
     <meta property="og:url" content="{{ request.url }}">
     <meta property="og:type" content="website">
 
-    <title>{% block title %}SGAPA Python | Flask v 2.0{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" type="image/x-icon">
 
-    <!--calendar-->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
-
-
+    <title>{% block title %} SGAPA | Flask v2.0 {% endblock %}</title>
 
     <!-- Estilos generales -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
-
-
 
     <!-- Fuentes e íconos -->
     <link rel="stylesheet"
@@ -46,22 +41,15 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Estilos adicionales específicos de cada página -->
-    {% block extra_css %}{% endblock %}
-
-
-    {% block head_js %}{% endblock %}
+    {% block extra_css %}{% endblock %}   
 
 </head>
-
 <body class="{% block body_class %}{% endblock %}">
     <main>
         {% block content %}{% endblock %}
     </main>
 
-    {% block extra_js %}
-    
-
+    {% block extra_js %}  
     {% endblock %}
 </body>
-
 </html>

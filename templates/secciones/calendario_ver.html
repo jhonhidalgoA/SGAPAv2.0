@@ -1,0 +1,52 @@
+{% extends "main.html" %}
+{% from "macros/macros.j2" import header %}
+{% block title %} M. DOCENTE | SGAPA{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/calendario_ver.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="calendar__container">
+    {{ header(titulo="Calendario Escolar Docente", color__fondo="var( --color-primary)") }}
+    <div class="container">
+        <div class="header">
+            <h1>📅 Calendario de Eventos</h1>
+            <div class="calendar-nav">
+                <button class="nav-btn" onclick="previousMonth()">← Anterior</button>
+                <div class="current-month" id="currentMonth"></div>
+                <button class="nav-btn" onclick="nextMonth()">Siguiente →</button>
+            </div>
+        </div>
+        <div class="calendar-section">
+            <div class="calendar-grid" id="calendarGrid">
+                <div class="day-header">Dom</div>
+                <div class="day-header">Lun</div>
+                <div class="day-header">Mar</div>
+                <div class="day-header">Mié</div>
+                <div class="day-header">Jue</div>
+                <div class="day-header">Vie</div>
+                <div class="day-header">Sáb</div>
+            </div>
+            <div class="events-display" id="eventsDisplay">
+                <h3>📋 Eventos del Mes</h3>
+                <div id="eventsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+   
+</div>
+{% block extra_js %}
+<script src="{{url_for('static', filename = 'js/calendario_ver.js')}}"></script>
+<script>
+ function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+</script>
+
+{% endblock %}
+
+{% endblock %}

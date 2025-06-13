@@ -1,19 +1,18 @@
 {% extends "main.html" %}
-{% block title %} MODULO ADMINISTRADOR | SGAPA{% endblock %}
+{% include "components/modal.html" %}
+{% block title %} M. ADMINISTRADOR | SGAPA {% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/administrador.css') }}">
 {% endblock %}
-{% include "components/modal.html" %}
+
 
 {% block content %}
 
-<!-- Navbar -->
 {% block navbar %}
 {% include "layouts/navbar.html" with context %}
 {% endblock %}
 
-<!-- Contenedor de cards -->
 <div class="card__container">
     <div class="home__title">
         <h1 class="card__title">Bienvenido Administrador</h1>
@@ -80,13 +79,12 @@
 </div>
 
 {% block extra_js %}
+<script src="{{ url_for('static', filename='js/administrador.js') }}"></script>
 <script>
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
     }
 </script>
-<script src="{{ url_for('static', filename='js/administrador.js') }}"></script>
 {% endblock %}
-
 
 {% endblock %}

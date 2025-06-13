@@ -1,48 +1,30 @@
 {% extends "main.html" %}
-{% block title %} Matrícula Estudiante | SGAPA{% endblock %}
+{% include "components/modal.html" %}
+{% from "macros/macros.j2" import header %}
+{% block title %} M. ADMINISTRADOR | SGAPA {% endblock %}
+
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/matricula.css') }}">
 {% endblock %}
 
 {% block content %}
-
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-
-<!-- Navegación -->
 <div class="tabs">
-    <div class="registration__title">
-        <div class="title">
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-                <h2>Registro Matrícula Estudiante</h2>
-            </div>
-        </div>
-        <div class="icon__return">
-            <a href="{{ url_for('dashboards.dashboard_administrador') }}" class="icon__link">
-                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-            </a>
-        </div>
-    </div>
+    {{ header(titulo="Registro Matrícula Estudiante", color__fondo="var(--color-blue-card)") }}
+   
     <ul class="tab-nav">
         <li class="active" data-tab="tab1">Datos del Estudiante</li>
         <li data-tab="tab2">Información Académica</li>
         <li data-tab="tab3">Datos Familiares</li>
     </ul>
+    
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    
-        {% for category, message in messages %}
-        <script>
-            
-            showModal("{{ category | title }}", "{{ message | safe}}", null);
-        </script>
-        {% endfor %}
-   
+    {% for category, message in messages %}
+    <script>
+        showModal("{{ category | title }}", "{{ message | safe}}", null);
+    </script>
+    {% endfor %}
     {% endif %}
     {% endwith %}
 
@@ -166,12 +148,10 @@
                 </div>
             </div>
         </div>
-
         <!--  Información Académica -->
         <div class="tab-content tab-2" id="tab2">
             <h3>Información Académica</h3>
             <div class="registration__grid">
-
                 <div class="group">
                     <label for="student_address">Dirección de Residencia:</label>
                     <input type="text" id="student_address" name="student_address">
@@ -358,12 +338,10 @@
 <script src="{{url_for('static', filename='js/tabs-modal.js') }}"></script>
 <script src="{{url_for('static', filename='js/photo-student.js' ) }}"></script>
 
-<script>
-    /* Funcion modal */
+<script>    
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
     }
-
     function showModal(title, message, action) {
         document.getElementById("modalTitle").innerText = title;
         document.getElementById("modalMessage").innerText = message;
@@ -405,7 +383,6 @@
         });
     });
 </script>
-
 {% endblock %}
 
 {% endblock %}

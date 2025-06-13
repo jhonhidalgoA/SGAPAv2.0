@@ -1,13 +1,14 @@
 from flask import (Blueprint, render_template, 
-                   request, redirect, url_for, flash, jsonify, json, current_app)
+                   request, redirect, url_for, flash, jsonify, json, current_app, app)
 from db import get_connection as get_db
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 import os
 import re
 from flask import current_app
 from functools import reduce
+
 
 
 secciones = Blueprint('secciones', __name__, url_prefix='/secciones')
@@ -230,7 +231,6 @@ def limpiar_datos():
     try:
         # Desactivar restricciones de llaves foráneas
         cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
-
         
         cursor.execute("DELETE FROM matricula_estudiantes;")
         cursor.execute("DELETE FROM contactos_familiares;")
@@ -567,7 +567,8 @@ def guardar_notas():
             "details": str(e)
         }), 500
     
-
+ # Menú escolar
+ 
 def reordenar_menu(menu):
     ordered = {}
     for dia in ORDEN_DIAS:
@@ -639,3 +640,136 @@ def cargar_menu():
         menu = json.load(f)
 
     return reordenar_menu(menu)
+
+# Calendario
+@secciones.route('/obtener-eventos', methods=['GET'])
+def obtener_eventos():
+    connection = None
+    try:
+        connection = get_db()  # Ya tienes esta función lista
+        with connection.cursor() as cursor:
+            sql = "SELECT id, titulo, fecha_inicio, fecha_fin, color FROM eventos_calendario"
+            cursor.execute(sql)
+            resultados = cursor.fetchall()
+
+            eventos = []
+            for row in resultados:
+                evento = {
+                    'id': row['id'],
+                    'title': row['titulo'],
+                    'startDate': row['fecha_inicio'].strftime('%Y-%m-%d'),
+                    'endDate': row['fecha_fin'].strftime('%Y-%m-%d'),
+                    'color': row['color']
+                }
+                eventos.append(evento)
+
+            return jsonify({'success': True, 'events': eventos})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
+
+@secciones.route('/guardar-evento', methods=['POST'])
+def guardar_evento():
+    data = request.get_json()
+    evento_id = data.get('id')
+    title = data.get('title')
+    start_date = data.get('startDate')
+    end_date = data.get('endDate')
+    color = data.get('color')
+
+    if not all([title, start_date, end_date, color]):
+        return jsonify({
+            'success': False,
+            'error': 'Faltan campos obligatorios'
+        }), 400
+
+    connection = None
+    try:
+        connection = get_db()
+        with connection.cursor() as cursor:
+            sql = """
+                INSERT INTO eventos_calendario (id, titulo, fecha_inicio, fecha_fin, color)
+                VALUES (%s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    titulo = VALUES(titulo),
+                    fecha_inicio = VALUES(fecha_inicio),
+                    fecha_fin = VALUES(fecha_fin),
+                    color = VALUES(color)
+            """
+            cursor.execute(sql, (evento_id, title, start_date, end_date, color))
+        connection.commit()
+        return jsonify({'success': True})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
+
+@secciones.route('/eliminar-evento', methods=['POST'])
+def eliminar_evento():
+    data = request.get_json()
+    evento_id = data.get('id')
+
+    if not evento_id:
+        return jsonify({
+            'success': False,
+            'error': 'ID del evento no proporcionado'
+        }), 400
+
+    connection = None
+    try:
+        connection = get_db()
+        with connection.cursor() as cursor:
+            sql = "DELETE FROM eventos_calendario WHERE id = %s"
+            cursor.execute(sql, (evento_id,))
+        connection.commit()
+        return jsonify({'success': True})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
+@secciones.route('/ver-eventos', methods=['GET'])
+def ver_eventos():
+    connection = None
+    try:
+        connection = get_db()
+        with connection.cursor() as cursor:
+            sql = "SELECT id, titulo, fecha_inicio, fecha_fin, color FROM eventos_calendario"
+            cursor.execute(sql)
+            resultados = cursor.fetchall()
+
+            eventos = []
+            for row in resultados:
+                evento = {
+                    'id': row['id'],
+                    'title': row['titulo'],
+                    'start': row['fecha_inicio'].strftime('%Y-%m-%d'),
+                    'end': row['fecha_fin'].strftime('%Y-%m-%d'),
+                    'color': row['color']
+                }
+                eventos.append(evento)
+
+            return jsonify({'success': True, 'events': eventos})
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+    finally:
+        if connection:
+            connection.close()
+
+@secciones.route('/ver-calendario')
+def ver_calendario():
+    return render_template('secciones/calendario_ver.html')

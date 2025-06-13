@@ -1,6 +1,7 @@
 {% extends "main.html" %}
-
-{% block title %}Registro de Docentes | SGAPA{% endblock %}
+{% include "components/modal.html" %}
+{% block title %} MODULO ADMINISTRADOR | SGAPA {% endblock %}
+{% from "macros/macros.j2" import header %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/registro_docente.css') }}">
@@ -8,33 +9,16 @@
 
 {% block content %}
 
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-
 <div class="tabs">
-    <div class="registration__title">
-        <div class="title">
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-                <h2>Registro Docente</h2>
-            </div>
-        </div>
-        <div class="icon__return">
-            <a href="{{ url_for('dashboards.dashboard_administrador') }}" class="icon__link">
-                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-            </a>
-        </div>
-    </div>
+    {{ header(titulo="Registro Docente", color__fondo="var(--color-green-emerald)") }} 
+
     <ul class="tab-nav">
         <li class="active" data-tab="tab1">Datos del Docente</li>
         <li data-tab="tab2">Información Profesional</li>
     </ul>
+
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-
     {% for category, message in messages %}
     <script>
         showModal("{{ category | title }}", "{{ message | safe}}", null);
@@ -42,6 +26,7 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
+
     <form action="{{ url_for('secciones.guardar_docente') }}" method="post" id="teacherRegistrationForm"
         class="registration__form" enctype="multipart/form-data">
         <div class="tab-content active" id="tab1">
@@ -59,7 +44,7 @@
                         <div class="group">
                             <label for="registration_date_teacher">Fecha de Registro:</label>
                             <input type="date" id="registration_date_teacher" name="registration_date_teacher">
-                                
+                              
                         </div>
                         <div class="group">
                             <label for="codigo_teacher">Código:</label>

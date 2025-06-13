@@ -1,31 +1,17 @@
 {% extends "main.html" %}
-{% block title %} MODULO ADMINISTRADOR | SGAPA{% endblock %}
+{% include "components/modal.html" %}
+{% from "macros/macros.j2" import header %}
+{% block title %} MODULO ADMINISTRADOR | SGAPA {% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/horario.css') }}">
 {% endblock %}
-{% include "components/modal.html" %}
 
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
 <main>
     <section>
-        <div class="registration__title">
-            <div class="title">
-                <div class="navbar__logo">
-                    <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                        class="icon material-symbols-outlined toggleBtn">
-                        logout
-                    </span>
-                    <h2>Horario General</h2>
-                </div>
-            </div>
-            <div class="icon__return">
-                <a href="{{ url_for('dashboards.dashboard_administrador') }}" class="icon__link">
-                    <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-                </a>
-            </div>
-        </div>
+        {{ header(titulo="Calendario", color__fondo="var(--color-pink)") }} 
+        
         <section class="container">
             <div class="horario">
                 <div class="container__title">

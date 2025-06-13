@@ -1,35 +1,23 @@
 {% extends "main.html" %}
-{% block title %} USUARIOS | SGAPA{% endblock %}
+{% include "components/modal.html" %}
+{% from "macros/macros.j2" import header %}
+{% block title %} M. ADMINISTRADOR | SGAPA {% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios.css') }}">
 {% endblock %}
-{% include "components/modal.html" %}
 
 {% block content %}
 <div class="tabs">
-    <div class="registration__title">
-        <div class="title">
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-                <h2>Usuarios</h2>
-            </div>
-        </div>
-        <div class="icon__return">
-            <a href="{{ url_for('dashboards.dashboard_administrador') }}" class="icon__link">
-                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-            </a>
-        </div>
-    </div>
+     {{ header(titulo="Calendario", color__fondo="var(--color-grey-card)") }}
+
     <ul class="tab-nav">
         <li class="active" data-tab="tab1">Estudiantes</li>
         <li data-tab="tab2">Docentes</li>
         <li data-tab="tab3">Administradores</li>
         <li data-tab="tab4">Acudientes</li>
     </ul>
+
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -39,6 +27,7 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
+
     <div class="tab-content active" id="tab1">
         <div class="search__container">
             <form class="search__box" action="" method="GET">
@@ -117,7 +106,6 @@
                 </tr>
             </tbody>
         </table>
-
     </div>
     <div class="tab-content tab-2" id="tab2">
     </div>
@@ -127,9 +115,13 @@
     </div>
 </div>
 
-
 {% block extra_js %}
 <script src="{{url_for('static', filename='js/tabs-modal.js') }}"></script>
+<script>   
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }    
+</script>
 {% endblock %}
 
 {% endblock %}

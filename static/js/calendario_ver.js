@@ -230,25 +230,7 @@ function saveEvent(e) {
         });
 }
 
-function deleteEvent(id) {
-    if (!confirm('¿Estás seguro de que quieres eliminar este evento?')) return;
 
-    fetch("/secciones/eliminar-evento", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id })
-    })
-        .then(res => res.json())
-        .then(() => {
-            events = events.filter(event => event.id !== id);
-            renderCalendar();
-            renderEventsList();
-        })
-        .catch(err => {
-            alert("❌ Error al eliminar el evento");
-            console.error(err);
-        });
-}
 
 function renderEventsList() {
     const eventsList = document.getElementById('eventsList');
