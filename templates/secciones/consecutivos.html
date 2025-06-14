@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+{% block title %}Consecutivos Generados - SGAPA{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/consecutivos.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <h2>📜 Consecutivos Generados</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo de Documento</th>
+                <th>Número</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if registros and registros|length > 0 %}
+                {% for reg in registros %}
+                    <tr>
+                        <td>{{ reg.id }}</td>
+                        <td>{{ reg.tipo_documento }}</td>
+                        <td>{{ '%05d' | format(reg.consecutivo) }}</td>
+                        <td>{{ reg.fecha_generacion.strftime('%d/%m/%Y') if reg.fecha_generacion else '-' }}</td>
+                        <td class="actions">
+                            <a href="{{ url_for('secciones.editar_consecutivo', id=reg.id) }}" class="btn btn-edit">✏️ Editar</a>
+                            <a href="{{ url_for('secciones.eliminar_consecutivo', id=reg.id) }}" class="btn btn-delete" onclick="return confirm('¿Estás seguro de eliminar este consecutivo?')">🗑️ Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="5">No hay consecutivos registrados</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

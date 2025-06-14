@@ -1,181 +1,267 @@
 {% extends "main.html" %}
+{% include "components/modal.html" %}
+{% block title %} M. DOCENTE | SGAPA{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/planeacion.css') }}">
-
 {% endblock %}
 
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-<div class="planning" id="planificacion">
-  <div class="registration__title">
-        <div class="title">
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-                <h2>Planeación Docente</h2>
-            </div>
-        </div>
-        <div class="icon__return">
-            <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
-                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-            </a>
-        </div>
-    </div>       
+<div class="container">
+  <div class="header">
+    <div class="icon__return">
+      <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
+        <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+      </a>
+    </div>   
+    <h1>Planeación Docente</h1>
+    <div class="navbar__logo">
+      <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+        class="icon material-symbols-outlined toggleBtn">
+        logout
+      </span>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <script>
+    showModal("{{ category | title }}", "{{ message | safe}}", null);
+  </script>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  <form action="{{ url_for('secciones.generar_pdf')}}" method="POST">
     <div class="planning__group">
-      <div class="date__star">
+      <div class="form-group">
         <label for="dateStar">Fecha de inicio:</label>
         <input type="date" name="dateStar" id="dateStar">
       </div>
-      <div class="date__star">
+
+      <div class="form-group">
         <label for="dateEnd">Fecha de fin:</label>
         <input type="date" name="dateEnd" id="dateEnd">
       </div>
-      <div class="period">
-        <label for="grados-select">Periodo:</label>
-        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
-          <option value="primero">Primero</option>
-          <option value="segundo">Segundo</option>
-          <option value="tercero">Terecero</option>
-          <option value="cuarto">Cuarto</option>
-        </select>
-      </div>
-      <div class="group">
-        <label for="grados-select">Grado:</label>
-        <select id="grados-select" name="grados" aria-label="Selecciona un grado">
+
+      <div class="form-group">
+        <label for="periodo">Periodo:</label>
+        <select id="periodo" name="periodo" aria-label="Selecciona un Periodo">
           <option value="">Seleccionar</option>
-          <option value="sexto">Grado Sexto</option>
-          <option value="septimo">Grado Séptimo</option>
-          <option value="octavo">Grado Octavo</option>
-          <option value="noveno">Grado Noveno</option>
-          <option value="decimo">Grado Decimo</option>
-          <option value="undecimo5">Grado Undécimo</option>
-        </select>
-      </div>
-      <div class="subjects">
-        <label for="grados-select">Asignatura:</label>
-        <select id="grados-select" name="grados" aria-label="Selecciona una asignatura">
-          <option value="">Seleccionar</option>
-          <option value="ciencias">Ciencias Naturales</option>
-          <option value="sociales">Ciencias Sociales</option>
-          <option value="lenguaje">Lenguaje</option>
-          <option value="matematicas">Matemáticas</option>
-          <option value="ingles">Ingles</option>
-        </select>
-      </div>
-      <div class="type">
-        <label for="estandar">Tipo:</label>
-        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
-          <option value="">Seleccionar</option>
-          <option value="X">Concepto General</option>
-          <option value="Y">Necesidad Especial PIAR</option>
+          <option value="Primero">Primero</option>
+          <option value="Segundo">Segundo</option>
+          <option value="Tercero">Tercero</option>
+          <option value="Cuarto">Cuarto</option>
         </select>
       </div>
 
-      <div class="estandar">
-        <label for="estandar">Estandar:</label>
-        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
+      <div class="form-group">
+        <label for="grado">Grado:</label>
+        <select id="grado" name="grado" aria-label="Selecciona un grado">
           <option value="">Seleccionar</option>
-          <option value="a">Pensamiento numérico y los sistemas numéricos </option>
-          <option value="b">Pensamiento espacial y los sistemas geométricos</option>
-          <option value="c">Pensamiento métrico y los sistemas métricos o de medidas</option>
-          <option value="d">Pensamiento aleatorio y los sistemas de datos</option>
-          <option value="e">Pensamiento variacional y los sistemas algebraicos y analíticos</option>
+          <option value="Grado Sexto">Grado Sexto</option>
+          <option value="Grado Séptimo">Grado Séptimo</option>
+          <option value="Grado Octavo">Grado Octavo</option>
+          <option value="Grado Noveno">Grado Noveno</option>
+          <option value="Grado Décimo">Grado Décimo</option>
+          <option value="Grado Undécimo">Grado Undécimo</option>
         </select>
       </div>
-      <div class="dba">
-        <label for="dba">DBA:</label>
-        <select id="dba" name="grados" aria-label="Selecciona un DBA">
+      <div class="form-group">
+        <label for="asignatura">Asignatura:</label>
+        <select id="asignatura" name="asignatura" aria-label="Selecciona una asignatura">
           <option value="">Seleccionar</option>
-          <option value="primero">1. Identifica los usos de los números (como
-            código, cardinal, medida, ordinal) y las
-            operaciones (suma y resta) en contextos de
-            juego, familiares, económicos, entre otros.</option>
-          <option value="segundo">2. Utiliza diferentes estrategias para contar,
-            realizar operaciones (suma y resta ) y resolver
-            problemas aditivos.</option>
-          <option value="tercero">3. Utiliza las características posicionales del
-            Sistema de Numeración Decimal (SND) para
-            establecer relaciones entre cantidades y
-            comparar números.
+          <option value="Ciencias Naturales">Ciencias Naturales</option>
+          <option value="Ciencias Sociales">Ciencias Sociales</option>
+          <option value="Lenguaje">Lenguaje</option>
+          <option value="Matemáticas">Matemáticas</option>
+          <option value="Inglés">Inglés</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" name="tipo" aria-label="Selecciona un tipo">
+          <option value="">Seleccionar</option>
+          <option value="Concepto General">Concepto General</option>
+          <option value="Necesidad Especial PIAR">Necesidad Especial PIAR</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="estandar">Estándar:</label>
+        <select id="estandar" name="estandar" aria-label="Selecciona un estándar">
+          <option value="">Seleccionar</option>
+          <option value="Pensamiento numérico y los sistemas numéricos">Pensamiento numérico y los sistemas numéricos
           </option>
+          <option value="Pensamiento espacial y los sistemas geométricos">Pensamiento espacial y los sistemas
+            geométricos</option>
+          <option value="Pensamiento métrico y los sistemas métricos o de medidas">Pensamiento métrico y los sistemas
+            métricos o de medidas</option>
+          <option value="Pensamiento aleatorio y los sistemas de datos">Pensamiento aleatorio y los sistemas de datos
+          </option>
+          <option value="Pensamiento variacional y los sistemas algebraicos y analíticos">Pensamiento variacional y los
+            sistemas algebraicos y analíticos</option>
         </select>
       </div>
-      <div class="evidencia">
-        <label for="evidence">Evidencias de Aprendizaje:</label>
-        <select id="evidence" name="evidence" aria-label="Selecciona una Evidencia">
+      <div class="form-group">
+        <label for="dba">DBA:</label>
+        <select id="dba" name="dba" aria-label="Selecciona un DBA">
           <option value="">Seleccionar</option>
-          <option value="1">1. Construye e interpreta representaciones pictóricas
-            y diagramas para representar relaciones entre
-            cantidades que se presentan en situaciones o
-            fenómenos.</option>
-          <option value="2">2. Explica cómo y por qué es posible hacer una
-            operación (suma o resta) en relación con los
-            usos de los números y el contexto en el cual se
-            presentan.</option>
-          <option value="3">3. Reconoce en sus actuaciones cotidianas
-            posibilidades de uso de los números y las
-            operaciones.</option>
+          <option
+            value="1. Identifica los usos de los números (como código, cardinal, medida, ordinal) y las operaciones (suma y resta) en contextos de juego, familiares, económicos, entre otros.">
+            1. Identifica los usos de los números...</option>
+          <option
+            value="2. Utiliza diferentes estrategias para contar, realizar operaciones (suma y resta) y resolver problemas aditivos.">
+            2. Utiliza diferentes estrategias para contar...</option>
+          <option
+            value="3. Utiliza las características posicionales del Sistema de Numeración Decimal (SND) para establecer relaciones entre cantidades y comparar números.">
+            3. Utiliza las características posicionales del SND...</option>
         </select>
       </div>
-
-      <div class="skills">
-        <label for="skills">Competencias:</label>
-        <textarea name="skills" id="skills" cols="55" placeholder="Escribe aquí..."></textarea>
-      </div>
-      <div class="skills">
-        <label for="skills">Objetivos:</label>
-        <textarea name="skills" id="skills" cols="55" placeholder="Escribe aquí..."></textarea>
-      </div>
-      <div class="period">
-        <label for="grados-select">Proyectos Pedagógicos Tranversales:</label>
-        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
+      <div class="form-group">
+        <label for="evidencia">Evidencias de Aprendizaje:</label>
+        <select id="evidencia" name="evidencia" aria-label="Selecciona una Evidencia">
           <option value="">Seleccionar</option>
-          <option value="primero">Proyecto para la Educación Sexual</option>
-          <option value="segundo">Educación y Seguridad Vial</option>
-          <option value="tercero">Educación Económica y Financiera</option>
-          <option value="cuarto">Etilos de Vida Saludable</option>
-          <option value="cuarto">Derechos Humanos</option>
-          <option value="cuarto">Cátedra de la Paz</option>
+          <option
+            value="1. Construye e interpreta representaciones pictóricas y diagramas para representar relaciones entre cantidades que se presentan en situaciones o fenómenos.">
+            1. Construye e interpreta representaciones pictóricas...</option>
+          <option
+            value="2. Explica cómo y por qué es posible hacer una operación (suma o resta) en relación con los usos de los números y el contexto en el cual se presentan.">
+            2. Explica cómo y por qué es posible hacer una operación...</option>
+          <option
+            value="3. Reconoce en sus actuaciones cotidianas posibilidades de uso de los números y las operaciones.">3.
+            Reconoce en sus actuaciones cotidianas...</option>
         </select>
+      </div>
+      <div class="form-group">
+        <label for="competencias">Competencias:</label>
+        <textarea name="competencias" id="competencias" placeholder="Escribe aquí las competencias..."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="objetivos">Objetivos:</label>
+        <textarea name="objetivos" id="objetivos" placeholder="Escribe aquí los objetivos..."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="proyecto_transversal">Proyectos Pedagógicos Transversales:</label>
+        <select id="proyecto_transversal" name="proyecto_transversal" aria-label="Selecciona un proyecto transversal">
+          <option value="">Seleccionar</option>
+          <option value="Proyecto para la Educación Sexual">Proyecto para la Educación Sexual</option>
+          <option value="Educación y Seguridad Vial">Educación y Seguridad Vial</option>
+          <option value="Educación Económica y Financiera">Educación Económica y Financiera</option>
+          <option value="Estilos de Vida Saludable">Estilos de Vida Saludable</option>
+          <option value="Derechos Humanos">Derechos Humanos</option>
+          <option value="Cátedra de la Paz">Cátedra de la Paz</option>
+        </select>
+      </div>
+      <div class="form-group following">
+        <label for="ultimo_consecutivo">Último consecutivo:</label>
+        <input type="text" id="ultimo_consecutivo" name="ultimo_consecutivo" value="{{ ultimo_consecutivo }}" disabled>
       </div>
     </div>
+
     <div class="planning__buttons">
-      <button class="btn">Nuevo<i class="material-symbols-outlined">add</i></button>
-      <button class="btn">Guardar<i class="material-symbols-outlined">save</i></button>
-      <button class="btn">Eliminar<i class="material-symbols-outlined">delete</i></button>
-      <button class="btn">Imprimir<i class="material-symbols-outlined">print</i></button>
-      <button class="btn">Ver<i class="material-symbols-outlined">table_eye</i></button>
+      <button type="button" class="btn" onclick="limpiarFormulario()">Nuevo
+        <i class="material-symbols-outlined">add</i>
+      </button>
+      <button type="submit" class="btn">Guardar
+        <i class="material-symbols-outlined">picture_as_pdf</i>
+      </button>
+      <button type="button" class="btn" onclick="limpiarFormulario()">Borrar
+        <i class="material-symbols-outlined">delete</i>
+      </button>
+      <a href="{{ url_for('secciones.ver_consecutivos') }}" class="btn">
+        Ver
+        <i class="material-symbols-outlined">eye_tracking</i>
+      </a>
     </div>
-  </div>
+  </form>
+</div>
+
 {% block extra_js %}
-  <script>
-     /*Ventana modal*/
-    function confirmLogout() {
-        window.location.href = "{{ url_for('auth.logout') }}";
+<script>
+  function confirmLogout() {
+    window.location.href = "{{ url_for('auth.logout') }}";
+  }
+
+  function showModal(title, message, action) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalMessage").innerText = message;
+    window.modalAction = action;
+    const modal = document.getElementById("confirmModal");
+    modal.style.display = "flex";
+  }
+
+  document.getElementById("modalConfirm").addEventListener("click", function () {
+    if (typeof modalAction === 'function') {
+      modalAction();
+    }
+    document.getElementById("confirmModal").style.display = "none";
+  });
+
+  document.getElementById("modalCancel").addEventListener("click", function () {
+    document.getElementById("confirmModal").style.display = "none";
+  });
+</script>
+
+<!--Validacion formulario-->
+<script>
+  function limpiarFormulario() {
+    document.querySelector('form').reset();
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    // Campos obligatorios del formulario de planeación
+    const REQUIRED_FIELDS = [
+      { id: "dateStar", name: "Fecha de Inicio" },
+      { id: "dateEnd", name: "Fecha de Fin" },
+      { id: "periodo", name: "Periodo" },
+      { id: "grado", name: "Grado" },
+      { id: "asignatura", name: "Asignatura" }
+    ];
+
+    const form = document.querySelector("form");
+
+    if (!form) return;
+
+    // Escuchar evento submit
+    form.addEventListener("submit", function (e) {
+      clearPreviousErrors();
+
+      const missingFields = validateRequiredFields(REQUIRED_FIELDS);
+
+      if (missingFields.length > 0) {
+        e.preventDefault();
+        showModal("⚠️ Advertencia", "Por favor complete los siguientes campos obligatorios:\n\n" +
+          missingFields.map(f => f.name).join("\n"), null);
+      }
+    });
+
+    // Limpiar errores previos
+    function clearPreviousErrors() {
+      document.querySelectorAll(".input-error").forEach(input => {
+        input.classList.remove("input-error");
+      });
     }
 
-    function showModal(title, message, action) {
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalMessage").innerText = message;
-        window.modalAction = action;
-
-        const modal = document.getElementById("confirmModal");
-        modal.style.display = "flex";
-    }
-    document.getElementById("modalConfirm").addEventListener("click", function () {
-        if (typeof modalAction === 'function') {
-            modalAction();
+    // Validar campos requeridos
+    function validateRequiredFields(fields) {
+      const missing = [];
+      fields.forEach(field => {
+        const input = document.getElementById(field.id);
+        if (input && !input.value.trim()) {
+          input.classList.add("input-error");
+          missing.push(field);
         }
-        document.getElementById("confirmModal").style.display = "none";
-    });
+      });
+      return missing;
+    }
 
-    document.getElementById("modalCancel").addEventListener("click", function () {
-        document.getElementById("confirmModal").style.display = "none";
+    // Añadir escuchadores para quitar clase 'input-error' al completar el campo
+    document.querySelectorAll('#dateStar, #dateEnd, #periodo, #grado, #asignatura').forEach(input => {
+      input.addEventListener('input', function () {
+        this.classList.remove('input-error');
+      });
     });
+  });
 </script>
 {% endblock %}
+
 {% endblock %}

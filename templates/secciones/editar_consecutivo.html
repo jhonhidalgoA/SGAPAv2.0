@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+{% block title %}Editar Consecutivo{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/consecutivos.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>✏️ Editar Consecutivo</h2>
+    <form action="{{ url_for('secciones.editar_consecutivo', id=registro.id) }}" method="post">
+        <div class="form-group">
+            <label for="tipo_documento">Tipo de Documento:</label>
+            <input type="text" id="tipo_documento" name="tipo_documento" value="{{ registro.tipo_documento }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="consecutivo">Consecutivo:</label>
+            <input type="number" id="consecutivo" name="consecutivo" value="{{ registro.consecutivo }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-edit">Actualizar Consecutivo</button>
+    </form>
+</div>
+{% endblock %}

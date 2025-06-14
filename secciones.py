@@ -1,13 +1,21 @@
 from flask import (Blueprint, render_template, 
-                   request, redirect, url_for, flash, jsonify, json, current_app, app)
+                   request, redirect, url_for, flash, jsonify, json, current_app, request, make_response)
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.lib import colors
+from reportlab.pdfgen import canvas
+from io import BytesIO
+import datetime
 from db import get_connection as get_db
-from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 import os
 import re
 from flask import current_app
 from functools import reduce
+from utils.consecutivo import obtener_siguiente_consecutivo
 
 
 
@@ -373,9 +381,7 @@ def asistencia():
 def reportes():
     return render_template('secciones/reportes.html')
 
-@secciones.route('/planeacion', methods=['GET', 'POST'])
-def planeacion():
-    return render_template('secciones/planeacion.html')
+
 
 @secciones.route('/tareas', methods=['GET', 'POST'])
 def tareas():
@@ -773,3 +779,241 @@ def ver_eventos():
 @secciones.route('/ver-calendario')
 def ver_calendario():
     return render_template('secciones/calendario_ver.html')
+
+
+# Planeacion
+@secciones.route('/generar_pdf', methods=['POST'])
+def generar_pdf():
+    datos = {
+        'fecha_inicio': request.form.get('dateStar'),
+        'fecha_fin': request.form.get('dateEnd'),
+        'periodo': request.form.get('periodo'),
+        'grado': request.form.get('grado'),
+        'asignatura': request.form.get('asignatura'),
+        'tipo': request.form.get('tipo'),
+        'estandar': request.form.get('estandar'),
+        'dba': request.form.get('dba'),
+        'evidencia': request.form.get('evidencia'),
+        'competencias': request.form.get('competencias'),
+        'objetivos': request.form.get('objetivos'),
+        'proyecto_transversal': request.form.get('proyecto_transversal')
+    }
+
+    # Validar campos obligatorios
+    if not all([datos['fecha_inicio'], datos['fecha_fin'], datos['periodo'], datos['grado'], datos['asignatura']]):
+        flash("⚠️ Faltan campos obligatorios", "warning")
+        return redirect(url_for('secciones.planeacion'))
+
+    # Obtener siguiente consecutivo
+    tipo_documento = 'plan_clase'    
+
+    try:
+        consecutivo = obtener_siguiente_consecutivo(tipo_documento)
+    except Exception as e:
+        flash(f"❌ Error al obtener el consecutivo: {str(e)}", "danger")
+        return redirect(url_for('secciones.planeacion'))
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4,
+                            rightMargin=40, leftMargin=40,
+                            topMargin=40, bottomMargin=40)
+    story = []
+
+    # Estilos
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='Encabezado', fontSize=12, alignment=1, spaceAfter=10))
+    styles.add(ParagraphStyle(name='Titulo', fontSize=16, alignment=1, textColor=colors.darkblue, spaceAfter=20))
+    styles.add(ParagraphStyle(name='Seccion', fontSize=12, textColor=colors.black, spaceBefore=14, spaceAfter=6))
+    styles.add(ParagraphStyle(name='NormalEspaciado', fontSize=10, spaceAfter=10))
+
+    # Logo (si luego tienes uno, reemplaza esta ruta)
+    logo_path = 'static/img/logoColegio.png'
+    if os.path.exists(logo_path):
+       img = Image(logo_path, width=0.6*inch, height=0.6*inch)
+       img.hAlign = 'LEFT'
+       story.append(img)
+
+    # Encabezado
+    story.append(Paragraph("INSTITUCIÓN EDUCATIVA SGAPA", styles['Encabezado']))
+    story.append(Paragraph("Docente: Jhon Fredy Hidalgo", styles['Encabezado']))
+    story.append(Paragraph("PLAN DE CLASE", styles['Titulo']))
+    story.append(Spacer(1, 12))
+
+    # Información general en dos columnas
+    info_data = [
+        ['Fecha de Inicio:', datos['fecha_inicio'] or 'No especificada', 'Fecha de Fin:', datos['fecha_fin'] or 'No especificada'],
+        ['Grado:', datos['grado'] or 'No especificado', 'Período:', datos['periodo'] or 'No especificado'],
+        ['Asignatura:', datos['asignatura'] or 'No especificada', 'Tipo:', datos['tipo'] or 'No especificado']
+    ]
+    info_table = Table(info_data, colWidths=[1.5*inch, 2.5*inch, 1.5*inch, 2.5*inch])
+    info_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+        ('BACKGROUND', (2, 0), (2, -1), colors.lightgrey),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (2, 0), (2, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 10)
+    ]))
+    story.append(info_table)
+    story.append(Spacer(1, 14))
+
+    # Secciones de contenido
+    def agregar_seccion(titulo, contenido):
+        if contenido:
+            story.append(Paragraph(titulo, styles['Seccion']))
+            story.append(Paragraph(contenido, styles['NormalEspaciado']))
+
+    agregar_seccion("ESTÁNDAR", datos['estandar'])
+    agregar_seccion("DBA (Derechos Básicos de Aprendizaje)", datos['dba'])
+    agregar_seccion("EVIDENCIAS DE APRENDIZAJE", datos['evidencia'])
+    agregar_seccion("COMPETENCIAS", datos['competencias'])
+    agregar_seccion("OBJETIVOS", datos['objetivos'])
+    agregar_seccion("PROYECTO PEDAGÓGICO TRANSVERSAL", datos['proyecto_transversal'])
+
+    # Fecha de generación
+    story.append(Spacer(1, 24))
+    fecha_generacion = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    story.append(Paragraph(f"Documento generado el: {fecha_generacion}", styles['NormalEspaciado']))
+
+    # Tabla de firmas
+    story.append(Spacer(1, 40))
+    firma_data = [
+        ["____________________________", "____________________________"],
+        ["Firma del Docente", "Firma del Coordinador o Rector"]
+    ]
+    firma_table = Table(firma_data, colWidths=[3*inch, 3*inch])
+    firma_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ('TOPPADDING', (0, 0), (-1, -1), 10)
+    ]))
+    story.append(firma_table)
+
+    # Generar PDF
+    doc.build(story)
+    buffer.seek(0)
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=planificacion_educativa.pdf'
+    return response
+
+@secciones.route('/planeacion', methods=['GET', 'POST'])
+def planeacion():
+    db = get_db()
+    cursor = db.cursor()
+    tipo_documento = 'plan_clase'
+
+    try:
+        cursor.execute("""
+            SELECT MAX(consecutivo) AS max_consecutivo 
+            FROM pdf_consecutivos 
+            WHERE tipo_documento = %s
+        """, (tipo_documento,))
+        
+        resultado = cursor.fetchone()
+
+        if resultado is None:
+            ultimo_consecutivo = '00000'
+        else:
+            if isinstance(resultado, dict):
+                valor = resultado.get('max_consecutivo')
+            else:
+                valor = resultado[0] if len(resultado) > 0 else None
+            
+            if valor is None:
+                ultimo_consecutivo = '00000'
+            else:
+                ultimo_consecutivo = str(valor).zfill(5)
+
+        return render_template('secciones/planeacion.html', ultimo_consecutivo=ultimo_consecutivo)
+
+    except Exception as e:
+        print(f"❌ Error al cargar consecutivo: {str(e)}")
+        return render_template('secciones/planeacion.html', ultimo_consecutivo='00000')
+
+    finally:
+        cursor.close()
+        db.close()
+
+@secciones.route('/ver-consecutivos')
+def ver_consecutivos():
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM pdf_consecutivos ORDER BY fecha_generacion DESC")
+        registros = cursor.fetchall()
+        
+        return render_template('secciones/consecutivos.html', registros=registros)
+    
+    except Exception as e:
+        flash(f"❌ Error al cargar consecutivos: {str(e)}", "danger")
+        return redirect(url_for('secciones.index'))
+    
+    finally:
+        cursor.close()
+        db.close()
+
+@secciones.route('/eliminar-consecutivo/<int:id>')
+def eliminar_consecutivo(id):
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        cursor.execute("DELETE FROM pdf_consecutivos WHERE id = %s", (id,))
+        db.commit()
+        flash("🗑️ Registro eliminado correctamente", "success")
+    
+    except Exception as e:
+        db.rollback()
+        flash(f"❌ No se pudo eliminar: {str(e)}", "danger")
+    
+    finally:
+        cursor.close()
+        db.close()
+    
+    return redirect(url_for('secciones.ver_consecutivos'))
+
+@secciones.route('/editar-consecutivo/<int:id>', methods=['GET', 'POST'])
+def editar_consecutivo(id):
+    db = get_db()
+    cursor = db.cursor()
+
+    if request.method == 'POST':
+        nuevo_consecutivo = request.form.get('consecutivo')
+        tipo_documento = request.form.get('tipo_documento')
+
+        if not nuevo_consecutivo.isdigit() or not tipo_documento:
+            flash("⚠️ Datos inválidos", "warning")
+            return redirect(url_for('secciones.editar_consecutivo', id=id))
+
+        try:
+            cursor.execute("""
+                UPDATE pdf_consecutivos 
+                SET consecutivo = %s, tipo_documento = %s 
+                WHERE id = %s
+            """, (nuevo_consecutivo, tipo_documento, id))
+            db.commit()
+            flash("✏️ Consecutivo actualizado", "success")
+            return redirect(url_for('secciones.ver_consecutivos'))
+        
+        except Exception as e:
+            db.rollback()
+            flash(f"❌ Error al actualizar: {str(e)}", "danger")
+            return redirect(url_for('secciones.ver_consecutivos'))
+
+    try:
+        cursor.execute("SELECT * FROM pdf_consecutivos WHERE id = %s", (id,))
+        registro = cursor.fetchone()
+        return render_template('secciones/editar_consecutivo.html', registro=registro)
+    
+    except Exception as e:
+        flash(f"❌ Error al cargar datos: {str(e)}", "danger")
+        return redirect(url_for('secciones.ver_consecutivos'))
+    
+    finally:
+        cursor.close()
+        db.close()

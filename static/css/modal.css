@@ -1,4 +1,5 @@
 @import url("variables.css");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 
 .modal-overlay {
@@ -13,6 +14,7 @@
     justify-content: center;
     align-items: center;
     animation: fadeIn 0.3s ease forwards;
+    font-family: 'Poppins', sans-serif;
 }
 
 .modal-box {
@@ -97,8 +99,6 @@
     margin-bottom: 20px;
 }
 
-/* Botones */
-/* Botones */
 .modal-buttons {    
     display: flex !important;
     justify-content: center !important; 
@@ -106,21 +106,22 @@
     margin-top: 50px;
 }
 
-.btn {
+.btns {
     display: flex;
+    justify-content: center;
     align-items: center; 
-    gap: 15px; 
+    gap: 10px; 
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
     transition: transform 0.2s;
-    width: 150px;
+    width: 180px;
     height: 50px;
 }
 
-.btn:hover {
-    transform: translateY(-2px);
+.btns:hover {
+    transform: scale(1.05);
 }
 
 .btns-confirm {
@@ -134,14 +135,12 @@
 
 .btns-confirm p, .btns-cancel p {
     color: #fff;
-    font-size: 18px;
-   
+    font-size: 18px;   
 }   
 
 
 .btns-cancel {
-    background-color: #dc3545; /* Rojo */
-    
+    background-color: #dc3545;    
 }
 
 /* Cerrar */
@@ -154,3 +153,6 @@
     color: #aaa;    
 }
 
+.modal-success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+.modal-danger { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+.modal-warning { background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; }
