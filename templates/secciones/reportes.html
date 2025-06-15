@@ -1,31 +1,42 @@
 {% extends "main.html" %}
+{% include "components/modal.html" %}
+{% block title %} M. DOCENTE | SGAPA{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reportes.css') }}">
 {% endblock %}
-
 {% block content %}
-
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-
-<div class="report" id="reportes">
-    <div class="registration__title">
-        <div class="title">
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-                <h2>Reportes Estudiantes</h2>
-            </div>
-        </div>
-        <div class="icon__return">
-            <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
-                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-            </a>
-        </div>
+<div class="container">
+  <div class="header">
+    <div class="icon__return">
+      <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
+        <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+      </a>
     </div>
+    <div class="title">
+      <div class="row__title">
+        <i class="material-symbols-outlined">picture_as_pdf</i>
+        <h1>Reportes Académicos</h1>
+      </div>
+      <p>Sistema de Gestión Administrativa y Procesos Académicos (SGAPA) </p>
+    </div>
+    <div class="navbar__logo">
+      <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+        class="icon material-symbols-outlined toggleBtn">
+        logout
+      </span>
+    </div>
+  </div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category, message in messages %}
+  <script>
+    showModal("{{ category | title }}", "{{ message | safe}}", null);
+  </script>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  <div class="report" id="reportes">
     <div class="report__group">
       <div class="group">
         <label for="grados-select">Grupo:</label>
@@ -71,35 +82,38 @@
       </select>
     </div>
     <div class="report__buttons">
-      <button class="btn">Generar<i class="material-symbols-outlined">picture_as_pdf</i></button>
+      <button class="btn">
+        <i class="material-symbols-outlined">picture_as_pdf</i>
+        Generar
+      </button>
     </div>
   </div>
+</div>
 
-  {% block extra_js %}
-  <script>
-     /*Ventana modal*/
-    function confirmLogout() {
-        window.location.href = "{{ url_for('auth.logout') }}";
+{% block extra_js %}
+<script>
+  function confirmLogout() {
+    window.location.href = "{{ url_for('auth.logout') }}";
+  }
+
+  function showModal(title, message, action) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalMessage").innerText = message;
+    window.modalAction = action;
+
+    const modal = document.getElementById("confirmModal");
+    modal.style.display = "flex";
+  }
+  document.getElementById("modalConfirm").addEventListener("click", function () {
+    if (typeof modalAction === 'function') {
+      modalAction();
     }
+    document.getElementById("confirmModal").style.display = "none";
+  });
 
-    function showModal(title, message, action) {
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalMessage").innerText = message;
-        window.modalAction = action;
-
-        const modal = document.getElementById("confirmModal");
-        modal.style.display = "flex";
-    }
-    document.getElementById("modalConfirm").addEventListener("click", function () {
-        if (typeof modalAction === 'function') {
-            modalAction();
-        }
-        document.getElementById("confirmModal").style.display = "none";
-    });
-
-    document.getElementById("modalCancel").addEventListener("click", function () {
-        document.getElementById("confirmModal").style.display = "none";
-    });
+  document.getElementById("modalCancel").addEventListener("click", function () {
+    document.getElementById("confirmModal").style.display = "none";
+  });
 </script>
 {% endblock %}
 {% endblock %}

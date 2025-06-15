@@ -1,108 +1,113 @@
 {% extends "main.html" %}
+{% include "components/modal.html" %}
+{% block title %} M. DOCENTE | SGAPA{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/asistencia.css') }}">
 {% endblock %}
 
-
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-
-<!--star asistencia-->
-<div class="assistance" id="asistencia">
-    <div class="assistance__title">
-        <div class="title">
+<div class="container">
+    <div class="assistance" id="asistencia">
+        <div class="header">
+            <div class="icon__return">
+                <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
+                    <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+                </a>
+            </div>
+            <div class="title">
+                <div class="row__title">
+                    <i class="material-symbols-outlined">app_registration</i>
+                    <h1>Asistencia</h1>
+                </div>
+                <p>Sistema de Gestión Administrativa y Procesos Académicos (SGAPA) </p>
+            </div>
             <div class="navbar__logo">
                 <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
                     class="icon material-symbols-outlined toggleBtn">
                     logout
                 </span>
-                <h2>Asistencia</h2>
             </div>
         </div>
-        <div class="icon__return">
-            <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
-                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-            </a>
+        <div class="assistance__group">
+            <div class="group">
+                <label for="grados-select">Grupo:</label>
+                <select id="grados-select" name="grados" aria-label="Selecciona un grado">
+                    <option value="">Seleccionar</option>
+                    <option value="601">Grado 601</option>
+                    <option value="602">Grado 602</option>
+                    <option value="603">Grado 603</option>
+                    <option value="604">Grado 604</option>
+                    <option value="605">Grado 605</option>
+                </select>
+            </div>
+            <div class="subjects">
+                <label for="grados-select">Asignatura:</label>
+                <select id="grados-select" name="grados" aria-label="Selecciona una asignatura">
+                    <option value="">Seleccionar</option>
+                    <option value="matematicas">Matemáticas</option>
+                    <option value="catellano">Castellano</option>
+                    <option value="tecnologia">Tecnología</option>
+                    <option value="etica">Ética</option>
+                    <option value="artistica">Artistica</option>
+                </select>
+            </div>
+            <div class="period">
+                <label for="grados-select">Periodo:</label>
+                <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
+                    <option value="primero">Primero</option>
+                    <option value="segundo">Segundo</option>
+                    <option value="tercero">Terecero</option>
+                    <option value="cuarto">Cuarto</option>
+                </select>
+            </div>
         </div>
-    </div>
-    <div class="assistance__group">
-        <div class="group">
-            <label for="grados-select">Grupo:</label>
-            <select id="grados-select" name="grados" aria-label="Selecciona un grado">
-                <option value="">Seleccionar</option>
-                <option value="601">Grado 601</option>
-                <option value="602">Grado 602</option>
-                <option value="603">Grado 603</option>
-                <option value="604">Grado 604</option>
-                <option value="605">Grado 605</option>
-            </select>
+        <div class="assistance__buttons">
+            <button class="btn"><i class="material-symbols-outlined">add</i>Cargar</button>
+            <button class="btn"><i class="material-symbols-outlined">save</i>Guardar</button>
+            <button class="btn"><i class="material-symbols-outlined">picture_as_pdf</i>Generar</button>
+            <button class="btn"><i class="material-symbols-outlined">print</i>Imprimir</button>
         </div>
-        <div class="subjects">
-            <label for="grados-select">Asignatura:</label>
-            <select id="grados-select" name="grados" aria-label="Selecciona una asignatura">
-                <option value="">Seleccionar</option>
-                <option value="matematicas">Matemáticas</option>
-                <option value="catellano">Castellano</option>
-                <option value="tecnologia">Tecnología</option>
-                <option value="etica">Ética</option>
-                <option value="artistica">Artistica</option>
-            </select>
+        <div class="assistance__notes">
+            <table class="table__edit">
+                <thead>
+                    <tr>
+                        <th class="table__name">Apellidos</th>
+                        <th class="table__name">Nombres</th>
+                        <th class="table__notes">Ausente</th>
+                        <th class="table__notes">Retardo</th>
+                        <th class="table__notes">Fuga</th>
+                        <th class="table__notes">Excusa</th>
+                        <th class="table__notes">Total</th>
+                        <th class="table__name">Observación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Pérez</td>
+                        <td>Juan</td>
+                        <td><input type="checkbox" class="attendance-check" name="ausente_1" aria-label="ausente"></td>
+                        <td><input type="checkbox" class="attendance-check" name="retardo_1" aria-label="retardo"></td>
+                        <td><input type="checkbox" class="attendance-check" name="fuga_1" aria-label="fuga"></td>
+                        <td><input type="checkbox" class="attendance-check" name="excusa_1" aria-label="excusa"></td>
+                        <td class="total-cell">0</td>
+                        <td><input type="text" class="observation-input" name="observacion_1" aria-label="observacion">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Giraldo </td>
+                        <td>Alejandra</td>
+                        <td><input type="checkbox" class="attendance-check" name="ausente_1" aria-label="ausente"></td>
+                        <td><input type="checkbox" class="attendance-check" name="retardo_1" aria-label="retardo"></td>
+                        <td><input type="checkbox" class="attendance-check" name="fuga_1" aria-label="fuga"></td>
+                        <td><input type="checkbox" class="attendance-check" name="excusa_1" aria-label="excusa"></td>
+                        <td class="total-cell">0</td>
+                        <td><input type="text" class="observation-input" name="observacion_1" aria-label="observacion">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="period">
-            <label for="grados-select">Periodo:</label>
-            <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
-                <option value="primero">Primero</option>
-                <option value="segundo">Segundo</option>
-                <option value="tercero">Terecero</option>
-                <option value="cuarto">Cuarto</option>
-            </select>
-        </div>
-    </div>
-    <div class="assistance__buttons">
-        <button class="btn">Cargar<i class="material-symbols-outlined">add</i></button>
-        <button class="btn">Guardar<i class="material-symbols-outlined">save</i></button>
-        <button class="btn">Generar<i class="material-symbols-outlined">picture_as_pdf</i></button>
-        <button class="btn">Imprimir<i class="material-symbols-outlined">print</i></button>
-    </div>
-    <div class="assistance__notes">
-        <table class="table__edit">
-            <thead>
-                <tr>
-                    <th class="table__name">Apellidos</th>
-                    <th class="table__name">Nombres</th>
-                    <th class="table__notes">Ausente</th>
-                    <th class="table__notes">Retardo</th>
-                    <th class="table__notes">Fuga</th>
-                    <th class="table__notes">Excusa</th>
-                    <th class="table__notes">Total</th>
-                    <th class="table__name">Observación</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Pérez</td>
-                    <td>Juan</td>
-                    <td><input type="checkbox" class="attendance-check" name="ausente_1" aria-label="ausente"></td>
-                    <td><input type="checkbox" class="attendance-check" name="retardo_1" aria-label="retardo"></td>
-                    <td><input type="checkbox" class="attendance-check" name="fuga_1" aria-label="fuga"></td>
-                    <td><input type="checkbox" class="attendance-check" name="excusa_1" aria-label="excusa"></td>
-                    <td class="total-cell">0</td>
-                    <td><input type="text" class="observation-input" name="observacion_1" aria-label="observacion"></td>
-                </tr>
-                <tr>
-                    <td>Giraldo </td>
-                    <td>Alejandra</td>
-                    <td><input type="checkbox" class="attendance-check" name="ausente_1" aria-label="ausente"></td>
-                    <td><input type="checkbox" class="attendance-check" name="retardo_1" aria-label="retardo"></td>
-                    <td><input type="checkbox" class="attendance-check" name="fuga_1" aria-label="fuga"></td>
-                    <td><input type="checkbox" class="attendance-check" name="excusa_1" aria-label="excusa"></td>
-                    <td class="total-cell">0</td>
-                    <td><input type="text" class="observation-input" name="observacion_1" aria-label="observacion"></td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 <!--end asistencia-->

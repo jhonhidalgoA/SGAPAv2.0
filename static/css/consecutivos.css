@@ -1,59 +1,188 @@
-.table-container {
+@import url("variables.css");
+@import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
     padding: 20px;
 }
 
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    font-size: 14px;
-    color: #333;
-    background-color: #fff;
+ .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);    
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.data-table thead tr {
-    background-color: var(--color-primary);
+.header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background: var(--color-orange-sunset);
     color: white;
-    font-weight: bold;
+    padding: 30px;
+    text-align: center;
+    flex-wrap: wrap;    
+} 
+
+.header .icon__return i{
+    font-size:2.5em;
+    color:white;
 }
 
-.data-table th,
-.data-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+.header .icon__return i:hover{
+    color: var(--color-accent);
+    transform:scale(1.2);
+    transition: all 0.3s ease;
+}  
+
+.header .title{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-.data-table tr:hover {
-    background-color: #f1f1f1;
+.row__title {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
 }
 
-.actions {
+.row__title i{
+    font-size:50px; 
+    color:var(--color-white); 
+}
+
+.row__title h1 {
+    margin: 0;
+    font-size: 2.0rem;
+}
+
+.title p {
+  margin-top: 12px;
+  font-size: 1.2rem;
+}
+
+.header span{
+    font-size: 2.5em;
+    cursor:pointer;
+}
+
+.header span:hover{
+    color: var(--color-accent);
+    transform:scale(1.2);
+    transition: all 0.3s ease;
+    transform: rotate(180deg);
+}
+
+.table-wrapper{
+    margin-top:30px;
+}
+
+.data__table {
+    width: 98%;
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
+    margin-bottom:10px;    
+}
+
+.data__table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.data__table th{
+    padding: 20px 15px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+}
+
+.data__table tr{
+     transition: all 0.3s ease;
+     border-bottom: 1px solid #f1f1f1;
+}
+
+.data_table tr:hover{
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    transform: scale(1.01);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.data__table td{
+    padding: 18px 15px;
+    vertical-align: middle;
+    color: #2c3e50;
+    text-align:center;
+    font-size:18px;
+}
+
+.data__table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.data__table .actions{
     display: flex;
-    gap: 8px;
+    justify-content: center;
+    align-items:center;
+    margin-left:30px;
+    gap:30px;    
+}
+
+.actions a{
+    display:inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap:20px;
+    padding: 15px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
 }
 
 .btn {
-    padding: 6px 12px;
+    padding: 10px 15px;
     text-decoration: none;
     color: white;
     border-radius: 4px;
     font-size: 14px;
     transition: background 0.3s;
+    width:150px;  
+   
 }
 
 .btn-edit {
-    background-color: #007BFF;
+    background-color: var(--color-button-load);
+    font-size:18px;
+    margin-right:10px;
+    
 }
-.btn-edit:hover {
-    background-color: #0056b3;
+
+.btn-edit:hover {    
+    transform: scale(1.05);
+    background-color: var(--color-button-load-hover);
 }
 
 .btn-delete {
-    background-color: #DC3545;
+    background-color: var(--color-danger);
+    font-size:18px;
 }
 .btn-delete:hover {
-    background-color: #A71D2A;
+    transform: scale(1.05);
+    background-color: var(--color-button-delete-hover);
 }
 

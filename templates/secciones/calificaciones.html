@@ -1,5 +1,6 @@
 {% extends "main.html" %}
-{% block title %} CALIFICACIONES | SGAPA{% endblock %}
+{% include "components/modal.html" %}
+{% block title %} M. DOCENTE | SGAPA{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/calificaciones.css') }}">
@@ -8,92 +9,85 @@
 {% endblock %}
 
 {% block content %}
-
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-
-<div class="ratings" id="calificaciones">
-    <div class="registration__title">
-        <div class="title">
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-                <h2>Calificaciones</h2>
-            </div>
-        </div>
+<div class="container">
+    <div class="header">
         <div class="icon__return">
             <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
                 <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
             </a>
         </div>
+        <div class="title">
+            <div class="row__title">
+                <i class="material-symbols-outlined">edit_note</i>
+                <h1>Calificaciones</h1>
+            </div>
+            <p>Sistema de Gestión Administrativa y Procesos Académicos (SGAPA) </p>
+        </div>
+        <div class="navbar__logo">
+            <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                class="icon material-symbols-outlined toggleBtn">
+                logout
+            </span>
+        </div>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <script>
+        showModal("{{ category | title }}", "{{ message | safe}}", null);
+    </script>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="ratings__group">
+        <div class="group">
+            <label for="grados-select">Grupo:</label>
+            <select id="grados-select" name="grados" aria-label="Selecciona un grado">
+                <option value="">Seleccionar</option>
+                <option value="6">Grado Sexto </option>
+                <option value="7">Grado Séptimo</option>
+                <option value="8">Grado Octavo</option>
+                <option value="8">Grado Noveno</option>
+                <option value="10">Grado Décimo</option>
+                <option value="11">Grado Undécimo</option>
+            </select>
+        </div>
+        <div class="subjects">
+            <label for="asignatura-select">Asignatura:</label>
+            <select id="asignatura-select" name="grados" aria-label="Selecciona una asignatura">
+                <option value="">Seleccionar</option>
+                <option value="1">Matemáticas</option>
+                <option value="2">Castellano</option>
+                <option value="3">Tecnología</option>
+                <option value="4">Ética</option>
+                <option value="5">Artistica</option>
+            </select>
+        </div>
+        <div class="period">
+            <label for="periodos-select">Periodo:</label>
+            <select id="periodos-select" name="periodos" aria-label="Selecciona un Periodo">
+                <option value="">Seleccionar</option>
+                <option value="1">Primero</option>
+                <option value="2">Segundo</option>
+                <option value="3">Tercero</option>
+                <option value="4">Cuarto</option>
+            </select>
+        </div>
+    </div>
+    <div class="ratings__buttons">
+        <button class="btn" id="btn-cargar"><i class="material-symbols-outlined">add</i>Cargar</button>
+        <button class="btn" id="btn-guardar"><i class="material-symbols-outlined">save</i>Guardar</button>
+        <button class="btn"><i class="material-symbols-outlined">print</i>Imprimir</button>
+        <button class="btn"><i class="material-symbols-outlined">eye_tracking</i>Ver Notas</button>
+    </div>
+    <div id="alerta" class="alerta ocultar"></div>
+    <div class="container__table">
+        <div id="example" class="ht-theme-main-dark-auto table"></div>
     </div>
 </div>
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-
-{% for category, message in messages %}
-<script>
-
-    showModal("{{ category | title }}", "{{ message | safe}}", null);
-</script>
-{% endfor %}
-
-{% endif %}
-{% endwith %}
-
-<div class="ratings__group">
-    <div class="group">
-        <label for="grados-select">Grupo:</label>
-        <select id="grados-select" name="grados" aria-label="Selecciona un grado">
-            <option value="">Seleccionar</option>
-            <option value="6">Grado Sexto </option>
-            <option value="7">Grado Séptimo</option>
-            <option value="8">Grado Octavo</option>
-            <option value="8">Grado Noveno</option>
-            <option value="10">Grado Décimo</option>
-            <option value="11">Grado Undécimo</option>
-        </select>
-    </div>
-    <div class="subjects">
-        <label for="asignatura-select">Asignatura:</label>
-        <select id="asignatura-select" name="grados" aria-label="Selecciona una asignatura">
-            <option value="">Seleccionar</option>
-            <option value="1">Matemáticas</option>
-            <option value="2">Castellano</option>
-            <option value="3">Tecnología</option>
-            <option value="4">Ética</option>
-            <option value="5">Artistica</option>
-        </select>
-    </div>
-    <div class="period">
-        <label for="periodos-select">Periodo:</label>
-        <select id="periodos-select" name="periodos" aria-label="Selecciona un Periodo">
-            <option value="">Seleccionar</option>
-            <option value="1">Primero</option>
-            <option value="2">Segundo</option>
-            <option value="3">Terecero</option>
-            <option value="4">Cuarto</option>
-        </select>
-    </div>
-</div>
-<div class="ratings__buttons">
-    <button class="btn" id="btn-cargar">Cargar<i class="material-symbols-outlined">add</i></button>
-    <button class="btn" id="btn-guardar">Guardar<i class="material-symbols-outlined">save</i></button>
-    <button class="btn">Imprimir<i class="material-symbols-outlined">print</i></button>
-    <button class="btn">Ver Notas<i class="material-symbols-outlined">eye_tracking</i></button>
-</div>
-<div id="alerta" class="alerta ocultar"></div>
-<div class="container__table">
-    <div id="example" class="ht-theme-main-dark-auto table"></div>
-</div>
-
-{% endblock %}
 
 {% block extra_js %}
-<script>
-    /*Funcion salir al index.html*/
+<script>   
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
     }
@@ -141,6 +135,6 @@
 </script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
 <script src="{{ url_for('static', filename='js/calificaciones.js') }}"></script>
-
+{% endblock %}
 
 {% endblock %}

@@ -2,82 +2,85 @@
 @import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 
-.assistance {
-  width: 90%;
-  margin: 0 auto;
+body {
+    font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
 }
 
-
-.assistance__title {
-  display: flex;  
-  justify-content: space-between;
-  align-items: center;  
-  gap: 20px;
-  text-align: start;
-  margin: 10px 1px 10px 2px;
-  padding: 10px;
-  height: 50px;
-  border-radius: var(--border-radius);  
-  border: 1px solid var(--color-orange-card);
-  background: var(--color-orange-card);
-  color:var(--color-white);
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
 }
 
-.assistance__title .title{
+.header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background: var(--color-orange-card);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    flex-wrap: wrap;
+}
+
+.header .icon__return i{
+    font-size:2.5em;
+    color:white;
+}
+
+.header .icon__return i:hover{
+    color: var(--color-accent);
+    transform:scale(1.2);
+    transition: all 0.3s ease;
+}  
+
+.header .title{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.row__title {
   display: flex;
-  justify-content:space-between;
   align-items: center;
-  gap: 20px;
+  gap: 10px; 
+}
+
+.row__title i{
+    font-size:50px; 
+    color:var(--color-white);    
+}
+
+.row__title h1 {
+    margin: 0;
+    font-size: 2.0em;
+}
+
+.title p {
+  margin-top: 12px;
+  font-size: 1.2rem;
 } 
 
-.assistance__title .icon__return i{
-  font-size: var(--fs-2xl);
-  color: var(--color-white);
-  cursor: pointer;
+.header span{
+    font-size: 2.5em;
+    cursor:pointer;
 }
 
-.navbar__logo {
-    display: flex;
-    justify-content:flex-start;
-    align-items: center;  
-    margin-left:25px;  
-    gap: var(--spacing-md);
-}
-
-.navbar__logo .icon, 
-.nav-item span {
-    font-size:var(--size-title-medium);
-    color: var(--color-white);
-    cursor: pointer;
-}
-
-.navbar__logo .icon{
+.header span:hover{
+    color: var(--color-accent);
+    transform:scale(1.2);
+    transition: all 0.3s ease;
     transform: rotate(180deg);
 }
 
-.navbar__logo .icon:hover{
-    color: var(--color-white);
-    transform: scale(1.2);   
-    transition: all 0.3s ease;
-}
 
-
-.navbar__logo .title {
-    font-size: var(--fs-base);
-    color: var(--color-white);
-    font-weight: var(--fw-bold); 
-    font-size:var(--size-title-medium-small);
-    text-decoration: none;
-}
-
-.navbar__logo .danger {
-    color: var(--color-danger);
-    font-weight: var(--fw-bold);
-}
-
-.navbar__logo h2{
-  letter-spacing: 2px;
-}
 
 .assistance__group {
   display: flex;
@@ -108,14 +111,20 @@
 .assistance__buttons .btn {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 8px 15px;
-  width: 140px;
-  font-size: 16px;
+  justify-content: center;
+  gap:30px;
+  padding: 12px 24px;
+  width: 200px;
+  font-size: 18px;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top:20px;
+}
+
+.btn i{
+    font-size: 30px;
 }
 
 .assistance__buttons .btn:first-child {

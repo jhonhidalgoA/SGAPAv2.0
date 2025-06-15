@@ -13,8 +13,14 @@
       <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
         <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
       </a>
-    </div>   
-    <h1>Planeación Docente</h1>
+    </div>
+    <div class="title">
+      <div class="row__title">
+        <i class="material-symbols-outlined">edit_note</i>
+        <h1>Planes de Clase</h1>
+      </div>
+      <p>Sistema de Gestión Administrativa y Procesos Académicos (SGAPA) </p>
+    </div>
     <div class="navbar__logo">
       <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
         class="icon material-symbols-outlined toggleBtn">
@@ -22,7 +28,6 @@
       </span>
     </div>
   </div>
-
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
   {% for category, message in messages %}
@@ -157,20 +162,22 @@
         <input type="text" id="ultimo_consecutivo" name="ultimo_consecutivo" value="{{ ultimo_consecutivo }}" disabled>
       </div>
     </div>
-
     <div class="planning__buttons">
-      <button type="button" class="btn" onclick="limpiarFormulario()">Nuevo
+      <button type="button" class="btn" onclick="limpiarFormulario()">
         <i class="material-symbols-outlined">add</i>
+        Nuevo
       </button>
-      <button type="submit" class="btn">Guardar
+      <button type="submit" class="btn">
         <i class="material-symbols-outlined">picture_as_pdf</i>
+        Guardar
       </button>
-      <button type="button" class="btn" onclick="limpiarFormulario()">Borrar
-        <i class="material-symbols-outlined">delete</i>
+      <button type="button" class="btn" onclick="limpiarFormulario()">
+        <i class="material-symbols-outlined">delete_sweep</i>
+        Borrar
       </button>
       <a href="{{ url_for('secciones.ver_consecutivos') }}" class="btn">
-        Ver
         <i class="material-symbols-outlined">eye_tracking</i>
+        Ver
       </a>
     </div>
   </form>

@@ -1,80 +1,84 @@
 @import url("variables.css");
 @import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-body{
-  font-family: 'Poppins', sans-serif;
+
+body {
+    font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
 }
 
-.report {
-    width: 85%;     
+.container {
+    max-width: 1200px;
     margin: 0 auto;
+    background: var(--color-white);
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+    min-height:auto;  
+    overflow: hidden;     
 }
 
-.registration__title{
-  display: flex;  
-  justify-content: space-between;
-  align-items: center;  
-  gap: 20px;
-  text-align: start;
-  margin: 10px 1px 10px 2px;
-  padding: 10px;
-  height: 50px;
-  border-radius: var(--border-radius);  
-  border: 1px solid var(--color-button-generate);
-  background: var(--color-button-generate);
-  color:var(--color-white);
+.header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background: var(--color-button-generate);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    flex-wrap: wrap;
 }
 
-.registration__title .title{
+.header .icon__return i{
+    font-size:2.5em;
+    color:white;
+}
+
+.header .icon__return i:hover{
+    color: var(--color-accent);
+    transform:scale(1.2);
+    transition: all 0.3s ease;
+}  
+
+.header .title{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.row__title {
   display: flex;
-  justify-content:space-between;
   align-items: center;
-  gap: 20px;
+  gap: 10px; 
+}
+
+.row__title i{
+    font-size:50px; 
+    color:var(--color-white);    
+}
+
+.row__title h1 {
+    margin: 0;
+    font-size: 2.0em;
+}
+
+.title p {
+  margin-top: 12px;
+  font-size: 1.2rem;
 } 
 
-.registration__title .icon__return i{
-  font-size: var(--fs-2xl);
-  color: var(--color-white);
-  cursor: pointer;
+.header span{
+    font-size: 2.5em;
+    cursor:pointer;
 }
 
-.navbar__logo {
-    display: flex;
-    justify-content:flex-start;
-    align-items: center;  
-    margin-left:25px;  
-    gap: var(--spacing-md);
-}
-
-.navbar__logo .icon, 
-.nav-item span {
-    font-size:var(--size-title-medium);
-    color: var(--color-white);
-    cursor: pointer;
-}
-
-.navbar__logo .icon{
-    transform: rotate(180deg);
-}
-
-.navbar__logo .icon:hover{
-    color: var(--color-white);
-    transform: scale(1.2);   
+.header span:hover{
+    color: var(--color-accent);
+    transform:scale(1.2);
     transition: all 0.3s ease;
-}
-
-
-.navbar__logo .title {
-    font-size: var(--fs-base);
-    color: var(--color-white);
-    font-weight: var(--fw-bold); 
-    font-size:var(--size-title-medium-small);
-    text-decoration: none;
-}
-
-.navbar__logo .danger {
-    color: var(--color-danger);
-    font-weight: var(--fw-bold);
+    transform: rotate(180deg);
 }
   
 .report__group {
@@ -120,20 +124,22 @@ body{
 .report__buttons {
   display: flex;
   justify-content: start;
-  margin: 50px 0 0 40px;
+  margin: 50px 0 20px 40px;
 }
 
 .report__buttons .btn {
 display: flex;
 align-items: center;
-justify-content: space-between;
-padding: 8px 15px;
-width: 140px;
-font-size: 16px;
+justify-content: center;
+gap:30px;
+padding: 12px 24px;
+width: 200px;
+font-size: 18px;
 color: white;
 border: none;
-border-radius: 5px;
+border-radius: 8px;
 cursor: pointer;
+transition: all 0.3s ease;
 }
 
 .report__buttons .btn:first-child {
@@ -142,7 +148,7 @@ cursor: pointer;
 
 .report__buttons .btn:nth-child(1):hover {
   background: var(--color-button-generate-hover);
-  transform: scale(1.10);
+  transform: scale(1.05);
   color: var(--color-hover-btn-2);
 }
   

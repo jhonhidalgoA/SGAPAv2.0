@@ -805,7 +805,7 @@ def generar_pdf():
         return redirect(url_for('secciones.planeacion'))
 
     # Obtener siguiente consecutivo
-    tipo_documento = 'plan_clase'    
+    tipo_documento = 'plan-clase'    
 
     try:
         consecutivo = obtener_siguiente_consecutivo(tipo_documento)
@@ -829,14 +829,14 @@ def generar_pdf():
     # Logo (si luego tienes uno, reemplaza esta ruta)
     logo_path = 'static/img/logoColegio.png'
     if os.path.exists(logo_path):
-       img = Image(logo_path, width=0.6*inch, height=0.6*inch)
+       img = Image(logo_path, width=0.8*inch, height=0.8*inch)
        img.hAlign = 'LEFT'
        story.append(img)
 
     # Encabezado
     story.append(Paragraph("INSTITUCIÓN EDUCATIVA SGAPA", styles['Encabezado']))
     story.append(Paragraph("Docente: Jhon Fredy Hidalgo", styles['Encabezado']))
-    story.append(Paragraph("PLAN DE CLASE", styles['Titulo']))
+    story.append(Paragraph(f"PLAN DE CLASE {str(consecutivo).zfill(5)}", styles['Titulo']))
     story.append(Spacer(1, 12))
 
     # Información general en dos columnas
@@ -897,7 +897,7 @@ def generar_pdf():
     buffer.seek(0)
     response = make_response(buffer.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'attachment; filename=planificacion_educativa.pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=plan-clase-{str(consecutivo).zfill(5)}.pdf'
     return response
 
 @secciones.route('/planeacion', methods=['GET', 'POST'])
