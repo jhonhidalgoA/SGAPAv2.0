@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% include "components/modal.html" %}
+{% from "macros/buttons.j2" import btn with context %}
 {% block title %} M. DOCENTE | SGAPA{% endblock %}
 
 {% block extra_css %}
@@ -63,10 +64,10 @@
             </div>
         </div>
         <div class="assistance__buttons">
-            <button class="btn"><i class="material-symbols-outlined">add</i>Cargar</button>
-            <button class="btn"><i class="material-symbols-outlined">save</i>Guardar</button>
-            <button class="btn"><i class="material-symbols-outlined">picture_as_pdf</i>Generar</button>
-            <button class="btn"><i class="material-symbols-outlined">print</i>Imprimir</button>
+            {{ btn(icono="add", texto="Cargar", color="load") }}            
+            {{ btn(icono="save", texto="Guardar", color="save") }}
+            {{ btn(icono="delete", texto="Eliminar", color="delete") }}
+            {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view") }}
         </div>
         <div class="assistance__notes">
             <table class="table__edit">

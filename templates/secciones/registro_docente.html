@@ -1,14 +1,15 @@
 {% extends "main.html" %}
 {% include "components/modal.html" %}
-{% block title %} MODULO ADMINISTRADOR | SGAPA {% endblock %}
 {% from "macros/macros.j2" import header %}
+{% from "macros/buttons.j2" import btn with context %}
+{% block title %} MODULO ADMINISTRADOR | SGAPA {% endblock %}
+
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/registro_docente.css') }}">
 {% endblock %}
 
 {% block content %}
-
 <div class="tabs">
     {{ header(titulo="Registro Docente", color__fondo="var(--color-green-emerald)") }} 
 
@@ -164,10 +165,10 @@
             <!-- Información Profesional -->            
         </div>
         <div class="ratings__buttons">
-            <button type="submit" class="btn">Guardar<i class="material-symbols-outlined">save</i></button>
-            <button type="button" class="btn">Generar<i class="material-symbols-outlined">picture_as_pdf</i></button>
-            <button type="button" class="btn">Eliminar<i class="material-symbols-outlined">delete</i></button>
-            <button type="button" class="btn">Imprimir<i class="material-symbols-outlined">print</i></button>
+             {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }} 
+             {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }} 
+             {{ btn(icono="delete", texto="Borrar", color="delete") }}  
+             {{ btn(icono="print", texto="Imprimir", color="print") }}   
         </div>
     </form>
 </div>

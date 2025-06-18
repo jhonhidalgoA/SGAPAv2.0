@@ -192,69 +192,7 @@ body{
     margin-top: 30px;
 }
 
-.ratings__buttons .btn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 15px;
-  width: 140px;
-  font-size: 16px;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
 
-.ratings__buttons .btn:first-child {
-  background-color: var(--color-button-load);
-}
-
-.ratings__buttons .btn:nth-child(1):hover {
-  background-color: var(--color-button-load-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-.ratings__buttons .btn:nth-child(2) {
-  background: var(--color-button-save);
-}
-
-.ratings__buttons .btn:nth-child(2):hover {
-  background-color: var(--color-button-save-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-
-.ratings__buttons .btn:nth-child(3) {
-  background-color: var(--color-button-delete);
-}
-
-.ratings__buttons .btn:nth-child(3):hover {
-  background-color: var(--color-button-delete-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-.ratings__buttons .btn:nth-child(4) {
-  background: var(--color-button-generate);
-}
-
-.ratings__buttons .btn:nth-child(4):hover {
-  background: var(--color-button-generate-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-} 
-
-.ratings__buttons .btn:last-child {
-background-color: var(--color-button-view);
-}
-
-.ratings__buttons .btn:last-child:hover {
-  background-color: var(--color-button-view-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
 
 .input-error {
     border: 1px solid red !important;

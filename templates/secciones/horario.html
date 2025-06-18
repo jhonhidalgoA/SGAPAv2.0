@@ -1,7 +1,8 @@
 {% extends "main.html" %}
 {% include "components/modal.html" %}
 {% from "macros/macros.j2" import header %}
-{% block title %} MODULO ADMINISTRADOR | SGAPA {% endblock %}
+{% from "macros/buttons.j2" import btn with context %}
+{% block title %} M. ADMINISTRADOR | SGAPA {% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/horario.css') }}">
@@ -10,8 +11,7 @@
 {% block content %}
 <main>
     <section>
-        {{ header(titulo="Calendario", color__fondo="var(--color-pink)") }} 
-        
+        {{ header(titulo="Calendario", color__fondo="var(--color-pink)") }}
         <section class="container">
             <div class="horario">
                 <div class="container__title">
@@ -53,15 +53,13 @@
                         <!-- Las filas se generarán dinámicamente -->
                     </tbody>
                 </table>
+
                 <div class="planning__buttons">
-                    <button class="btn" id="agregar-hora" aria-label="Agregar nueva hora">Agregar<i
-                            class="material-symbols-outlined">add</i></button>
-                    <button class="btn" id="cargar" aria-label="Guardar horario">Guardar<i
-                            class="material-symbols-outlined">save</i></button>
-                    <button class="btn" id="guardar" aria-label="Guardar horario">Eliminar<i
-                            class="material-symbols-outlined">delete</i></button>
-                    <button class="btn" id="imprimir" aria-label="Imprimir horario">Imprimir<i
-                            class="material-symbols-outlined">print</i></button>
+                    {{ btn(icono="add", texto="Agregar", color="send", id="agregar-hora") }}
+                    {{ btn(icono="picture_as_pdf", texto="Guardar", color="save", tipo="submit") }}
+                    {{ btn(icono="delete", texto="Borrar", color="delete", tipo="reset") }}
+                    {{ btn(icono="print", texto="Imprimir", color="print") }}
+
                 </div>
             </div>
             <div class="asignacion">
@@ -158,7 +156,6 @@
 </main>|
 {% block extra_js %}
 <script>
-    /* Funcion modal */
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
     }

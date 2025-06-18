@@ -80,8 +80,6 @@ body {
     transform: rotate(180deg);
 }
 
-
-
 .assistance__group {
   display: flex;
   justify-content: space-around;
@@ -105,66 +103,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 80px;
-  margin-top: 30px;
-}
-
-.assistance__buttons .btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap:30px;
-  padding: 12px 24px;
-  width: 200px;
-  font-size: 18px;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top:20px;
-}
-
-.btn i{
-    font-size: 30px;
-}
-
-.assistance__buttons .btn:first-child {
-  background-color: var(--color-button-load);
-}
-
-.assistance__buttons .btn:nth-child(1):hover {
-  background-color: var(--color-button-load-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-.assistance__buttons .btn:nth-child(2) {
-  background: var(--color-button-save);
-}
-
-.assistance__buttons .btn:nth-child(2):hover {
-  background-color: var(--color-button-save-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-.assistance__buttons .btn:nth-child(3) {
-  background-color: var(--color-button-delete);
-}
-
-.assistance__buttons .btn:nth-child(3):hover {
-  background-color: var(--color-button-delete-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-.assistance__buttons .btn:last-child {
-  background-color: var(--color-button-print);
-}
-
-.assistance__buttons .btn:last-child:hover {
-  background-color: var(--color-button-print-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
+  margin-top: 50px;
 }
 
 .assistance__notes {

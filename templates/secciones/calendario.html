@@ -2,7 +2,6 @@
 {% from "macros/macros.j2" import header %}
 {% block title %} M. ADMINSITRADOR | SGAPA{% endblock %}
 
-
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/calendario.css') }}">
 {% endblock %}
@@ -12,7 +11,7 @@
     {{ header(titulo="Calendario Escolar Administrador", color__fondo="var( --color-primary)") }}
     <div class="container">
         <div class="header">
-            <h1>📅 Calendario de Eventos</h1>
+            <h1>📅 Calendario de Escolar</h1>
             <div class="calendar-nav">
                 <button class="nav-btn" onclick="previousMonth()">← Anterior</button>
                 <div class="current-month" id="currentMonth"></div>

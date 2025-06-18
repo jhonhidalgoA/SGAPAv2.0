@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="tabs">
-     {{ header(titulo="Calendario", color__fondo="var(--color-grey-card)") }}
+     {{ header(titulo="Usuarios", color__fondo="var(--color-grey-card)") }}
 
     <ul class="tab-nav">
         <li class="active" data-tab="tab1">Estudiantes</li>
@@ -120,7 +120,25 @@
 <script>   
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
-    }    
+    }
+    function showModal(title, message, action) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMessage").innerText = message;
+        window.modalAction = action;
+
+        const modal = document.getElementById("confirmModal");
+        modal.style.display = "flex";
+    }
+    document.getElementById("modalConfirm").addEventListener("click", function () {
+        if (typeof modalAction === 'function') {
+            modalAction();
+        }
+        document.getElementById("confirmModal").style.display = "none";
+    });
+
+    document.getElementById("modalCancel").addEventListener("click", function () {
+        document.getElementById("confirmModal").style.display = "none";
+    });
 </script>
 {% endblock %}
 

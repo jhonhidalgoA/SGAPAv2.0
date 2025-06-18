@@ -1,30 +1,44 @@
 {% extends "main.html" %}
+{% include "components/modal.html" %}
+{% from "macros/buttons.j2" import btn with context %}
+{% block title %} M. DOCENTE | SGAPA{% endblock %}
+
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tareas.css') }}">
-
 {% endblock %}
 
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-<div class="task" id="tareas">
-    <div class="registration__title">
-        <div class="title">
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-                <h2>Asignación Tareas</h2>
-            </div>
-        </div>
+<div class="container" id="tareas">
+    <div class="header">
         <div class="icon__return">
             <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
                 <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
             </a>
         </div>
+        <div class="title">
+            <div class="row__title">
+                <i class="material-symbols-outlined">format_list_numbered</i>
+                <h1>Asignación Tareas</h1>
+            </div>
+            <p>Sistema de Gestión Administrativa y Procesos Académicos (SGAPA) </p>
+        </div>
+        <div class="navbar__logo">
+            <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                class="icon material-symbols-outlined toggleBtn">
+                logout
+            </span>
+        </div>
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <script>
+        showModal("{{ category | title }}", "{{ message | safe}}", null);
+    </script>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
     <div class="task__parts">
         <div class="task__left">
             <div class="task__group">
@@ -98,7 +112,7 @@
 </div>
 {% block extra_js %}
 <script>
-    /* Funcion modal */
+    
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
     }

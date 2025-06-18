@@ -827,41 +827,69 @@ header.navbar.down {
     align-items: center;
 }
 
-.spinner{
-    width: 50px;
-    height: 50px;
-    border: 5px solid var(--color-primary-blue);
-    border-top: 5px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;"
+/* From Uiverse.io by satyamchaudharydev */ 
+.spinner {
+ --size: 30px;
+ --first-block-clr: #005bba;
+ --second-block-clr: #fed500;
+ --clr: #111;
+ width: 100px;
+ height: 100px;
+ position: relative;
 }
 
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.spinner::after,.spinner::before {
+ box-sizing: border-box;
+ position: absolute;
+ content: "";
+ width: var(--size);
+ height: var(--size);
+ top: 50%;
+ animation: up 2.4s cubic-bezier(0, 0, 0.24, 1.21) infinite;
+ left: 50%;
+ background: var(--first-block-clr);
 }
 
-/* Responsive styles */
-
-@media (max-width: 992px) {
-    .header {
-        padding: 1.3rem 5%;
-    }
+.spinner::after {
+ background: var(--second-block-clr);
+ top: calc(50% - var(--size));
+ left: calc(50% - var(--size));
+ animation: down 2.4s cubic-bezier(0, 0, 0.24, 1.21) infinite;
 }
 
+@keyframes down {
+ 0%, 100% {
+  transform: none;
+ }
 
-@media (max-width: 768px) {
-    .icons {
-        display: inline-flex;
-    }
+ 25% {
+  transform: translateX(100%);
+ }
 
-    .navbar {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        height: 17.7rem;
-        background: red;
-    }
+ 50% {
+  transform: translateX(100%) translateY(100%);
+ }
+
+ 75% {
+  transform: translateY(100%);
+ }
 }
+
+@keyframes up {
+ 0%, 100% {
+  transform: none;
+ }
+
+ 25% {
+  transform: translateX(-100%);
+ }
+
+ 50% {
+  transform: translateX(-100%) translateY(-100%);
+ }
+
+ 75% {
+  transform: translateY(-100%);
+ }
+}
+

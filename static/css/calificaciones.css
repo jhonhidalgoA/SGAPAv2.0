@@ -14,7 +14,7 @@ body{
    border-radius: 15px;
    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
    background: white; 
-    
+   overflow: hidden;    
 }
 
 .header {
@@ -79,11 +79,12 @@ body{
     transform: rotate(180deg);
 }
 
-
 .ratings__group {
   display: flex;
   justify-content: space-around;
+  gap:30px;
   margin-top: 20px;
+  
 }
 
 .ratings__group select {
@@ -98,7 +99,6 @@ body{
   margin-top:10px;
 }
 
-
 .ratings__buttons {
   display: flex;
   justify-content: center;
@@ -107,75 +107,6 @@ body{
   margin-top: 30px;
 }
 
-.ratings__buttons .btn {
-    display: flex;
-    align-items: center;
-    justify-content:center;
-    gap: 30px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    font-size: 18px;   
-    cursor: pointer;
-    width:200px;
-    transition: all 0.3s ease;
-    color: white;
-}
-
-.ratings__buttons .btn i{
-  font-size: 30px;
-}
-
-.ratings__buttons .btn:first-child {
-  background-color: var(--color-button-load);
-}
-
-.ratings__buttons .btn:nth-child(1):hover {
-  background-color: var(--color-button-load-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-.ratings__buttons .btn:nth-child(2) {
-  background: var(--color-button-save);
-}
-
-.ratings__buttons .btn:nth-child(2):hover {
-  background-color: var(--color-button-save-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-
-.ratings__buttons .btn:nth-child(3) {
-  background-color: var(--color-button-delete);
-}
-
-.ratings__buttons .btn:nth-child(3):hover {
-  background-color: var(--color-button-delete-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-.ratings__buttons .btn:nth-child(4) {
-  background-color: var(--color-button-print);
-}
-
-.ratings__buttons .btn:nth-child(4):hover {
-  background-color: var(--color-button-print-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
-
-.ratings__buttons .btn:last-child {
-  background-color: var(--color-button-view);
-}
-
-.ratings__buttons .btn:last-child:hover {
-  background-color: var(--color-button-view-hover);
-  transform: scale(1.10);
-  color: var(--color-hover-btn-2);
-}
 
 .alerta {
   width:55%;
@@ -201,78 +132,149 @@ body{
   pointer-events: none;
 }
 
+
 /* table*/
-.container__table{
-  display: flex;
-  justify-content: center;
-  margin-top:1px;   
- }
 
- .container__table .table{
-  width: 90%;
-  margin-bottom: 15px; 
- }
-
- .htCore td, .htCore th {
-  font-size: 18px !important;  
-  height: 40px !important;    
-  padding: 8px !important;
+.table-container {
+    padding: 20px;
+    overflow-x: auto;
 }
 
-.ht_master {
-  width: auto !important; 
-  max-width: 100%;         
+.tabla-editable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
- .nombre-apellido {
-  font-size: 18px;   
-  color: #fff;
-}
-
-.nota-final {
-    background-color:rgb(18, 130, 227);
-    color: #333;
-}
-
-/* Estilos para la tabla */
-.htCore td {
-    padding: 8px 12px;
+.tabla-editable th {
+    background: var(--color-primary);
+    color: white;
+    text-align: center;
+    padding: 12px 16px;
+    text-transform: uppercase;
     font-size: 14px;
+    font-weight: 600;
+    width:60px;
 }
 
-/* Estilo para nombres y apellidos */
-.nombre-apellido {
-    font-weight: 500;
-    color: #333;
-}
-
-/* Estilo para nota final */
-.nota-final {
-    background-color: #f9f9f9;
-    font-weight: bold;
-}
-
-/* Estilo para spinner de carga */
-.spin {
-    animation: spin 1s linear infinite;
-    display: inline-block;
+.tabla-editable td,
+.tabla-editable th {
+    padding: 10px 16px;
     vertical-align: middle;
+    border-bottom: 1px solid #e9ecef;
 }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.tabla-editable tr:hover {
+    background-color: #f8f9fa;
 }
 
-/* Estilo para botones deshabilitados */
-.btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+.nota-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    box-shadow: inset 0 0 0 1px #ddd;
+    
 }
 
-/* Estilo para celdas con error de validación */
-.htInvalid {
-    background-color: #ffdddd;
+.nota-input:focus {
+    outline: none;
+    border-color: var(--color-success);
+    background-color: #f1f3f9;
 }
+
+/* Quitar flechas */
+.nota-input::-webkit-inner-spin-button,
+.nota-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.nota-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.input-error {
+    border-color: #ff4d4d !important;
+    background-color: #ffe6e6 !important;
+}
+
+.nota-final {
+    font-weight: bold;
+    color: white;
+    padding: 6px 10px;
+    text-align: center;
+    border-radius: 4px;
+    display: inline-block;
+    min-width: 60px;
+}
+
+.nota-excelente {
+    background-color: #40c057;
+}
+
+.nota-buena {
+    background-color: #fab005;
+}
+
+.nota-regular {
+    background-color: #fd7e14;
+}
+
+.nota-deficiente {
+    background-color:#f40b0b;
+    
+}
+
+.alerta {
+    width: 80%;
+    margin: 10px auto 0 auto;    
+    color: #000;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    line-height: 1.5;
+    min-height: 50px;
+    display: none;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s ease-in-out;
+}
+
+
+
+.alerta.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.alerta.danger {
+    background:#f8081c;
+    color: white;
+    font-size:20px;
+}
+
+.alerta.ocultar,
+.alerta[style*="display: none"] {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+
+
+
 
 

@@ -266,11 +266,7 @@ function renderEventsList() {
                 <div class="event-info">
                     <div class="event-title">${event.title}</div>
                     <div class="event-dates">${dateRange}</div>
-                </div>
-                <div class="event-actions">
-                    <button class="edit-btn" onclick="editEvent(${event.id})" title="Editar evento">✏️</button>
-                    <button class="delete-btn" onclick="deleteEvent(${event.id})" title="Eliminar evento">🗑️</button>
-                </div>
+                </div>                
             </div>`;
     }).join('');
 }

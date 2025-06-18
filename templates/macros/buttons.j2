@@ -1,0 +1,10 @@
+{% macro btn(icono, texto, color='primary', id=None, onclick=None, tipo="button" ) %}
+    <button
+        type="{{tipo}}"
+        class="btn btn__{{ color }}" 
+        {% if id %}id="{{ id }}"{% endif %}
+        {% if onclick %}onclick="{{ onclick }}"{% endif %}>
+        <i class="material-symbols-outlined">{{ icono }}</i>
+        <span>{{ texto }}</span>     
+    </button>
+{% endmacro %}

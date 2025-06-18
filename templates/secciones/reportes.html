@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% include "components/modal.html" %}
+{% from "macros/buttons.j2" import btn with context %}
 {% block title %} M. DOCENTE | SGAPA{% endblock %}
 
 {% block extra_css %}
@@ -82,14 +83,10 @@
       </select>
     </div>
     <div class="report__buttons">
-      <button class="btn">
-        <i class="material-symbols-outlined">picture_as_pdf</i>
-        Generar
-      </button>
+      {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }}       
     </div>
   </div>
 </div>
-
 {% block extra_js %}
 <script>
   function confirmLogout() {

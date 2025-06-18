@@ -127,28 +127,3 @@ body {
   margin: 50px 0 20px 40px;
 }
 
-.report__buttons .btn {
-display: flex;
-align-items: center;
-justify-content: center;
-gap:30px;
-padding: 12px 24px;
-width: 200px;
-font-size: 18px;
-color: white;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-transition: all 0.3s ease;
-}
-
-.report__buttons .btn:first-child {
-  background: var(--color-button-generate);
-}
-
-.report__buttons .btn:nth-child(1):hover {
-  background: var(--color-button-generate-hover);
-  transform: scale(1.05);
-  color: var(--color-hover-btn-2);
-}
-  

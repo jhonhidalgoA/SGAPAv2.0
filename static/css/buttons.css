@@ -1,0 +1,98 @@
+@import url("variables.css");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+.btn{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    gap: 20px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;   
+    cursor: pointer;
+    width:200px;
+    transition: background-color 0.3s ease, transform 0.1s ease;  
+    color: var(--color-white); 
+    font-family: var(--font-family-primary);
+}
+
+.btn span {
+    vertical-align: middle;
+}
+
+.button i{
+  font-size: 30px;
+}
+
+.btn:hover{
+    transform: scale(1.10);
+    color: var(--color-hover-btn-2);
+
+}
+
+/* Colores por tipo*/
+
+.btn__load{
+    background-color: var(--color-button-load);
+}
+
+.btn__load:hover{
+  background-color: var(--color-button-load-hover);   
+} 
+
+.btn__save{
+    background: var(--color-button-save);
+}
+
+.btn__save:hover{
+    background: var(--color-button-save-hover);
+}
+
+.btn__print{
+    background: var(--color-button-print);
+}
+
+.btn__print:hover{
+    background: var(--color-button-print-hover);
+}
+
+.btn__delete{
+    background-color:var(--color-button-delete);
+}
+
+.btn__delete:hover{
+    background-color: var(--color-button-delete-hover);
+}
+
+.btn__print{
+    background-color: var(--color-button-print);
+}
+
+.btn__print:hover{
+    background-color: var(--color-button-print-hover);
+}
+
+.btn__view{
+    background-color: var(--color-button-view);
+}
+
+.btn__view:hover{
+    background-color: var(--color-button-view-hover);
+}
+
+.btn__generate{
+  background: var(--color-button-generate);
+}
+
+.btn__generate:hover{
+  background: var(--color-button-generate-hover);
+}
+
+.btn__send{
+    background-color: var(--color-button-send);
+}
+
+.btn__send:hover{
+  background-color: var(--color-button-send-hover);   
+} 

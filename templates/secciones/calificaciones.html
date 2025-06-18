@@ -1,11 +1,10 @@
 {% extends "main.html" %}
 {% include "components/modal.html" %}
+{% from "macros/buttons.j2" import btn with context %}
 {% block title %} M. DOCENTE | SGAPA{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/calificaciones.css') }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/styles/handsontable.min.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/styles/ht-theme-main.min.css" />
 {% endblock %}
 
 {% block content %}
@@ -30,6 +29,7 @@
             </span>
         </div>
     </div>
+    
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -39,6 +39,7 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
+
     <div class="ratings__group">
         <div class="group">
             <label for="grados-select">Grupo:</label>
@@ -75,14 +76,30 @@
         </div>
     </div>
     <div class="ratings__buttons">
-        <button class="btn" id="btn-cargar"><i class="material-symbols-outlined">add</i>Cargar</button>
-        <button class="btn" id="btn-guardar"><i class="material-symbols-outlined">save</i>Guardar</button>
-        <button class="btn"><i class="material-symbols-outlined">print</i>Imprimir</button>
-        <button class="btn"><i class="material-symbols-outlined">eye_tracking</i>Ver Notas</button>
+        {{ btn(icono="add", texto="Cargar", color="load", id="btn-cargar") }}        
+        {{ btn(icono="save", texto="Guardar", color="save") }} 
+        {{ btn(icono="delete", texto="Eliminar", color="delete") }}        
+        {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view") }}
     </div>
-    <div id="alerta" class="alerta ocultar"></div>
-    <div class="container__table">
-        <div id="example" class="ht-theme-main-dark-auto table"></div>
+    <div id="alerta" class="alerta"></div>
+    <div class="table-container">
+        <table id="tabla-calificaciones" class="tabla-editable">
+            <thead>
+                <tr>
+                    <th>Apellidos</th>
+                    <th>Nombres</th>
+                    <th>Nota 1</th>
+                    <th>Nota 2</th>
+                    <th>Nota 3</th>
+                    <th>Nota 4</th>
+                    <th>Nota 5</th>
+                    <th>Nota Final</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-cuerpo">
+                <!-- Aquí se insertan las filas dinámicamente -->
+            </tbody>
+        </button>
     </div>
 </div>
 
@@ -111,30 +128,8 @@
         document.getElementById("confirmModal").style.display = "none";
     });
 </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const camposVacios = urlParams.get('campos_vacios');
-
-        if (camposVacios) {
-            const listaCampos = camposVacios.split(',');
-
-            listaCampos.forEach(id => {
-                const input = document.getElementById(id);
-                if (input) {
-                    input.classList.add('input-error');
-                }
-            });
-        }
-        document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
-            input.addEventListener('input', function () {
-                this.classList.remove('input-error');
-            });
-        });
-    });
-</script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
 <script src="{{ url_for('static', filename='js/calificaciones.js') }}"></script>
+
 {% endblock %}
 
 {% endblock %}

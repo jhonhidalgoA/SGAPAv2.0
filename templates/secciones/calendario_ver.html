@@ -8,11 +8,29 @@
 {% endblock %}
 
 {% block content %}
-<div class="calendar__container">
-    {{ header(titulo="Calendario Escolar Docente", color__fondo="var( --color-primary)") }}
+<div class="calendar__container">    
     <div class="container">
         <div class="header">
-            <h1>📅 Calendario de Eventos</h1>
+            <div class="icon__return">
+                <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
+                    <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+                </a>
+            </div>
+            <div class="title">
+                <div class="row__title">
+                    <i class="material-symbols-outlined">calendar_month</i>
+                    <h1>Calendario de Escolar</h1>
+                </div>
+                <p>Sistema de Gestión Administrativa y Procesos Académicos (SGAPA) </p>
+            </div>
+            <div class="navbar__logo">
+                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                    class="icon material-symbols-outlined toggleBtn">
+                    logout
+                </span>
+            </div>        
+
+            
             <div class="calendar-nav">
                 <button class="nav-btn" onclick="previousMonth()">← Anterior</button>
                 <div class="current-month" id="currentMonth"></div>
@@ -36,7 +54,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+ 
    
 </div>
 {% block extra_js %}

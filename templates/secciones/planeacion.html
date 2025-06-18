@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% include "components/modal.html" %}
+{% from "macros/buttons.j2" import btn with context %}
 {% block title %} M. DOCENTE | SGAPA{% endblock %}
 
 {% block extra_css %}
@@ -163,18 +164,9 @@
       </div>
     </div>
     <div class="planning__buttons">
-      <button type="button" class="btn" onclick="limpiarFormulario()">
-        <i class="material-symbols-outlined">add</i>
-        Nuevo
-      </button>
-      <button type="submit" class="btn">
-        <i class="material-symbols-outlined">picture_as_pdf</i>
-        Guardar
-      </button>
-      <button type="button" class="btn" onclick="limpiarFormulario()">
-        <i class="material-symbols-outlined">delete_sweep</i>
-        Borrar
-      </button>
+      {{ btn(icono="add", texto="Nuevo", color="send", onclick="limpiarFormulario()", tipo="button") }}
+      {{ btn(icono="picture_as_pdf", texto="Guardar", color="save", tipo="submit") }}
+      {{ btn(icono="delete", texto="Borrar", color="delete", tipo="reset") }}
       <a href="{{ url_for('secciones.ver_consecutivos') }}" class="btn">
         <i class="material-symbols-outlined">eye_tracking</i>
         Ver

@@ -7,8 +7,8 @@ body{
 } 
 
 section {
-width: 90%;
-margin: 0 auto;
+    width: 90%;
+    margin: 0 auto;
 }
 
 .container {
@@ -118,72 +118,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     margin-top: 40px;
 }
 
- .btn {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 15px;
-    width: 140px;
-    font-size: 16px;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    
-}
 
-.planning__buttons .btn:first-child {
-    background: var(--color-button-load);
-
-}
-
-.planning__buttons .btn:nth-child(1):hover {
-    background: var(--color-button-load-hover);
-    transform: scale(1.10);
-    color: var(--color-hover-btn-2);
-}
-
-.planning__buttons .btn:nth-child(2) {
-    background: var(--color-button-save);
-
-}
-
-.planning__buttons .btn:nth-child(2):hover {
-    background: var(--color-button-save-hover);
-    transform: scale(1.10);
-    color: var(--color-hover-btn-2);
-}
-
-.planning__buttons .btn:nth-child(3) {
-    background: var(--color-button-delete);
-}
-
-.planning__buttons .btn:nth-child(3):hover {
-    background: var(--color-button-delete-hover);
-    transform: scale(1.10);
-    color: var(--color-hover-btn-2);
-}
-
-.planning__buttons .btn:nth-child(4) {
-    background: var(--color-button-print);
-}
-
-.planning__buttons .btn:nth-child(4):hover {
-    background: var(--color-button-print-hover);
-    transform: scale(1.10);
-    color: var(--color-hover-btn-2);
-
-}
-
-.planning__buttons .btn:nth-child(5) {
-    background: var(--color-button-view);
-}
-
-.planning__buttons .btn:nth-child(5):hover {
-    background: var(--color-button-view-hover);
-    transform: scale(1.10);
-    color: var(--color-hover-btn-2);
-}
 
 
 .break{
