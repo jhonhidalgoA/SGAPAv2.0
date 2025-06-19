@@ -28,16 +28,44 @@ body{
     flex-wrap: wrap;
 }
 
-.header .icon__return i{
-    font-size:2.5em;
-    color:white;
+.header .icon__return {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    position: relative;
 }
 
-.header .icon__return i:hover{
-    color: var(--color-accent);
-    transform:scale(1.2);
-    transition: all 0.3s ease;
-}  
+.header .icon__return i {
+    font-size: 2.5em;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.header .icon__return:hover {
+    animation: pulse-border 1s infinite;
+    transform: scale(1.1);
+}
+
+.header .icon__return:hover i {
+    color: var(--color-primary);
+} 
+
+@keyframes pulse-border {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
 
 .header .title{
     display:flex;
@@ -67,16 +95,47 @@ body{
   font-size: 1.2rem;
 } 
 
-.header span{
-    font-size: 2.5em;
-    cursor:pointer;
+@keyframes pulse-border {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
 }
 
-.header span:hover{
-    color: var(--color-accent);
-    transform:scale(1.2);
+/* Contenedor del icono */
+.navbar__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Icono en sí */
+.navbar__logo .icon {
+    font-size: 2.5em;
+    color: white;
     transition: all 0.3s ease;
-    transform: rotate(180deg);
+}
+
+/* Hover animado */
+.navbar__logo:hover {
+    animation: pulse-border 1s infinite;
+    transform: scale(1.1);
+}
+
+.navbar__logo:hover .icon {
+    color: var(--color-button-delete);
+    transform: rotate(180deg) scale(1.2);
 }
 
 .ratings__group {
@@ -133,7 +192,7 @@ body{
 }
 
 
-/* table*/
+/* tabla*/
 
 .table-container {
     padding: 20px;
@@ -231,7 +290,7 @@ body{
 }
 
 .nota-deficiente {
-    background-color:#f40b0b;
+    background-color: #f40b0b;
     
 }
 
@@ -251,9 +310,8 @@ body{
     opacity: 1;
     visibility: visible;
     transition: all 0.3s ease-in-out;
+    
 }
-
-
 
 .alerta.success {
     background: #d4edda;

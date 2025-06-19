@@ -1,5 +1,5 @@
 from flask import (Blueprint, render_template, 
-                   request, redirect, url_for, flash, jsonify, json, current_app, request, make_response)
+                   request, redirect, url_for, flash, jsonify, json, current_app, request, make_response, send_file)
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -16,6 +16,11 @@ import re
 from flask import current_app
 from functools import reduce
 from utils.consecutivo import obtener_siguiente_consecutivo
+import pymysql
+from flask import send_file
+from docx import Document
+from docx.shared import Pt
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 
 
@@ -238,8 +243,7 @@ def limpiar_datos():
 
     try:
         # Desactivar restricciones de llaves foráneas
-        cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
-        
+        cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")        
         cursor.execute("DELETE FROM matricula_estudiantes;")
         cursor.execute("DELETE FROM contactos_familiares;")
         cursor.execute("DELETE FROM users;")
@@ -263,7 +267,7 @@ def limpiar_datos():
     return redirect(url_for('secciones.matricula'))
 
 
-# Docente registro
+# REGISTRO DOCENTE
 @secciones.route('/guardar_docente', methods=['POST'])
 def guardar_docente():
     db = get_db()
@@ -369,10 +373,6 @@ def guardar_docente():
     return redirect(url_for('secciones.registro_docente'))
 
 
-@secciones.route('/calificaciones', methods=['GET', 'POST'])
-def calificaciones():
-    return render_template('secciones/calificaciones.html')
-
 @secciones.route('/asistencia', methods=['GET', 'POST'])
 def asistencia():
     return render_template('secciones/asistencia.html')
@@ -380,8 +380,6 @@ def asistencia():
 @secciones.route('/reportes', methods=['GET', 'POST'])
 def reportes():
     return render_template('secciones/reportes.html')
-
-
 
 @secciones.route('/tareas', methods=['GET', 'POST'])
 def tareas():
@@ -391,9 +389,7 @@ def tareas():
 def horario():
     return render_template('secciones/horario.html')
 
-@secciones.route('/calendario')
-def calendario():
-    return render_template('secciones/calendario.html')
+
 
 @secciones.route('/usuarios', methods=['GET', 'POST'])
 def usuarios():
@@ -408,13 +404,16 @@ def circulares():
     return render_template('secciones/circulares.html')  
 
 
-
+# --- CALIFICACIONES ---
 # 1 junio 2025
-@secciones.route('/api/estudiantes/<string:grupo>')
+@secciones.route('/calificaciones', methods=['GET', 'POST'])
+def calificaciones():
+    return render_template('secciones/calificaciones.html')
+
+@secciones.route('/api/estudiantes/<string:grupo>', methods=['GET'])
 def api_estudiantes(grupo):
     db = get_db()
     cursor = db.cursor()
-
     try:
         cursor.execute("""
             SELECT 
@@ -426,7 +425,7 @@ def api_estudiantes(grupo):
             JOIN estudiantes e ON m.student_id = e.student_id
             WHERE m.grade_id = %s
               AND m.academic_year = YEAR(CURRENT_DATE)
-            ORDER BY apellidos, nombres
+            ORDER BY  e.full_name ASC
         """, (grupo,))
         estudiantes = cursor.fetchall()
 
@@ -455,60 +454,16 @@ def api_estudiantes(grupo):
             "details": str(e)
         }), 500
 
-
-# Cargar notas existentes
-@secciones.route('/api/cargar-notas')
-def cargar_notas():
-    grupo = request.args.get('grupo')
-    asignatura = request.args.get('asignatura')
-    periodo = request.args.get('periodo')
-
-    if not all([grupo, asignatura, periodo]):
-        return jsonify({
-            "error": "Faltan parámetros: grupo, asignatura y periodo son obligatorios"
-        }), 400
-
-    db = get_db()
-    cursor = db.cursor()
-
-    try:
-        cursor.execute("""
-            SELECT * FROM valor_notas 
-            WHERE grade_id = %s AND subject_id = %s AND period_id = %s
-        """, (grupo, asignatura, periodo))
-        notas = cursor.fetchall()
-
-        data = [
-            {
-                "student_id": str(nota["student_id"]),
-                "nota1": str(nota["nota1"]) if nota["nota1"] is not None else "",
-                "nota2": str(nota["nota2"]) if nota["nota2"] is not None else "",
-                "nota3": str(nota["nota3"]) if nota["nota3"] is not None else "",
-                "nota4": str(nota["nota4"]) if nota["nota4"] is not None else "",
-                "nota5": str(nota["nota5"]) if nota["nota5"] is not None else "",
-                "nota_final": str(nota["nota_final"]) if nota["nota_final"] is not None else ""
-            }
-            for nota in notas
-        ]
-
-        return jsonify({"data": data, "success": True})
-
-    except Exception as e:
-        print(f"❌ Error al cargar notas: {str(e)}")
-        return jsonify({
-            "error": "No se pudieron cargar las notas",
-            "details": str(e)
-        }), 500
-
-
-# Endpoint para guardar nuevas notas
+# Guardar nuevas notas
 @secciones.route('/api/guardar-notas', methods=['POST'])
 def guardar_notas():
     data = request.get_json()
 
-    # Validación básica
     if not data or not isinstance(data, dict):
-        return jsonify({"error": "Datos inválidos"}), 400
+        return jsonify({
+            "error": "Datos inválidos",
+            "details": "No se recibió un JSON válido"
+        }), 400
 
     grupo = data.get('grupo')
     asignatura = data.get('asignatura')
@@ -517,64 +472,151 @@ def guardar_notas():
 
     if not all([grupo, asignatura, periodo]):
         return jsonify({
-            "error": "Faltan parámetros: grupo, asignatura y periodo son obligatorios"
+            "error": "Faltan parámetros obligatorios",
+            "missing": {
+                "grupo": grupo is None,
+                "asignatura": asignatura is None,
+                "periodo": periodo is None
+            }
         }), 400
 
-    
-    db = get_db()
-    cursor = db.cursor()
+    if not isinstance(notas_data, list) or len(notas_data) == 0:
+        return jsonify({
+            "error": "No hay estudiantes con notas para guardar",
+            "details": "El campo 'notas' está vacío o no es una lista"
+        }), 400
+
+    db = None
+    cursor = None
 
     try:
-        # Eliminar todas las notas anteriores 
+        db = get_db()
+        cursor = db.cursor()
+
+        # Eliminar notas previas del grupo, asignatura y período
         cursor.execute("""
-            DELETE FROM valor_notas
+            DELETE FROM valor_notas 
             WHERE grade_id = %s AND subject_id = %s AND period_id = %s
         """, (grupo, asignatura, periodo))
-        db.commit()
 
         # Insertar nuevas notas
         for nota in notas_data:
             student_id = nota.get("student_id")
-            nota1 = nota.get("nota1")
-            nota2 = nota.get("nota2")
-            nota3 = nota.get("nota3")
-            nota4 = nota.get("nota4")
-            nota5 = nota.get("nota5")
+            nota1 = float(nota.get("nota1")) if nota.get("nota1") else None
+            nota2 = float(nota.get("nota2")) if nota.get("nota2") else None
+            nota3 = float(nota.get("nota3")) if nota.get("nota3") else None
+            nota4 = float(nota.get("nota4")) if nota.get("nota4") else None
+            nota5 = float(nota.get("nota5")) if nota.get("nota5") else None
 
             cursor.execute("""
                 INSERT INTO valor_notas (
-                    grade_id,
-                    student_id,
-                    subject_id,
-                    period_id,
-                    nota1,
-                    nota2,
-                    nota3,
-                    nota4,
-                    nota5
-                )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    grade_id, student_id, subject_id, period_id, 
+                    nota1, nota2, nota3, nota4, nota5
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 grupo, student_id, asignatura, periodo,
                 nota1, nota2, nota3, nota4, nota5
             ))
 
         db.commit()
+
         return jsonify({
-            "message": "Notas guardadas correctamente",
-            "success": True
+            "message": "✅ Notas guardadas correctamente",
+            "total_registros": len(notas_data),
+            "grupo": grupo,
+            "asignatura": asignatura,
+            "periodo": periodo
         })
 
     except Exception as e:
-        db.rollback()
+        if db:
+            db.rollback()
         print(f"❌ Error al guardar notas: {str(e)}")
         return jsonify({
             "error": "No se pudieron guardar las notas",
             "details": str(e)
         }), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if db and hasattr(db, 'close'):
+            db.close()
+
+# Cargar notas existentes
+@secciones.route('/api/cargar-notas', methods=['GET'])
+def cargar_notas():
+    grupo = request.args.get('grupo')
+    asignatura = request.args.get('asignatura')
+    periodo = request.args.get('periodo')
+
+    if not all([grupo, asignatura, periodo]):
+        return jsonify({
+            "error": "Faltan parámetros obligatorios",
+            "missing": {
+                "grupo": grupo is None,
+                "asignatura": asignatura is None,
+                "periodo": periodo is None
+            }
+        }), 400
+
+    try:
+        db = get_db()
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+
+        cursor.execute("""
+            SELECT student_id, nota1, nota2, nota3, nota4, nota5
+            FROM valor_notas
+            WHERE grade_id = %s AND subject_id = %s AND period_id = %s
+        """, (grupo, asignatura, periodo))
+
+        notas = cursor.fetchall()
+        return jsonify({"data": notas})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     
- # Menú escolar
- 
+@secciones.route('/api/notas-estudiante', methods=['GET'])
+def get_notas_estudiante():
+    grupo = request.args.get('grupo')
+    estudiante_id = request.args.get('estudiante')
+    periodo = request.args.get('periodo') or '1'  # Por defecto
+
+    if not all([grupo, estudiante_id]):
+        return jsonify({"error": "Faltan parámetros"}), 400
+
+    try:
+        db = get_db()
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+
+        # Obtener datos del estudiante
+        cursor.execute("""
+            SELECT e.full_name, e.document_number, m.grade_id 
+            FROM estudiantes e
+            JOIN matricula_estudiantes m ON e.student_id = m.student_id
+            WHERE e.student_id = %s AND m.grade_id = %s
+        """, (estudiante_id, grupo))
+        estudiante = cursor.fetchone()
+        
+        # Obtener notas del estudiante
+        cursor.execute("""
+            SELECT v.nota1, v.nota2, v.nota3, v.nota4, v.nota5, s.name AS asignatura
+            FROM valor_notas v
+            JOIN asignaturas s ON v.subject_id = s.subject_id
+            WHERE v.grade_id = %s AND v.student_id = %s AND v.period_id = %s
+        """, (grupo, estudiante_id, periodo))
+        notas = cursor.fetchall()
+
+        return jsonify({
+            "estudiante": estudiante,
+            "notas": notas
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500    
+    
+
+ # ---MENÚ ESCOLAR ---
 def reordenar_menu(menu):
     ordered = {}
     for dia in ORDEN_DIAS:
@@ -621,8 +663,6 @@ def guardar_cambios():
 
     return jsonify({ "success": True })
 
-
-
 @secciones.route('/editar_menu', methods=['GET', 'POST'])
 def editar_menu(): 
     ruta_json = os.path.join(current_app.static_folder, "data", "menu.json")
@@ -647,12 +687,18 @@ def cargar_menu():
 
     return reordenar_menu(menu)
 
-# Calendario
+
+
+# CALENDARIO
+@secciones.route('/calendario')
+def calendario():
+    return render_template('secciones/calendario.html')
+
 @secciones.route('/obtener-eventos', methods=['GET'])
 def obtener_eventos():
     connection = None
     try:
-        connection = get_db()  # Ya tienes esta función lista
+        connection = get_db()  
         with connection.cursor() as cursor:
             sql = "SELECT id, titulo, fecha_inicio, fecha_fin, color FROM eventos_calendario"
             cursor.execute(sql)
@@ -781,7 +827,7 @@ def ver_calendario():
     return render_template('secciones/calendario_ver.html')
 
 
-# Planeacion
+# PLANEACIÓN
 @secciones.route('/generar_pdf', methods=['POST'])
 def generar_pdf():
     datos = {
@@ -799,7 +845,7 @@ def generar_pdf():
         'proyecto_transversal': request.form.get('proyecto_transversal')
     }
 
-    # Validar campos obligatorios
+   
     if not all([datos['fecha_inicio'], datos['fecha_fin'], datos['periodo'], datos['grado'], datos['asignatura']]):
         flash("⚠️ Faltan campos obligatorios", "warning")
         return redirect(url_for('secciones.planeacion'))
@@ -1017,3 +1063,98 @@ def editar_consecutivo(id):
     finally:
         cursor.close()
         db.close()
+
+@secciones.route('/generar-boletin-word', methods=['POST'])
+def generar_boletin_word():
+    data = request.get_json()
+    grupo = data.get('grupo')
+    estudiante_id = data.get('estudiante_id')
+    
+    if not grupo or not estudiante_id:
+        return jsonify({"error": "Faltan parámetros obligatorios"}), 400
+
+    try:
+        db = get_db()
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+
+        # Obtener datos del estudiante
+        cursor.execute("""
+            SELECT 
+                e.student_id,
+                e.full_name,
+                e.document_number,
+                m.grade_id
+            FROM estudiantes e
+            JOIN matricula_estudiantes m ON e.student_id = m.student_id
+            WHERE e.student_id = %s AND m.grade_id = %s
+        """, (estudiante_id, grupo))
+        estudiante = cursor.fetchone()
+
+        if not estudiante:
+            return jsonify({"error": "Estudiante no encontrado en este grado"}), 404
+
+        # Cargar plantilla Word
+        try:
+            doc = Document("Colegio Educativo SGAPA.docx")
+        except Exception as e:
+            return jsonify({"error": "No se encontró la plantilla Word", "details": str(e)}), 500
+
+        # Función para reemplazar texto con formato
+        def replace_with_format(paragraph, placeholder, text, bold=False, uppercase=False):
+            if placeholder in paragraph.text:
+                # Dividir el texto para mantener el contexto
+                before, after = paragraph.text.split(placeholder, 1)
+                
+                # Limpiar el párrafo
+                paragraph.clear()
+                
+                
+                if before:
+                    paragraph.add_run(before)
+                
+                # Procesar el texto
+                processed_text = text.upper() if uppercase else text
+                
+                # Agregar el texto con formato
+                run = paragraph.add_run(processed_text)
+                run.bold = bold
+                
+                # Agregar la parte posterior normal
+                if after:
+                    paragraph.add_run(after)
+
+        # Reemplazar los placeholders con formato
+        for paragraph in doc.paragraphs:
+            replace_with_format(paragraph, '{nombre}', estudiante['full_name'], bold=True, uppercase=True)
+            replace_with_format(paragraph, '{documento}', str(estudiante['document_number']))
+            replace_with_format(paragraph, '{grado}', str(grupo))
+            replace_with_format(paragraph, '{jornada}', 'única')
+            replace_with_format(paragraph, '{año}', '2025')
+            replace_with_format(paragraph, '{día}', '18')
+            replace_with_format(paragraph, '{mes}', 'Junio')
+            replace_with_format(paragraph, '{año de fecha}', '2025')
+
+        # Guardar archivo temporal
+        archivo_temporal = f"boletin_{estudiante_id}.docx"
+        doc.save(archivo_temporal)
+
+        # Enviar el archivo y luego eliminarlo
+        response = send_file(
+            archivo_temporal,
+            as_attachment=True,
+            download_name=f"Boletin_{estudiante['full_name'].replace(' ', '_')}.docx"
+        )
+        
+        # Eliminar el archivo temporal después de enviarlo
+        try:
+            os.remove(archivo_temporal)
+        except:
+            pass
+
+        return response
+
+    except Exception as e:
+        return jsonify({
+            "error": "Error interno del servidor",
+            "details": str(e)
+        }), 500

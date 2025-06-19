@@ -260,6 +260,25 @@
       });
     });
   });
+
+  const textarea = document.getElementById('competencias');
+  const objetivos = document.getElementById('objetivos');
+
+  textarea.addEventListener('input', function () {
+    const lines = textarea.value.split('\n');
+    textarea.value = lines.map(line => {
+      if (line.trim().startsWith('•')) return line;
+      return '• ' + line.trim();
+    }).join('\n');
+  });
+
+  objetivos.addEventListener('input', function () {
+    const lines = objetivos.value.split('\n');
+    objetivos.value = lines.map(line => {
+      if (line.trim().startsWith('•')) return line;
+      return '• ' + line.trim();
+    }).join('\n');
+  });
 </script>
 {% endblock %}
 

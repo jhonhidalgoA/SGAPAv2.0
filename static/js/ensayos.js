@@ -72,8 +72,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function calcularPromedio(notas) {
     const notasValidas = notas.filter(n => n !== null && n !== '');
-    return notasValidas.length
-        ? (notasValidas.reduce((a, b) => a + parseFloat(b), 0) / notasValidas.length).toFixed(1)
+    return notasValidas.length 
+        ? (notasValidas.reduce((a, b) => a + parseFloat(b), 0) / notasValidas.length).toFixed(1) 
         : '';
 }
 
@@ -88,11 +88,11 @@ function getClaseNota(nota) {
 function validarNota(valor) {
     // Eliminar caracteres no numéricos salvo punto y coma decimal
     let numero = valor.replace(/[^0-9.,]/g, '');
-
+   
     numero = numero.replace(',', '.');
 
     const n = parseFloat(numero);
-
+    
     if (isNaN(n) || numero === '') {
         return { valido: false, valor: '', mensaje: '❌ Valor inválido', fueraDeRango: false };
     } else if (n < 1.0) {
@@ -117,11 +117,11 @@ function crearFila(estudiante) {
         <td><input class="nota-input" type="number" step="0.1" min="1" max="5" value="${estudiante.nota4 || ''}"></td>
         <td><input class="nota-input" type="number" step="0.1" min="1" max="5" value="${estudiante.nota5 || ''}"></td>
         <td><div class="nota-final ${getClaseNota(calcularPromedio([
-        estudiante.nota1, estudiante.nota2, estudiante.nota3, estudiante.nota4, estudiante.nota5
-    ]))}">
+            estudiante.nota1, estudiante.nota2, estudiante.nota3, estudiante.nota4, estudiante.nota5
+        ]))}">
                 ${calcularPromedio([
-        estudiante.nota1, estudiante.nota2, estudiante.nota3, estudiante.nota4, estudiante.nota5
-    ])}</div>
+                    estudiante.nota1, estudiante.nota2, estudiante.nota3, estudiante.nota4, estudiante.nota5
+                ])}</div>
         </td>
     `;
 
@@ -146,10 +146,10 @@ let alertasPersistentes = new Map();
 
 function mostrarAlertaPersistente(input, mensaje, tipo = 'danger') {
     const inputId = input.dataset.inputId || Math.random().toString(36).substr(2, 9);
-    input.dataset.inputId = inputId;
-
+    input.dataset.inputId = inputId;    
+  
     alertasPersistentes.set(inputId, { mensaje, tipo });
-
+    
     const alertaDiv = document.getElementById('alerta');
     if (!alertaDiv) return;
 
@@ -157,15 +157,15 @@ function mostrarAlertaPersistente(input, mensaje, tipo = 'danger') {
     alertaDiv.className = `alerta ${tipo}`;
     alertaDiv.classList.remove('ocultar');
     alertaDiv.style.display = 'block';
-
-
+    
+    
 }
 
 function ocultarAlertaPersistente(input) {
     const inputId = input.dataset.inputId;
     if (inputId && alertasPersistentes.has(inputId)) {
         alertasPersistentes.delete(inputId);
-
+        
         // Solo ocultar si no hay más alertas persistentes
         if (alertasPersistentes.size === 0) {
             const alertaDiv = document.getElementById('alerta');
@@ -193,9 +193,9 @@ function configurarEventListenersNotas(input) {
         } else {
             this.classList.remove('input-error');
             ocultarAlertaPersistente(this);
-
+            
         }
-
+        
         const fila = this.closest('tr');
         const todasNotas = fila.querySelectorAll('.nota-input');
         const valores = Array.from(todasNotas).map(i => i.value);
@@ -217,13 +217,13 @@ function configurarEventListenersNotas(input) {
                 this.placeholder = '';
             }
             this.classList.add('input-error');
-        } else {
+        } else {           
             this.value = resultado.valor;
             this.classList.remove('input-error');
             ocultarAlertaPersistente(this);
         }
 
-
+        
         recalcularPromedios({ target: this });
     });
 
@@ -236,7 +236,7 @@ function configurarEventListenersNotas(input) {
 
 //  Navegacion por teclado
 document.addEventListener('DOMContentLoaded', () => {
-    document.addEventListener('keydown', function (e) {
+    document.addEventListener('keydown', function(e) {
         const active = document.activeElement;
 
         if (active && active.classList.contains('nota-input')) {
@@ -288,7 +288,6 @@ async function cargarDatos() {
     const asignatura = document.getElementById('asignatura-select').value;
     const periodo = document.getElementById('periodos-select').value;
     const btnCargar = document.getElementById('btn-cargar');
-    const containerTabla = document.getElementById('tabla-cuerpo');
 
     btnCargar.innerHTML = '<i class="material-symbols-outlined spin">refresh</i> Cargando...';
     btnCargar.disabled = true;
@@ -297,19 +296,16 @@ async function cargarDatos() {
         // Cargar estudiantes del grupo
         const resEstudiantes = await fetch(`/secciones/api/estudiantes/${grupo}`);
         if (!resEstudiantes.ok) throw new Error('No se encontraron estudiantes');
+
         const dataEstudiantes = await resEstudiantes.json();
 
         // Cargar notas existentes
         const resNotas = await fetch(`/secciones/api/cargar-notas?grupo=${grupo}&asignatura=${asignatura}&periodo=${periodo}`);
-        const dataNotas = resNotas.ok ? await resNotas.json() : { data: [] };
+        const dataNotas = resNotas.ok ? await resNotas.json() : {data: []};
 
-        // Mostrar datos recibidos (opcional)
-        console.log("Estudiantes:", dataEstudiantes.data);
-        console.log("Notas:", dataNotas.data);
-
-        // Combinar datos por student_id
+        // Combinar datos
         const datosCombinados = dataEstudiantes.data.map(est => {
-            const notaEncontrada = dataNotas.data.find(n => n.student_id === parseInt(est.student_id)) || {};
+            const notaEncontrada = dataNotas.data.find(n => n.id === est.id) || {};
             return {
                 ...est,
                 nota1: notaEncontrada.nota1 || '',
@@ -326,7 +322,7 @@ async function cargarDatos() {
             const fila = crearFila(est);
             containerTabla.appendChild(fila);
 
-            // Volver a configurar eventos
+            
             fila.querySelectorAll('.nota-input').forEach(input => {
                 configurarEventListenersNotas(input);
             });
@@ -349,66 +345,36 @@ async function guardarNotas() {
     const grupo = document.getElementById('grados-select').value;
     const asignatura = document.getElementById('asignatura-select').value;
     const periodo = document.getElementById('periodos-select').value;
+
     const filas = document.querySelectorAll('#tabla-cuerpo tr');
-
-    // Validación: ¿Hay estudiantes cargados?
-    if (filas.length === 0) {
-        mostrarAlerta("⚠️ No hay estudiantes cargados para guardar", 'danger');
-        return;
-    }
-
-    // Construir datos de notas
-    const notasData = [];
-
-    filas.forEach(fila => {
+    const notasData = Array.from(filas).map(fila => {
         const celdas = fila.querySelectorAll('td');
+        const apellidos = celdas[0].querySelector('input').value.trim();
+        const nombres = celdas[1].querySelector('input').value.trim();
+        const nota1 = celdas[2].querySelector('input').value.trim();
+        const nota2 = celdas[3].querySelector('input').value.trim();
+        const nota3 = celdas[4].querySelector('input').value.trim();
+        const nota4 = celdas[5].querySelector('input').value.trim();
+        const nota5 = celdas[6].querySelector('input').value.trim();
+        const nota_final = celdas[7].querySelector('.nota-final').textContent;
 
-        if (!celdas || celdas.length < 8) return;
-
-        const student_id = fila.dataset.id; // ← Aquí obtenemos el ID del estudiante
-        const apellidos = celdas[0].querySelector('input')?.value.trim() || '';
-        const nombres = celdas[1].querySelector('input')?.value.trim() || '';
-        const nota1 = celdas[2].querySelector('input')?.value.trim() || '';
-        const nota2 = celdas[3].querySelector('input')?.value.trim() || '';
-        const nota3 = celdas[4].querySelector('input')?.value.trim() || '';
-        const nota4 = celdas[5].querySelector('input')?.value.trim() || '';
-        const nota5 = celdas[6].querySelector('input')?.value.trim() || '';
-        const nota_final = celdas[7].querySelector('.nota-final')?.textContent.trim() || '';
-
-        // Solo agregar si al menos una nota no está vacía
-        if ([nota1, nota2, nota3, nota4, nota5].some(nota => nota !== '')) {
-            notasData.push({
-                student_id,
-                apellidos,
-                nombres,
-                nota1,
-                nota2,
-                nota3,
-                nota4,
-                nota5,
-                nota_final
-            });
-        }
+        return {
+            apellidos, nombres, nota1, nota2, nota3, nota4, nota5, nota_final
+        };
     });
-
-    // Validación final
-    if (notasData.length === 0) {
-        mostrarAlerta("⚠️ No hay estudiantes con notas para guardar", 'danger');
-        return;
-    }
 
     try {
         const response = await fetch('/secciones/api/guardar-notas', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ grupo, asignatura, periodo, notas: notasData }) // ← Aquí usamos "notas"
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ grupo, asignatura, periodo, notasData })
         });
 
         const result = await response.json();
-
-        if (!response.ok) throw new Error(result.error || 'Error al guardar las notas');
+        if (!response.ok) throw new Error(result.error || 'Error al guardar');
 
         mostrarAlerta('✅ Notas guardadas correctamente', 'success');
+
     } catch (error) {
         mostrarAlerta(`❌ ${error.message}`, 'danger');
     }

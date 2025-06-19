@@ -43,47 +43,45 @@
         <label for="grados-select">Grupo:</label>
         <select id="grados-select" name="grados" aria-label="Selecciona un grado">
           <option value="">Seleccionar</option>
-          <option value="601">Grado 601</option>
-          <option value="602">Grado 602</option>
-          <option value="603">Grado 603</option>
-          <option value="604">Grado 604</option>
-          <option value="605">Grado 605</option>
+          <option value="6">Grado Sexto </option>
+          <option value="7">Grado Séptimo</option>
+          <option value="8">Grado Octavo</option>
+          <option value="8">Grado Noveno</option>
+          <option value="10">Grado Décimo</option>
+          <option value="11">Grado Undécimo</option>
         </select>
       </div>
       <div class="subjects">
-        <label for="grados-select">Estudiante:</label>
-        <select id="grados-select" name="grados" aria-label="Selecciona una asignatura">
+        <label for="name-student">Estudiante:</label>
+        <select id="name-student" name="name-student" aria-label="Selecciona una nombre">
           <option value="">Seleccionar</option>
-          <option value="matematicas">Agudelo Pérez Ana María</option>
-          <option value="catellano">Alvarez Ríos Camilo Andrés</option>
-          <option value="tecnologia">Arango Vargas Felipe</option>
-          <option value="etica">Benítez Gómez Luisa Fernanda</option>
-          <option value="artistica">Cárdenas López Esteban Daniel</option>
+          <!--aqui dinamicamente los nombres-->
         </select>
       </div>
       <div class="period">
-        <label for="grados-select">Periodo:</label>
-        <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
-          <option value="primero">Primero</option>
-          <option value="segundo">Segundo</option>
-          <option value="tercero">Terecero</option>
-          <option value="cuarto">Cuarto</option>
+        <label for="periodos-select">Periodo:</label>
+        <select id="periodos-select" name="periodo" aria-label="Selecciona un Periodo">
+          <option value="">Seleccionar</option>
+          <option value="1">Primero</option>
+          <option value="2">Segundo</option>
+          <option value="3">Tercero</option>
+          <option value="4">Cuarto</option>
         </select>
       </div>
     </div>
     <div class="report__type">
-      <label for="grados-select"> Tipo de Reporte:</label>
-      <select id="grados-select" name="grados" aria-label="Reporte">
+      <label for="report"> Tipo de Reporte:</label>
+      <select id="report" name="report" aria-label="Selecciona un Reporte">
         <option value="">Seleccionar</option>
-        <option value="primero">Boletin de Calificaciones</option>
-        <option value="segundo">Plan de Ajuste Razonable PIAR</option>
-        <option value="tercero">Informe de Aprobación y Reprobación</option>
-        <option value="cuarto">Concentrador de Notas por Período</option>
-        <option value="cuarto">Concentrador de Notas todos los Períodos</option>
+        <option value="boletin">Boletin de Calificaciones</option>
+        <option value="certificado">Certificado Escolar</option>
+        <option value="concentrador">Concentrador de Notas por Período</option>
+        <option value="informe">Informe de Aprobación y Reprobación</option>
+        <option value="plan">Plan de Ajuste Razonable PIAR</option>
       </select>
     </div>
     <div class="report__buttons">
-      {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }}       
+      {{ btn(icono="picture_as_pdf", texto="Generar", color="generate", id="btn-generar-word") }}
     </div>
   </div>
 </div>
@@ -110,6 +108,94 @@
 
   document.getElementById("modalCancel").addEventListener("click", function () {
     document.getElementById("confirmModal").style.display = "none";
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Escuchar cambios en grado para cargar estudiantes
+    const gradosSelect = document.getElementById('grados-select');
+    const estudiantesSelect = document.getElementById('name-student');
+    const reporteSelect = document.getElementById('report');
+    const btnGenerar = document.getElementById('btn-generar-word');
+    const periodo = document.getElementById('periodos-select').value || '1';
+
+    // Cargar estudiantes cuando se selecciona un grupo
+    gradosSelect.addEventListener('change', async function () {
+      const grupo = this.value;
+      if (!grupo) {
+        estudiantesSelect.innerHTML = '<option value="">Selecciona un grupo primero</option>';
+        estudiantesSelect.disabled = true;
+        return;
+      }
+
+      estudiantesSelect.innerHTML = '<option value="">Cargando...</option>';
+      estudiantesSelect.disabled = true;
+
+      try {
+        const res = await fetch(`/secciones/api/estudiantes/${grupo}`);
+        const data = await res.json();
+
+        if (!res.ok || !data.data || data.data.length === 0) {
+          estudiantesSelect.innerHTML = '<option>No hay estudiantes</option>';
+          return;
+        }
+
+        estudiantesSelect.innerHTML = '<option value="">Selecciona un estudiante</option>';
+
+        data.data.forEach(est => {
+          const option = document.createElement('option');
+          option.value = est.student_id;
+          option.textContent = est.full_name;
+          estudiantesSelect.appendChild(option);
+        });
+
+        estudiantesSelect.disabled = false;
+
+      } catch (error) {
+        console.error("❌ Error al cargar estudiantes:", error);
+        estudiantesSelect.innerHTML = '<option>Error al cargar</option>';
+      }
+    });
+
+    // Habilitar botón solo si se selecciona Boletín + grado + estudiante
+    function validarFormulario() {
+      const grupo = gradosSelect.value;
+      const estudiante = estudiantesSelect.value;
+      const tipoReporte = reporteSelect.value;
+      btnGenerar.disabled = !(grupo && estudiante && tipoReporte === 'boletin');
+    }
+
+    [gradosSelect, estudiantesSelect, reporteSelect].forEach(el => {
+      el.addEventListener('change', validarFormulario);
+    });
+
+    // Generar boletín Word rellenado
+    btnGenerar.addEventListener('click', async () => {
+      const grupo = gradosSelect.value;
+      const estudiante_id = estudiantesSelect.value;
+      const periodo = document.getElementById('periodos-select').value || '1';
+
+      if (!grupo || !estudiante_id) return alert("⚠️ Faltan datos");
+
+      try {
+        const response = await fetch('/secciones/generar-boletin-word', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ grupo, estudiante_id, periodo })
+        });
+
+        if (!response.ok) throw new Error("Error al generar el documento");
+
+        const blob = await response.blob();
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `boletin_${estudiante_id}.docx`;
+        link.click();
+
+      } catch (error) {
+        alert(`❌ ${error.message}`);
+      }
+    });
   });
 </script>
 {% endblock %}
