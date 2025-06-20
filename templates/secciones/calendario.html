@@ -8,10 +8,9 @@
 
 {% block content %}
 <div class="calendar__container">
-    {{ header(titulo="Calendario Escolar Administrador", color__fondo="var( --color-primary)") }}
-    <div class="container">
-        <div class="header">
-            <h1>📅 Calendario de Escolar</h1>
+    {{ header(titulo="Calendario Escolar Administrador", color__fondo="var(--color-orange-sunset)") }}
+    <div class="container__header">
+        <div class="header__calendar">           
             <div class="calendar-nav">
                 <button class="nav-btn" onclick="previousMonth()">← Anterior</button>
                 <div class="current-month" id="currentMonth"></div>

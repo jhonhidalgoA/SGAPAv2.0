@@ -1,16 +1,16 @@
 {% extends "main.html" %}
+{% from "macros/header-block.j2" import header_block %}
 {% from "macros/macros.j2" import header %}
 {% block title %} M. DOCENTE | SGAPA{% endblock %}
-
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/calendario_ver.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="calendar__container">    
-    <div class="container">
-        <div class="header">
+<div class="calendar__container">
+    <div class="container__header">
+        <div class="header__calendar">
             <div class="icon__return">
                 <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
                     <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
@@ -28,16 +28,14 @@
                     class="icon material-symbols-outlined toggleBtn">
                     logout
                 </span>
-            </div>        
-
-            
+            </div>
+        </div>
+        <div class="calendar-section">
             <div class="calendar-nav">
                 <button class="nav-btn" onclick="previousMonth()">← Anterior</button>
                 <div class="current-month" id="currentMonth"></div>
                 <button class="nav-btn" onclick="nextMonth()">Siguiente →</button>
             </div>
-        </div>
-        <div class="calendar-section">
             <div class="calendar-grid" id="calendarGrid">
                 <div class="day-header">Dom</div>
                 <div class="day-header">Lun</div>
@@ -54,13 +52,13 @@
         </div>
     </div>
 
- 
-   
+
+
 </div>
 {% block extra_js %}
 <script src="{{url_for('static', filename = 'js/calendario_ver.js')}}"></script>
 <script>
- function confirmLogout() {
+    function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
     }
 </script>

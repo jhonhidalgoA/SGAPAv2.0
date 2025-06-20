@@ -4,6 +4,7 @@
 
 body{  
   font-family: 'Poppins', sans-serif;
+  /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
 }
 
 .tabs {
@@ -42,7 +43,7 @@ body{
   padding: 20px;
   border: 2px solid #ccc;
   margin-top:15px;
-  border-radius: 0 5px 5px 5px;
+  border-radius: 0 0 10px 10px;
   height:500px;
 }
 
@@ -53,7 +54,7 @@ body{
 .registration__form {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 5px;    
 }
 
 .registration__form h3{
@@ -64,7 +65,7 @@ body{
     margin-top: 20px;
     display: flex;
     gap: 20px;
-    align-items: flex-start;
+    align-items: flex-start;    
 }
 
 .photo__container {
@@ -123,7 +124,7 @@ body{
     gap: 10px;
     flex-direction: column; 
     position: relative;
-    bottom: 30px; 
+    bottom: 30px;    
      
 }
 

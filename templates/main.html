@@ -6,7 +6,7 @@
         Proyecto: SGAPA - Software de Gestión Escolar
         Empresa: SGAPA
         Descripción: Plantilla base del sistema SGAPA
-        Autores: [Emmanuel Medina, Juan Esteban Giraldo, Jhon F. Hidalgo]
+        Autor: [ Jhon F. Hidalgo]
         Última actualización: [12-Jun-2025]
     ==================================== -->
 
@@ -42,7 +42,8 @@
 
     <!-- Macro botones-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">    
-
+    <!-- Header block-->
+     <link rel="stylesheet" href="{{url_for('static', filename='css/header-block.css')}}">
     
     {% block extra_css %}{% endblock %}   
 

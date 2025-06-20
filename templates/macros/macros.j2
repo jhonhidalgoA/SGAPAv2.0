@@ -1,17 +1,16 @@
 {% macro header(titulo, color__fondo='white') %}
-<div class="registration__title" style="background-color: {{ color__fondo }};">    
-        <div class="navbar__logo">
+<div class="header" style="background-color: {{ color__fondo }};">    
+        <div class="logo">
             <a href="{{ url_for('dashboards.dashboard_administrador') }}">
                 <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
             </a>            
             <h2>{{ titulo }}</h2>
+        </div>    
+        <div class="return">
+            <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+                    class="icon material-symbols-outlined toggleBtn">
+                    logout
+            </span>        
         </div>
-    
-    <div class="icon__return">
-        <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                class="icon material-symbols-outlined toggleBtn">
-                logout
-        </span>        
-    </div>
 </div>
 {% endmacro %}

@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% include "components/modal.html" %}
+{% from "macros/header-block.j2" import header_block %}
 {% from "macros/buttons.j2" import btn with context %}
 {% block title %} M. DOCENTE | SGAPA{% endblock %}
 
@@ -10,26 +11,9 @@
 
 {% block content %}
 <div class="container" id="tareas">
-    <div class="header">
-        <div class="icon__return">
-            <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
-                <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-            </a>
-        </div>
-        <div class="title">
-            <div class="row__title">
-                <i class="material-symbols-outlined">format_list_numbered</i>
-                <h1>Asignación Tareas</h1>
-            </div>
-            <p>Sistema de Gestión Administrativa y Procesos Académicos (SGAPA) </p>
-        </div>
-        <div class="navbar__logo">
-            <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                class="icon material-symbols-outlined toggleBtn">
-                logout
-            </span>
-        </div>
-    </div>
+
+    {{ header_block('format_list_numbered', 'Asignación Tareas', '#34495E') }}
+    
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}

@@ -17,126 +17,6 @@ body{
    overflow: hidden;    
 }
 
-.header {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    background: var(--color-blue-card);
-    color: white;
-    padding: 30px;
-    text-align: center;
-    flex-wrap: wrap;
-}
-
-.header .icon__return {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-    position: relative;
-}
-
-.header .icon__return i {
-    font-size: 2.5em;
-    color: white;
-    transition: color 0.3s ease;
-}
-
-.header .icon__return:hover {
-    animation: pulse-border 1s infinite;
-    transform: scale(1.1);
-}
-
-.header .icon__return:hover i {
-    color: var(--color-primary);
-} 
-
-@keyframes pulse-border {
-    0% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-    }
-}
-
-.header .title{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.row__title {
-  display: flex;
-  align-items: center;
-  gap: 10px; 
-}
-
-.row__title i{
-    font-size:50px; 
-    color:var(--color-white);    
-}
-
-.row__title h1 {
-    margin: 0;
-    font-size: 2.0em;
-}
-
-.title p {
-  margin-top: 12px;
-  font-size: 1.2rem;
-} 
-
-@keyframes pulse-border {
-    0% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-    }
-}
-
-/* Contenedor del icono */
-.navbar__logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-    position: relative;
-}
-
-/* Icono en sí */
-.navbar__logo .icon {
-    font-size: 2.5em;
-    color: white;
-    transition: all 0.3s ease;
-}
-
-/* Hover animado */
-.navbar__logo:hover {
-    animation: pulse-border 1s infinite;
-    transform: scale(1.1);
-}
-
-.navbar__logo:hover .icon {
-    color: var(--color-button-delete);
-    transform: rotate(180deg) scale(1.2);
-}
 
 .ratings__group {
   display: flex;
@@ -165,7 +45,6 @@ body{
   padding: 30px 40px; 
   margin-top: 30px;
 }
-
 
 .alerta {
   width:55%;

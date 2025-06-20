@@ -4,6 +4,7 @@
 
 body{  
   font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+  /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
 }
 
 
@@ -44,7 +45,7 @@ body{
   padding: 20px;
   border: 2px solid #ccc;
   margin-top:15px;
-  border-radius: 0 5px 5px 5px;
+  border-radius: 0 0 10px 10px;
   height:500px;
 }
 

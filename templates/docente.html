@@ -1,18 +1,18 @@
 {% extends "main.html" %}
+{% include "components/modal.html" %}
 {% block title %} MODULO DOCENTE | SGAPA{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/docente.css') }}">
 {% endblock %}
-{% include "components/modal.html" %}
 
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
 
-<!-- Navbar -->
+
 {% block navbar %}
 {% include "layouts/navbar.html" with context %}
 {% endblock %}
+
 <div class="card__container">
     <div class="home__title">
         <h1 class="card__title">Bienvenido Docente</h1>
@@ -97,6 +97,5 @@
     });
 </script>
 {% endblock %}
-
 
 {% endblock %}

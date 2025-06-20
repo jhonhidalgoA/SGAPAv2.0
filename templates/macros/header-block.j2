@@ -1,0 +1,22 @@
+{% macro header_block(icon_name, title_name, background_color) %}
+<div class="header" style="background-color: {{ background_color }};">
+    <div class="icon__return">
+        <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
+            <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
+        </a>
+    </div>
+    <div class="title">
+        <div class="row__title">
+            <i class="material-symbols-outlined">{{ icon_name }}</i>
+            <h1>{{ title_name }}</h1>
+        </div>
+        <p>Sistema de Gestión Administrativa y Procesos Académicos (SGAPA)</p>
+    </div>
+    <div class="navbar__logo">
+        <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
+              class="icon material-symbols-outlined toggleBtn">
+            logout
+        </span>
+    </div>
+</div>
+{% endmacro %}

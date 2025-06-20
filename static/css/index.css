@@ -7,9 +7,8 @@
 }
 
 body {
-    font-family: "Poppins", serif;
+    font-family: "Poppins", sans-serif;
 }
-
 
 header.navbar {
     position: fixed;
@@ -21,7 +20,7 @@ header.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 60px;
+    height: 70px;
     z-index: 100;
 }
 
@@ -82,32 +81,7 @@ header.navbar.down {
     align-items: center;
 }
 
-.navbar__item .navbar__submenu {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    display: none;
-    padding: 20px 50px;
-    background: rgba(0, 0, 0, 0.1);
-}
 
-.navbar__item:hover .navbar__submenu {
-    display: block;
-}
-
-.navbar__item .navbar__menu {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.navbar__menu .submenu__toggle {
-    display: flex;
-    align-items: center;
-    color: var(--color-white);
-}
 
 .navbar__menu .icons {
     font-size: 1.8rem;

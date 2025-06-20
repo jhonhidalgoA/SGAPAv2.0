@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% include "components/modal.html" %}
+{% from "macros/header-block.j2" import header_block %}
 {% from "macros/buttons.j2" import btn with context %}
 {% block title %} M. DOCENTE | SGAPA{% endblock %}
 
@@ -10,26 +11,9 @@
 {% block content %}
 <div class="container">
     <div class="assistance" id="asistencia">
-        <div class="header">
-            <div class="icon__return">
-                <a href="{{ url_for('dashboards.docente') }}" class="icon__link">
-                    <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-                </a>
-            </div>
-            <div class="title">
-                <div class="row__title">
-                    <i class="material-symbols-outlined">app_registration</i>
-                    <h1>Asistencia</h1>
-                </div>
-                <p>Sistema de Gestión Administrativa y Procesos Académicos (SGAPA) </p>
-            </div>
-            <div class="navbar__logo">
-                <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                    class="icon material-symbols-outlined toggleBtn">
-                    logout
-                </span>
-            </div>
-        </div>
+
+        {{ header_block('app_registration', 'Asistencia', 'var(--color-orange-card)') }}
+
         <div class="assistance__group">
             <div class="group">
                 <label for="grados-select">Grupo:</label>
@@ -64,7 +48,7 @@
             </div>
         </div>
         <div class="assistance__buttons">
-            {{ btn(icono="add", texto="Cargar", color="load") }}            
+            {{ btn(icono="add", texto="Cargar", color="load") }}
             {{ btn(icono="save", texto="Guardar", color="save") }}
             {{ btn(icono="delete", texto="Eliminar", color="delete") }}
             {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view") }}

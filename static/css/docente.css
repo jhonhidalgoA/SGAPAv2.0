@@ -3,7 +3,12 @@
 
 
 body{
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+    background-image:url('/static/img/fondo_3.jpg');  
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 

@@ -3,7 +3,7 @@
 
 
 body {
-  font-family: 'Poppins', sans-serif;  
+  font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
   background-image:url('/static/img/fondo_4.jpg');  
   background-size: cover;
   background-position: center;

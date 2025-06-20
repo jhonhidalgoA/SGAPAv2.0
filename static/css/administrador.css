@@ -3,8 +3,12 @@
 
 
 body{
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
-  font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+    background-image:url('/static/img/fondo_13.jpg');  
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 
