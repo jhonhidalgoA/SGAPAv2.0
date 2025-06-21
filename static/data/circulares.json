@@ -1,0 +1,32 @@
+[
+    {
+        "numero": "001",
+        "fecha": "25-Enero-2025",
+        "descripcion": "Inicio año escolar 2025",
+        "enlace": "pdfs/circular_001.pdf"
+    },
+    {
+        "numero": "002",
+        "fecha": "12-Febrero-2025",
+        "descripcion": "Modificación Manual de Convivencia",
+        "enlace": "pdfs/circular_002.pdf"
+    },
+    {
+        "numero": "003",
+        "fecha": "23-Marzo-2025",
+        "descripcion": "Transporte Escolar 2025",
+        "enlace": "pdfs/circular_003.pdf"
+    },
+    {
+        "numero": "004",
+        "fecha": "01-Abril-2025",
+        "descripcion": "Acciones para enfrentar la Fiebre Amarilla",
+        "enlace": "pdfs/circular_004.pdf"
+    },
+    {
+        "numero": "005",
+        "fecha": "09-Junio-2025",
+        "descripcion": "Actualizacion CV 2025 SIGEP",
+        "enlace": "pdfs/circular_005.pdf"
+    }
+]

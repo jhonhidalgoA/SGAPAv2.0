@@ -49,7 +49,8 @@
     --color-button-view: #1fd6f3;
     --color-button-print: #616161;
     --color-button-generate: #9c27b0;
-    --color-button-send: #6a00ff;  
+    --color-button-send: #6a00ff; 
+    --color-button-download: #3f51b5; 
     --color-button-load-hover: #e68900;
     --color-button-save-hover: #218838;
     --color-button-delete-hover: #d4152c;
@@ -58,7 +59,8 @@
     --color-button-view-hover: #17c2e3;
     --color-button-print-hover: #3b3939;
     --color-button-generate-hover: #7b1fa2;
-    --color-button-send-hover: #6204e6;
+    --color-button-send-hover: #6204e6;    
+    --color-button-download-hover: #303f9f; 
     
     --color-hover-btn: #0000;
     --color-hover-btn-2: #d2d4d6;

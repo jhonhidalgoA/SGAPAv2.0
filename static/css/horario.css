@@ -42,7 +42,7 @@ section {
 }
 
 .horario {
-    width: 85%;
+    width: 100%;
     border: 2px solid rgb(157, 154, 154);
     border-radius: 0 0 10px 10px;
     margin: 0.5rem;
@@ -55,7 +55,7 @@ h3 {
 table {
     margin: 20px auto;
     border-collapse: collapse;
-    width: 98%;
+    width: 100%;
     table-layout: fixed;
 }
 
@@ -63,7 +63,7 @@ th,
 td {
     border: 1px solid #dddddd;
     text-align: center;
-    padding: 5px;
+    padding: 1px;
 }
 
 th {
@@ -72,7 +72,7 @@ th {
 
 .horario_dias{
     color: #fff;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .time-container {
@@ -85,7 +85,7 @@ th {
     display:flex;
     gap:20px;
     font-size: 18px;
-    padding: 5px;
+    padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
     cursor: pointer;
@@ -94,8 +94,8 @@ th {
 }
 
 input[type="time"] {
-    font-size: 14px;
-    width: 80px;
+    font-size: 18px;
+    width: 50px;
     padding: 5px;
     background-color: #caceca;
     
@@ -107,9 +107,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .tabla__horario select {
-    font-size: 12px;
-    padding: 1px;
-    width: 100%;
+    font-size: 18px; 
+    margin:1px auto;   
+    width: 90%;
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
@@ -139,8 +139,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     width: 80%; 
     max-width: 500px; 
 }
+
 .asignacion {
-    width: 30%;
+    width: 20%;
     border: 2px solid rgb(157, 154, 154);
     border-radius: 0 0 10px 10px;
     margin: 0.5rem;
@@ -154,12 +155,21 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 .asignacion table {   
     border-collapse: collapse;
-    margin: 20px auto;
+    margin: 10px auto;
     text-align: left;
-  }
+    width:100%;
+}
 
+.tabla__materias thead{
+    background:red;
+    
+}
 
-  .asignacion table .subject {
-    font-size: 18px;
+.tabla__materias td{
+    font-size:14px;
+}
+
+.asignacion table .subject {
+    font-size: 14px;
     text-align: start;
-  }
+}

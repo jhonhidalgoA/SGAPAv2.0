@@ -1,28 +1,14 @@
 {% extends "main.html" %}
+{% from "macros/header-navbar.j2" import header_navbar %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/restaurante.css') }}">
 {% endblock %}
 
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-<div class="events__title">
-    <div class="title">
-        <div class="navbar__logo">
-            <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                class="icon material-symbols-outlined toggleBtn">
-                logout
-            </span>
-            <h2>Restaurante Escolar</h2>
-        </div>
-    </div>
-    <div class="icon__return">
-        <a href="{{ url_for('index') }}" class="icon__link">
-            <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-        </a>
-    </div>
-</div>
+
+{{ header_navbar() }}
+
 <div class="menu__container">
     <div class="left">
         <div class="left__title">
@@ -65,10 +51,8 @@
         </div>
     </div>
 </div>
-{% endblock %}
 
 {% block extra_js %}
-<script>  
+{% endblock %}
 
-</script>
 {% endblock %}

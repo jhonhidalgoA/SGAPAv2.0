@@ -1,27 +1,13 @@
 {% extends "main.html" %}
+{% from "macros/header-navbar.j2" import header_navbar %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 
 {% block content %}
-<!--barra de navegacion-->
-<header class="navbar">
-    <div class="navbar__brand">
-        <a href="#" class="navbar__link">SGAPA</a>
-    </div>
-    <span class="icon material-symbols-outlined">menu_open </span>
-    <ul class="navbar__list">
-        <li class="navbar__item"><a href="#">Inicio</a></li>
-        <li class="navbar__item"><a href="#noticias">Noticias</a></li>
-        <li class="navbar__item"><a href="#eventos">Eventos</a></li>        
-        <li class="navbar__item"><a href="#nosotros">Nosotros</a></li>
-        <li class="navbar__item"><a href="#contacto">Contacto</a></li>
-    </ul>
-    <ul class="navbar__btn">
-        <li><a href="{{ url_for('auth.login') }}">Ingresar</a></li>
-    </ul>
-</header>
+
+{{ header_navbar() }}
 
 <!--iconos de redes sociales-->
 <div class="buttons-network">
@@ -286,20 +272,19 @@
 <div class="loading" id="loading">
     <span class="spinner"></span>
 </div>
-{% endblock %}
+
 
 {% block extra_js %}
 <script>
     window.addEventListener("scroll", function () {
-        var header = document.querySelector("header");
-        var submenu = document.querySelector(".navbar__submenu");
+        var header = document.querySelector("header");        
         header.classList.toggle("down", window.scrollY > 0);
-        submenu.classList.toggle("down", window.scrollY > 0);
+        
     });
 </script>
 <script>
     /*Spinner*/
-    const cards = document.querySelectorAll('.schedule__card');
+    let cards = document.querySelectorAll('.schedule__card');
     const modal = document.getElementById('pdfModal');
     const pdfViewer = document.getElementById('pdfViewer');
     const downloadLink = document.getElementById('downloadLink');
@@ -346,4 +331,6 @@
         }
     });
 </script>
+{% endblock %}
+
 {% endblock %}

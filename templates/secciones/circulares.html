@@ -1,103 +1,25 @@
 {% extends "main.html" %}
+{% from "macros/circulares.j2" import circular %}
+{% from "macros/header-navbar.j2" import header_navbar %}
+{% include "components/modal.html" %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/circulares.css') }}">
 {% endblock %}
 
-
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-<div class="events__title">
-    <div class="title">
-        <div class="navbar__logo">
-            <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                class="icon material-symbols-outlined toggleBtn">
-                logout
-            </span>
-            <h2>Circulares 2025</h2>
-        </div>
-    </div>
-    <div class="icon__return">
-        <a href="{{ url_for('index') }}" class="icon__link">
-            <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-        </a>
-    </div>
-</div>
-<seccion>
-<div class="information">
-    <div class="information__card">
-        <img src="../../static/img/pdf_1.png" alt="">
-        <h3 class="pdf__title">CIRCULAR 001 </h3>
-        <span class="pdf__date">25-Enero-2025</span>        
-    </div>
-    <div class="information__subtitle">
-        <p>Inicio año escolar 2025</p>
-    </div>
-    <a href="/static/pdfs/circular_001.pdf" download class="btn__download">Descargar</a>    
-</div>
-<div class="information">
-    <div class="information__card">
-        <img src="../../static/img/pdf_1.png" alt="">
-        <h3 class="pdf__title">CIRCULAR 002 </h3>
-        <span class="pdf__date">12-Febrero-2025</span>        
-    </div>
-    <div class="information__subtitle">
-        <p>Modificación Manual de Convivencia</p>
-    </div>    
-    <a href="/static/pdfs/circular_002.pdf" download class="btn__download">Descargar</a>
-       
-</div>
-<div class="information">
-    <div class="information__card">
-        <img src="../../static/img/pdf_1.png" alt="">
-        <h3 class="pdf__title">CIRCULAR 003 </h3>  
-        <span class="pdf__date">23-Marzo-2025</span>          
-    </div>
-    <div class="information__subtitle">
-        <p>Transporte Escolar 2025</p>
-    </div>    
-    <a href="/static/pdfs/circular_003.pdf" download class="btn__download">Descargar</a>    
-</div>
-<div class="information">
-    <div class="information__card">
-        <img src="../../static/img/pdf_1.png" alt="">
-        <h3 class="pdf__title">CIRCULAR 004 </h3>
-        <span class="pdf__date">01-Abril-2025</span>            
-    </div>
-    <div class="information__subtitle">
-        <p>Acciones para enfretar la Fiebre Amarilla</p>
-    </div>    
-    <a href="/static/pdfs/circular_003.pdf" download class="btn__download">Descargar</a>    
-</div>
-</seccion>
+
+{{ header_navbar() }}
+
+<section class="circulares__lista">
+    {% for c in circulares %}
+    {{ circular(numero=c.numero, fecha=c.fecha, descripcion=c.descripcion, enlace=url_for('static',
+    filename=c.enlace))
+    }}
+    {% endfor %}
+</section>
 
 {% block extra_js %}
-<script>
-    /*Funcion modal index.html*/
-    function confirmLogout() {
-        window.location.href = "{{ url_for('auth.logout') }}";
-    }
-
-    function showModal(title, message, action) {
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalMessage").innerText = message;
-        window.modalAction = action;
-
-        const modal = document.getElementById("confirmModal");
-        modal.style.display = "flex";
-    }
-    document.getElementById("modalConfirm").addEventListener("click", function () {
-        if (typeof modalAction === 'function') {
-            modalAction();
-        }
-        document.getElementById("confirmModal").style.display = "none";
-    });
-
-    document.getElementById("modalCancel").addEventListener("click", function () {
-        document.getElementById("confirmModal").style.display = "none";
-    });
-</script>
 
 {% endblock %}
 

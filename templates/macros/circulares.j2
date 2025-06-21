@@ -1,0 +1,16 @@
+{% macro circular(numero, fecha, descripcion, enlace) %}
+    <div class="information">
+        <div class="information__card">
+            <img src="{{ url_for('static', filename='img/pdf_1.png') }}" alt="PDF Icono">
+            <h3 class="pdf__title">CIRCULAR {{ numero }}</h3>
+            <span class="pdf__date">{{ fecha }}</span>        
+        </div>
+        <div class="information__subtitle">
+            <p>{{ descripcion }}</p>
+        </div>    
+        <a href="{{ enlace }}" download class="btn__download">
+            <span class=" material-symbols-outlined">cloud_done</span>
+            <span class="btn__text">Descargar</span>
+        </a>
+    </div>
+{% endmacro %}

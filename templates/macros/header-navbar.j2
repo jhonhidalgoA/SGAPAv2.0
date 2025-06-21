@@ -1,0 +1,19 @@
+{% macro header_navbar() %}
+<header class="navbar">
+    <div class="navbar__brand">
+        <a href="#" class="navbar__link">SG<span class="danger">A</span>PA</a>
+    </div>
+
+    <ul class="navbar__list">
+        <li class="navbar__item"><a href="#">Inicio</a></li>
+        <li class="navbar__item"><a href="#noticias">Noticias</a></li>
+        <li class="navbar__item"><a href="#eventos">Eventos</a></li>
+        <li class="navbar__item"><a href="#nosotros">Nosotros</a></li>
+        <li class="navbar__item"><a href="#contacto">Contacto</a></li>
+    </ul>
+
+    <ul class="navbar__btn">
+        <li><a href="{{ url_for('auth.login') }}">Ingresar</a></li>
+    </ul>
+</header>
+{% endmacro %}

@@ -1,49 +1,60 @@
+// Materias con nombre y color asociado
 const materias = [
-    { nombre: "Matemáticas", color: "#FF5733" }, // Rojo vivo
-    { nombre: "Geometría", color: "#FF9800" }, // Naranja vivo
-    { nombre: "Estadística", color: "#FF5722" }, // Rojo anaranjado
-    { nombre: "Tecnología", color: "#00BC44" }, // Verde esmeralda            
-    { nombre: "Castellano", color: "#29B6F6" }, // Azul brillante
-    { nombre: "C. Lectora", color: "#4DD0E1" }, // Turquesa claro
-    { nombre: "Inglés", color: "#03A9F4" }, // Azul cielo
-    { nombre: "Biología", color: "#4CAF50" }, // Verde vivo
-    { nombre: "Física", color: "#8BC34A" }, // Verde lima
-    { nombre: "Química", color: "#00E676" }, // Verde neón
+    { nombre: "Matemáticas", color: "#FF5733" },
+    { nombre: "Geometría", color: "#FF9800" },
+    { nombre: "Estadística", color: "#FF5722" },
+    { nombre: "Tecnología", color: "#00BC44" },
+    { nombre: "Castellano", color: "#29B6F6" },
+    { nombre: "C. Lectora", color: "#4DD0E1" },
+    { nombre: "Inglés", color: "#03A9F4" },
+    { nombre: "Biología", color: "#4CAF50" },
+    { nombre: "Física", color: "#8BC34A" },
+    { nombre: "Química", color: "#00E676" },
     { nombre: "Artística", color: "#98B528" },
-    { nombre: "Ética", color: "#F06292" }, // Rosa pastel
-    { nombre: "Religión", color: "#FF6E40" }, // Coral claro
-    { nombre: "Cátedra de la Paz", color: "#FFA726" }, // Naranja cálido
-    { nombre: "Educación Física", color: "#F44336" }, // Rojo intenso
-    { nombre: "Ciencias Sociales", color: "#FFC107" }, // Amarillo vibrante
-    { nombre: "Historia y Geografía", color: "#FF7043" }, // Naranja claro
+    { nombre: "Ética", color: "#F06292" },
+    { nombre: "Religión", color: "#FF6E40" },
+    { nombre: "Cátedra de la Paz", color: "#FFA726" },
+    { nombre: "Educación Física", color: "#F44336" },
+    { nombre: "Ciencias Sociales", color: "#FFC107" },
+    { nombre: "Historia y Geografía", color: "#FF7043" },
     { nombre: "Descanso", color: "#97A085" },
     { nombre: "Almuerzo", color: "#CAC7B1" }
 ];
 
+// Días de la semana
 const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+
+// Contador de selecciones por materia
 const seleccionContador = {};
+let totalHorasAsignadas = 0;
 
-// Inicializar el contador
-
+// Inicializar contadores desde la tabla estática
 Array.from(document.querySelectorAll('#tablaMaterias tbody tr')).forEach(row => {
     const materia = row.cells[0].textContent.trim();
     const maxAsignaciones = parseInt(row.cells[1].textContent);
     seleccionContador[materia] = { count: 0, max: maxAsignaciones };
 });
 
-// Función para generar una fila de la tabla
+// Función para parsear hora a objeto Date
+function parseTime(timeStr) {
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+}
 
+// Función para generar una fila de horario
 function generarFila(horaInicio = "07:00", horaFin = "08:00") {
-    const fila = document.createElement('tr');           
+    const fila = document.createElement('tr');
     const celdaHora = document.createElement('td');
     celdaHora.className = 'time-container';
     celdaHora.innerHTML = `
-<div class="time" data-time="${horaInicio}">${horaInicio}</div>
-<div class="time" data-time="${horaFin}">${horaFin}</div>
-`;
+        <div class="time" data-time="${horaInicio}">${horaInicio}</div>
+        <div class="time" data-time="${horaFin}">${horaFin}</div>
+    `;
     fila.appendChild(celdaHora);
 
-    // Celdas de días (Lunes a Viernes)
+    // Celdas de días
     dias.forEach(dia => {
         const celdaDia = document.createElement('td');
         const select = document.createElement('select');
@@ -55,7 +66,7 @@ function generarFila(horaInicio = "07:00", horaFin = "08:00") {
         opcionDefault.textContent = "Seleccionar";
         select.appendChild(opcionDefault);
 
-        // Opciones de materias
+        // Opciones dinámicas
         materias.forEach(materia => {
             const opcion = document.createElement('option');
             opcion.value = materia.nombre;
@@ -71,21 +82,16 @@ function generarFila(horaInicio = "07:00", horaFin = "08:00") {
     return fila;
 }
 
-// Función para hacer las horas editables
-
+// Hacer las horas editables
 function hacerHorasEditables() {
-    const times = document.querySelectorAll('.time');
-
-    times.forEach(time => {
+    document.querySelectorAll('.time').forEach(time => {
         time.addEventListener('click', () => {
             const currentTime = time.dataset.time;
             const input = document.createElement('input');
             input.type = 'time';
             input.value = currentTime;
-
             time.textContent = '';
             time.appendChild(input);
-
             input.focus();
 
             input.addEventListener('blur', () => {
@@ -97,41 +103,23 @@ function hacerHorasEditables() {
             });
 
             input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    input.blur();
-                }
+                if (e.key === 'Enter') input.blur();
             });
         });
     });
 }
 
-// Función para validar las horas
-
+// Validar que la nueva hora no sea inválida
 function validarHora(hora, timeElement) {
     const fila = timeElement.closest('tr');
     const horas = fila.querySelectorAll('.time');
     const horaInicio = horas[0].dataset.time;
     const horaFin = horas[1].dataset.time;
+
     return true;
 }
 
-// Función para mostrar errores en la interfaz
-
-function mostrarError(mensaje) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.textContent = mensaje;
-
-    const btnContainer = document.querySelector('.btn');
-    btnContainer.insertAdjacentElement('beforebegin', errorDiv);
-
-    setTimeout(() => {
-        errorDiv.remove();
-    }, 3000);
-}
-
-// Función para actualizar el select y aplicar el color
-
+// Actualiza los colores y estados de los selects
 function actualizarSelect(select, materiaSeleccionada) {
     const materiaInfo = materias.find(m => m.nombre === materiaSeleccionada);
     if (materiaInfo) {
@@ -152,21 +140,23 @@ function actualizarSelect(select, materiaSeleccionada) {
     });
 }
 
-
-
+// Manejador de cambio de selección de materias
 document.getElementById('tabla-horario').addEventListener('change', (e) => {
     if (e.target.tagName === 'SELECT') {
         const select = e.target;
         const materiaSeleccionada = select.value;
         const materiaAnterior = select.dataset.materiaAnterior;
 
+        // Restablecer si había una materia anterior
         if (materiaAnterior) {
             seleccionContador[materiaAnterior].count--;
             actualizarSelect(select, materiaAnterior);
             select.dataset.materiaAnterior = "";
             select.style.backgroundColor = "";
+            actualizarTotalHoras(-1); // Restar 1 hora
         }
 
+        // Agregar nueva materia
         if (materiaSeleccionada) {
             const contador = seleccionContador[materiaSeleccionada];
 
@@ -177,45 +167,50 @@ document.getElementById('tabla-horario').addEventListener('change', (e) => {
                 contador.count++;
                 actualizarSelect(select, materiaSeleccionada);
                 select.dataset.materiaAnterior = materiaSeleccionada;
+                select.style.backgroundColor = materias.find(m => m.nombre === materiaSeleccionada)?.color || "";
+                actualizarTotalHoras(1); // Sumar 1 hora
             }
         }
     }
 });
 
+// Mostrar mensaje de error temporal
 function mostrarError(mensaje) {
-    const btnContainer = document.querySelector('.btn');
-    const existingError = document.querySelector('.error-message');
-
-    if (existingError) {
-        existingError.remove();
-    }
-
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.textContent = mensaje;
 
+    const btnContainer = document.querySelector('.planning__buttons');
     btnContainer.insertAdjacentElement('beforebegin', errorDiv);
 
-    setTimeout(() => {
-        errorDiv.remove();
-    }, 3000);
+    setTimeout(() => errorDiv.remove(), 3000);
 }
 
-// Agregar la primera fila al cargar la página
-document.getElementById('tabla-horario').appendChild(generarFila());
+// Actualizar contador de horas totales
+function actualizarTotalHoras(cambio) {
+    totalHorasAsignadas += cambio;
+    const totalElement = document.getElementById("total-horas");
+    if (totalElement) {
+        totalElement.textContent = totalHorasAsignadas;
+    }
+}
+
+// Añadir primera fila al cargar
+const tablaHorario = document.getElementById('tabla-horario');
+tablaHorario.appendChild(generarFila());
 hacerHorasEditables();
 
-// Función para agregar una nueva fila
+// Botón para agregar filas
 document.getElementById('agregar-hora').addEventListener('click', () => {
-    const tabla = document.getElementById('tabla-horario');
-    const ultimaFila = tabla.lastElementChild;
+    const ultimaFila = tablaHorario.lastElementChild;
     const ultimaHoraFin = ultimaFila.querySelector('.time:last-child').dataset.time;
 
-    if (ultimaHoraFin >= "23:59") {
+    if (parseTime(ultimaHoraFin) >= parseTime("23:59")) {
         mostrarError("No se pueden agregar más horas.");
         return;
     }
 
-    tabla.appendChild(generarFila(ultimaHoraFin, "00:00"));
+    const nuevaFila = generarFila(ultimaHoraFin, "00:00");
+    tablaHorario.appendChild(nuevaFila);
     hacerHorasEditables();
 });

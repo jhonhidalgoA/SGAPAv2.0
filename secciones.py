@@ -390,7 +390,6 @@ def horario():
     return render_template('secciones/horario.html')
 
 
-
 @secciones.route('/usuarios', methods=['GET', 'POST'])
 def usuarios():
     return render_template('secciones/usuarios.html')
@@ -399,9 +398,18 @@ def usuarios():
 def eventos():
     return render_template('secciones/eventos.html')  
 
-@secciones.route('/circulares')
-def circulares():
-    return render_template('secciones/circulares.html')  
+@secciones.route('/circulares', methods=['GET', 'POST'])
+def circulares():    
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, 'static', 'data', 'circulares.json')
+
+    if not os.path.exists(file_path):
+        return "Archivo no encontrado", 500
+
+    with open(file_path, encoding='utf-8') as f:
+        lista_circulares = json.load(f)
+
+    return render_template('secciones/circulares.html', circulares=lista_circulares)  
 
 
 # --- CALIFICACIONES ---
@@ -1158,3 +1166,7 @@ def generar_boletin_word():
             "error": "Error interno del servidor",
             "details": str(e)
         }), 500
+    
+
+
+
