@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="tabs">
-    {{ header(titulo="Registro Docente", color__fondo="var(--color-green-emerald)") }} 
+    {{ header(titulo="Registro Docente", color__fondo="var(--color-green-emerald)") }}
 
     <ul class="tab-nav">
         <li class="active" data-tab="tab1">Datos del Docente</li>
@@ -43,8 +43,7 @@
                     <div class="field__row">
                         <div class="group">
                             <label for="registration_date_teacher">Fecha de Registro:</label>
-                            <input type="date" id="registration_date_teacher" name="registration_date_teacher">
-                              
+                            <input type="date" id="registration_date_teacher" name="registration_date_teacher" readonly>
                         </div>
                         <div class="group">
                             <label for="codigo_teacher">Código:</label>
@@ -161,13 +160,13 @@
             </div>
         </div>
         <div class="tab-content tab-2" id="tab2">
-            <!-- Información Profesional -->            
+            <!-- Información Profesional -->
         </div>
         <div class="ratings__buttons">
-             {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }} 
-             {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }} 
-             {{ btn(icono="delete", texto="Borrar", color="delete") }}  
-             {{ btn(icono="print", texto="Imprimir", color="print") }}   
+            {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }}
+            {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }}
+            {{ btn(icono="delete", texto="Borrar", color="delete") }}
+            {{ btn(icono="print", texto="Imprimir", color="print") }}
         </div>
     </form>
 </div>
@@ -176,165 +175,209 @@
 <script src="{{url_for('static', filename='js/photo-student.js') }}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    const VALIDATIONS = {
-        EMAIL_REGEX: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        PHONE_REGEX: /^\d{7,}$/,
-        DOCUMENT_REGEX: /^\d+$/,
-        REQUIRED_FIELDS: [
-            { id: "teacher_name", name: "Nombres" },
-            { id: "teacher_lastname", name: "Apellidos" },
-            { id: "teacher_document_type", name: "Tipo de Documento" },
-            { id: "teacher_document_number", name: "Número de Documento" },
-            { id: "teacher_email", name: "Correo Electrónico" },
-            { id: "teacher_phone", name: "Teléfono" },
-            { id: "scale", name: "Escalafón" }
-        ]
-    };
+        const VALIDATIONS = {
+            EMAIL_REGEX: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            PHONE_REGEX: /^\d{9,}$/,
+            DOCUMENT_REGEX: /^\d+$/,
+            REQUIRED_FIELDS: [
+                { id: "teacher_name", name: "Nombres" },
+                { id: "teacher_lastname", name: "Apellidos" },
+                { id: "teacher_document_type", name: "Tipo de Documento" },
+                { id: "teacher_document_number", name: "Número de Documento" },
+                { id: "teacher_email", name: "Correo Electrónico" },
+                { id: "teacher_phone", name: "Teléfono" },
+                { id: "scale", name: "Escalafón" }
+            ]
+        };
+     
 
-    const form = document.getElementById("teacherRegistrationForm");
+        const registrationDateInput = document.getElementById("registration_date_teacher");
+        if (registrationDateInput) {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, "0");
+            const day = String(today.getDate()).padStart(2, "0");
+            const todayStr = `${year}-${month}-${day}`;
 
-    if (form) {
-        form.addEventListener("submit", handleFormSubmit);
-        setupInputListeners(form);
-    }
-
-    function handleFormSubmit(e) {
-        e.preventDefault();
-        clearPreviousErrors();
-
-        const validationResult = validateForm();
-
-        if (!validationResult.isValid) {
-            showError(validationResult.message, validationResult.focusElement);
-            return;
+            registrationDateInput.value = todayStr;
+            registrationDateInput.max = todayStr; 
         }
 
-        submitForm();
-    }
-
-    function validateForm() {
-        const missingFields = validateRequiredFields();
-
-        if (missingFields.length > 0) {
-            const firstMissingField = VALIDATIONS.REQUIRED_FIELDS.find(f => 
-                f.name === missingFields[0].replace("* ", "")
-            );
-
-            return {
-                isValid: false,
-                message: "Debe completar los siguientes campos obligatorios:\n\n" + missingFields.join("\n"),
-                focusElement: document.getElementById(firstMissingField?.id)
-            };
-        }
-
-        const emailValidation = validateEmail();
-        if (!emailValidation.isValid) return emailValidation;
-
-        const phoneValidation = validatePhone();
-        if (!phoneValidation.isValid) return phoneValidation;
-
-        const documentValidation = validateDocument();
-        if (!documentValidation.isValid) return documentValidation;
-
-        return { isValid: true };
-    }
-
-    function validateRequiredFields() {
-        const missingFields = [];
-
-        VALIDATIONS.REQUIRED_FIELDS.forEach(field => {
-            const input = document.getElementById(field.id);
-            if (!input?.value.trim()) {
-                missingFields.push(field.name);
-                input?.classList.add('input-error');
+        function calculateAge(birthDate) {
+            const today = new Date();
+            const birthDateObj = new Date(birthDate);
+            
+            if (isNaN(birthDateObj.getTime())) {
+                return 0;
             }
-        });
-
-        return missingFields;
-    }
-
-    function validateEmail() {
-        const emailInput = document.getElementById("teacher_email");
-        const email = emailInput?.value.trim();
-
-        if (email && !VALIDATIONS.EMAIL_REGEX.test(email)) {
-            emailInput.classList.add("input-error");
-            return {
-                isValid: false,
-                message: "Por favor ingrese un correo electrónico válido.",
-                focusElement: emailInput
-            };
+            
+            let age = today.getFullYear() - birthDateObj.getFullYear();
+            const monthDiff = today.getMonth() - birthDateObj.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+                age--;
+            }
+            
+            return age;
         }
 
-        return { isValid: true };
-    }
-
-    function validatePhone() {
-        const phoneInput = document.getElementById("teacher_phone");
-        const phone = phoneInput?.value.trim();
-
-        if (phone && !VALIDATIONS.PHONE_REGEX.test(phone)) {
-            phoneInput.classList.add("input-error");
-            return {
-                isValid: false,
-                message: "Por favor ingrese un número de teléfono válido (mínimo 7 dígitos).",
-                focusElement: phoneInput
-            };
-        }
-
-        return { isValid: true };
-    }
-
-    function validateDocument() {
-        const docNumberInput = document.getElementById("teacher_document_number");
-        const docNumber = docNumberInput?.value.trim();
-
-        if (docNumber && !VALIDATIONS.DOCUMENT_REGEX.test(docNumber)) {
-            docNumberInput.classList.add("input-error");
-            return {
-                isValid: false,
-                message: "El número de documento debe contener solo números.",
-                focusElement: docNumberInput
-            };
-        }
-
-        return { isValid: true };
-    }
-
-    function clearPreviousErrors() {
-        document.querySelectorAll('.input-error').forEach(input => {
-            input.classList.remove('input-error');
-        });
-    }
-
-    function showError(message, focusElement) {
-        showModal("Validación requerida", message, function () {
-            focusElement?.focus();
-        });
-    }
-
-    function submitForm() {
-        const submitButton = form.querySelector("button[type=submit]");
-
-        if (submitButton) {
-            submitButton.disabled = true;
-            form.submit();
-            setTimeout(() => {
-                submitButton.disabled = false;
-            }, 3000);
-        } else {
-            form.submit();
-        }
-    }
-
-    function setupInputListeners(formElement) {
-        formElement.querySelectorAll("input, select").forEach(input => {
-            input.addEventListener("input", function () {
-                this.classList.remove("input-error");
+       
+        const birthDateInput = document.getElementById("teacher_birth_date");
+        const ageInput = document.getElementById("teacher_age");
+        
+        if (birthDateInput && ageInput) {
+            birthDateInput.addEventListener("change", function() {
+                const birthDate = this.value;
+                const age = calculateAge(birthDate);
+                ageInput.value = age > 0 ? age : "";
             });
-        });
-    }   
-});
+        }
+
+        const form = document.getElementById("teacherRegistrationForm");
+
+        if (form) {
+            form.addEventListener("submit", handleFormSubmit);
+            setupInputListeners(form);
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            clearPreviousErrors();
+
+            const validationResult = validateForm();
+
+            if (!validationResult.isValid) {
+                showError(validationResult.message, validationResult.focusElement);
+                return;
+            }
+
+            submitForm();
+        }
+
+        function validateForm() {
+            const missingFields = validateRequiredFields();
+
+            if (missingFields.length > 0) {
+                const firstMissingField = VALIDATIONS.REQUIRED_FIELDS.find(f =>
+                    f.name === missingFields[0].replace("* ", "")
+                );
+
+                return {
+                    isValid: false,
+                    message: "Debe completar los siguientes campos obligatorios:\n\n" + missingFields.join("\n"),
+                    focusElement: document.getElementById(firstMissingField?.id)
+                };
+            }
+
+            const emailValidation = validateEmail();
+            if (!emailValidation.isValid) return emailValidation;
+
+            const phoneValidation = validatePhone();
+            if (!phoneValidation.isValid) return phoneValidation;
+
+            const documentValidation = validateDocument();
+            if (!documentValidation.isValid) return documentValidation;
+
+            return { isValid: true };
+        }
+
+        function validateRequiredFields() {
+            const missingFields = [];
+
+            VALIDATIONS.REQUIRED_FIELDS.forEach(field => {
+                const input = document.getElementById(field.id);
+                if (!input?.value.trim()) {
+                    missingFields.push(field.name);
+                    input?.classList.add('input-error');
+                }
+            });
+
+            return missingFields;
+        }
+
+        function validateEmail() {
+            const emailInput = document.getElementById("teacher_email");
+            const email = emailInput?.value.trim();
+
+            if (email && !VALIDATIONS.EMAIL_REGEX.test(email)) {
+                emailInput.classList.add("input-error");
+                return {
+                    isValid: false,
+                    message: "Por favor ingrese un correo electrónico válido.",
+                    focusElement: emailInput
+                };
+            }
+
+            return { isValid: true };
+        }
+
+        function validatePhone() {
+            const phoneInput = document.getElementById("teacher_phone");
+            const phone = phoneInput?.value.trim();
+
+            if (phone && !VALIDATIONS.PHONE_REGEX.test(phone)) {
+                phoneInput.classList.add("input-error");
+                return {
+                    isValid: false,
+                    message: "Por favor ingrese un número de teléfono válido (mínimo 7 dígitos).",
+                    focusElement: phoneInput
+                };
+            }
+
+            return { isValid: true };
+        }
+
+        function validateDocument() {
+            const docNumberInput = document.getElementById("teacher_document_number");
+            const docNumber = docNumberInput?.value.trim();
+
+            if (docNumber && !VALIDATIONS.DOCUMENT_REGEX.test(docNumber)) {
+                docNumberInput.classList.add("input-error");
+                return {
+                    isValid: false,
+                    message: "El número de documento debe contener solo números.",
+                    focusElement: docNumberInput
+                };
+            }
+
+            return { isValid: true };
+        }
+
+        function clearPreviousErrors() {
+            document.querySelectorAll('.input-error').forEach(input => {
+                input.classList.remove('input-error');
+            });
+        }
+
+        function showError(message, focusElement) {
+            showModal("Validación requerida", message, function () {
+                focusElement?.focus();
+            });
+        }
+
+        function submitForm() {
+            const submitButton = form.querySelector("button[type=submit]");
+
+            if (submitButton) {
+                submitButton.disabled = true;
+                form.submit();
+                setTimeout(() => {
+                    submitButton.disabled = false;
+                }, 3000);
+            } else {
+                form.submit();
+            }
+        }
+
+        function setupInputListeners(formElement) {
+            formElement.querySelectorAll("input, select").forEach(input => {
+                input.addEventListener("input", function () {
+                    this.classList.remove("input-error");
+                });
+            });
+        }
+        
+    });
 </script>
 {% endblock %}
 {% endblock %}

@@ -207,3 +207,9 @@ body{
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
 }
+
+#registration_date_teacher{
+    border: 2px solid #4CAF50;
+    background-color: #e8f5e8;
+}
+
