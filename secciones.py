@@ -1,26 +1,68 @@
-from flask import (Blueprint, render_template, 
-                   request, redirect, url_for, flash, jsonify, json, current_app, request, make_response, send_file)
+# ─────────────────────────────────────────────────────
+# ✅ ORDEN DE LAS ROUTES
+
+# 1.  MATRÍCULA ESTUDIANTES
+# 2.  REGISTRO DOCENTES
+# 3.  CIRCULARES
+# 4.  REGISTRAR CALIFICACIONES
+# 5.  MENÚ ESCOLAR
+# 6.  CALENDARIO
+# 7.  PLANEACIÓN
+# 8.  REPORTES
+# 9.  ASISTENCIA
+# ─────────────────────────────────────────────────────
+
+
+
+# ─────────────────────────────────────────────────────
+# 📦 IMPORTACIONES ESTÁNDAR
+# ─────────────────────────────────────────────────────
+import os
+import re
+import json
+import datetime
+from io import BytesIO
+from functools import reduce
+
+# ─────────────────────────────────────────────────────
+# 🌐 FLASK Y EXTENSIONES
+# ─────────────────────────────────────────────────────
+from flask import (
+    Blueprint, render_template, request, redirect, url_for,
+    flash, jsonify, current_app, make_response, send_file
+)
+from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash
+
+# ─────────────────────────────────────────────────────
+# 🐬 BASE DE DATOS (MySQL / Conexiones)
+# ─────────────────────────────────────────────────────
+import pymysql
+from db import get_connection as get_db
+
+# ─────────────────────────────────────────────────────
+# 📄 GENERACIÓN DE DOCUMENTOS (PDF / Word)
+# ─────────────────────────────────────────────────────
+# ReportLab (PDF)
 from reportlab.lib.pagesizes import letter, A4
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.platypus import (
+    SimpleDocTemplate, Table, TableStyle,
+    Paragraph, Spacer, Image
+)
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas
-from io import BytesIO
-import datetime
-from db import get_connection as get_db
-from werkzeug.utils import secure_filename
-from werkzeug.security import generate_password_hash
-import os
-import re
-from flask import current_app
-from functools import reduce
-from utils.consecutivo import obtener_siguiente_consecutivo
-import pymysql
-from flask import send_file
+
+# python-docx (Word)
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+
+# ─────────────────────────────────────────────────────
+# 🧰 UTILIDADES PERSONALIZADAS
+# ─────────────────────────────────────────────────────
+from utils.consecutivo import obtener_siguiente_consecutivo
 
 
 
@@ -35,14 +77,12 @@ ORDEN_CATEGORIAS = [
 ]
 
 
+# ─────────────────────────────────────────────────────
+# 1. 🧠 MATRÍCULA ESTUDIANTES  
+# ─────────────────────────────────────────────────────
 @secciones.route('/matricula', methods=['GET', 'POST'])
 def matricula():
     return render_template('secciones/matricula.html')
-    
-
-@secciones.route('/registro_docente', methods=['GET', 'POST'])
-def registro_docente():
-    return render_template('secciones/registro_docente.html')
 
 @secciones.route('/guardar_matricula', methods=['POST'])
 def guardar_matricula():
@@ -267,7 +307,13 @@ def limpiar_datos():
     return redirect(url_for('secciones.matricula'))
 
 
-# REGISTRO DOCENTE
+# ─────────────────────────────────────────────────────
+# 📄 REGISTRO DOCENTE
+# ─────────────────────────────────────────────────────
+@secciones.route('/registro_docente', methods=['GET', 'POST'])
+def registro_docente():
+    return render_template('secciones/registro_docente.html')
+
 @secciones.route('/guardar_docente', methods=['POST'])
 def guardar_docente():
     db = get_db()
@@ -373,13 +419,7 @@ def guardar_docente():
     return redirect(url_for('secciones.registro_docente'))
 
 
-@secciones.route('/asistencia', methods=['GET', 'POST'])
-def asistencia():
-    return render_template('secciones/asistencia.html')
 
-@secciones.route('/reportes', methods=['GET', 'POST'])
-def reportes():
-    return render_template('secciones/reportes.html')
 
 @secciones.route('/tareas', methods=['GET', 'POST'])
 def tareas():
@@ -398,6 +438,10 @@ def usuarios():
 def eventos():
     return render_template('secciones/eventos.html')  
 
+
+# ─────────────────────────────────────────────────────
+# 3. 📄  CIRCULARES
+# ─────────────────────────────────────────────────────
 @secciones.route('/circulares', methods=['GET', 'POST'])
 def circulares():    
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -412,8 +456,9 @@ def circulares():
     return render_template('secciones/circulares.html', circulares=lista_circulares)  
 
 
-# --- CALIFICACIONES ---
-# 1 junio 2025
+# ─────────────────────────────────────────────────────
+# 4. 📄  REGISTRAR CALIFICACIONES
+# ─────────────────────────────────────────────────────
 @secciones.route('/calificaciones', methods=['GET', 'POST'])
 def calificaciones():
     return render_template('secciones/calificaciones.html')
@@ -624,7 +669,9 @@ def get_notas_estudiante():
         return jsonify({"error": str(e)}), 500    
     
 
- # ---MENÚ ESCOLAR ---
+# ─────────────────────────────────────────────────────
+# 5. 📄  MENÚ ESCOLAR
+# ─────────────────────────────────────────────────────
 def reordenar_menu(menu):
     ordered = {}
     for dia in ORDEN_DIAS:
@@ -695,9 +742,9 @@ def cargar_menu():
 
     return reordenar_menu(menu)
 
-
-
-# CALENDARIO
+# ─────────────────────────────────────────────────────
+# 6. 📄  CALENDARIO
+# ─────────────────────────────────────────────────────
 @secciones.route('/calendario')
 def calendario():
     return render_template('secciones/calendario.html')
@@ -834,8 +881,10 @@ def ver_eventos():
 def ver_calendario():
     return render_template('secciones/calendario_ver.html')
 
+# ─────────────────────────────────────────────────────
+# 📄  PLANEACIÓN
+# ─────────────────────────────────────────────────────
 
-# PLANEACIÓN
 @secciones.route('/generar_pdf', methods=['POST'])
 def generar_pdf():
     datos = {
@@ -1072,6 +1121,14 @@ def editar_consecutivo(id):
         cursor.close()
         db.close()
 
+# ─────────────────────────────────────────────────────
+# 8. 📄  REPORTES
+# ─────────────────────────────────────────────────────
+
+@secciones.route('/reportes', methods=['GET', 'POST'])
+def reportes():
+    return render_template('secciones/reportes.html')
+
 @secciones.route('/generar-boletin-word', methods=['POST'])
 def generar_boletin_word():
     data = request.get_json()
@@ -1167,6 +1224,22 @@ def generar_boletin_word():
             "details": str(e)
         }), 500
     
+# ─────────────────────────────────────────────────────
+# 9. 📄  ASISTENCIA
+# ─────────────────────────────────────────────────────
+@secciones.route('/asistencia', methods=['GET', 'POST'])
+def asistencia():
+    db = get_db()
+    cursor = db.cursor(pymysql.cursors.DictCursor)
+    if request.method == 'POST':
+        grupo = request.form.get('grupo')
+        asignatura = request.form.get('asignatura')
 
+        cursor.execute("SELECT * FROM estudiante WHERE grupo = %s ORDER BY apellido, nombre", (grupo,))
+        alumnos = cursor.fetchall()
 
+        return render_template('asistencia.html', alumnos=alumnos, grupo=grupo, asignatura=asignatura)
+   
+
+    return render_template('secciones/asistencia.html')
 

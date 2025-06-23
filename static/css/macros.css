@@ -9,7 +9,7 @@
   text-align: start;
   margin: 10px 1px 10px 2px;
   padding: 10px;
-  height: 60px;
+  height: 70px;
   border-radius: 10px 10px 0 0;  
   font-family: 'Poppins', sans-serif; 
   color:var(--color-white);
@@ -20,28 +20,29 @@
     display: flex;
     justify-content:flex-start;
     align-items: center;  
-    margin-left:10px; 
+    margin-left:15px; 
     color: white; 
     gap: 30px;
 }
 
 .header .logo i{
-    font-size: 30px;
+    font-size: 2.3rem;
     color: white;
     transition: color 0.3s ease;
     border-radius: 50%;
     transition: transform 0.3s ease;
-    cursor: pointer;   
+    cursor: pointer;
+    padding:5px;   
 }
 
 .logo i:hover  {
     animation: pulse-border 1s infinite;
     transform: scale(1.1);
-    color:yellow;
+    color: var(--color-primary);
 }
 
 .logo h2 { 
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   letter-spacing:1px;
   white-space: nowrap;
 }
@@ -49,18 +50,17 @@
 .return {
     display:flex;
     align-items:center;    
-    color: white;
-    width: 40px;
-    height: 40px;
+    color: white;    
     border-radius: 50%;
     cursor: pointer;
-    margin-right:10px;
+    margin-right:20px;
     transition: color 0.3s ease;     
 }
 
 .return .icon{
-    font-size: 30px;    
+    font-size: 2.2rem;    
     transition: all 0.3s ease;
+    padding:5px;  
 }
 
 .return:hover  {

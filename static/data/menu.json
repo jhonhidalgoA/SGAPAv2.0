@@ -1,41 +1,17 @@
 {
-    "Jueves": {
-        "Complementos": [
-            {
-                "img": "postre.png",
-                "nombre": "Barra de Postres"
-            },
-            {
-                "img": "frutas.png",
-                "nombre": "Barra de Frutas"
-            }
-        ],
-        "Menú alternativo": [
-            {
-                "img": "pasta.png",
-                "nombre": "Pasta en salsa Napolitana"
-            },
-            {
-                "img": "pescado.png",
-                "nombre": "Salmon Ahumado"
-            },
-            {
-                "img": "coliflor.png",
-                "nombre": "Coliflor cocida"
-            }
-        ],
+    "Lunes": {
         "Menú del día": [
             {
-                "img": "arroz.png",
-                "nombre": "Arroz"
+                "nombre": "Arroz con leche y Coco",
+                "img": "arroz.png"
             },
             {
-                "img": "pollo.png",
-                "nombre": "Pollo Frito"
+                "nombre": "Pollo Apanado Frisby",
+                "img": "pollo.png"
             },
             {
                 "img": "ensalada.png",
-                "nombre": "Ensalada"
+                "nombre": "Ensalada de Pollo y Quinua"
             }
         ],
         "Menú vegetariano": [
@@ -45,19 +21,7 @@
             },
             {
                 "img": "pan.png",
-                "nombre": "Pan artesanal"
-            }
-        ]
-    },
-    "Lunes": {
-        "Complementos": [
-            {
-                "img": "postre.png",
-                "nombre": "Barra de Postres"
-            },
-            {
-                "img": "frutas.png",
-                "nombre": "Barra de Frutas"
+                "nombre": "Pan de la Casa"
             }
         ],
         "Menú alternativo": [
@@ -74,56 +38,18 @@
                 "nombre": "Coliflor cocida"
             }
         ],
-        "Menú del día": [
-            {
-                "img": "arroz.png",
-                "nombre": "Arroz con leche"
-            },
-            {
-                "img": "pollo.png",
-                "nombre": "Pollo Asado"
-            },
-            {
-                "img": "ensalada.png",
-                "nombre": "Ensalada de Pollo y Quinua"
-            }
-        ],
-        "Menú vegetariano": [
-            {
-                "img": "sopa.png",
-                "nombre": "Sopa de Ahuyama"
-            },
-            {
-                "img": "pan.png",
-                "nombre": "Pan de la Casa"
-            }
-        ]
-    },
-    "Martes": {
         "Complementos": [
             {
                 "img": "postre.png",
                 "nombre": "Barra de Postres"
             },
             {
-                "img": "yogurt.png",
-                "nombre": "Yogurt"
+                "img": "frutas.png",
+                "nombre": "Barra de Frutas"
             }
-        ],
-        "Menú alternativo": [
-            {
-                "img": "lasana.png",
-                "nombre": "Lasaña"
-            },
-            {
-                "img": "pollo_teriyaki.png",
-                "nombre": "Pollo Teriyaki"
-            },
-            {
-                "img": "repollo.png",
-                "nombre": "Ensalada de Repollo"
-            }
-        ],
+        ]
+    },
+    "Martes": {
         "Menú del día": [
             {
                 "img": "papas.png",
@@ -147,33 +73,33 @@
                 "img": "aguacate.png",
                 "nombre": "Ensalada de Aguacate"
             }
-        ]
-    },
-    "Miércoles": {
-        "Complementos": [
-            {
-                "img": "frutas.png",
-                "nombre": "Barra de Frutas"
-            },
-            {
-                "img": "agua.png",
-                "nombre": "Agua Saborizada"
-            }
         ],
         "Menú alternativo": [
             {
-                "img": "tortilla.png",
-                "nombre": "Tortilla de Vegetales"
+                "img": "lasana.png",
+                "nombre": "Lasaña"
             },
             {
-                "img": "salchicha.png",
-                "nombre": "Salchicha Casera"
+                "img": "pollo_teriyaki.png",
+                "nombre": "Pollo Teriyaki"
             },
             {
-                "img": "lechuga.png",
-                "nombre": "Ensalada de Lechuga"
+                "img": "repollo.png",
+                "nombre": "Ensalada de Repollo"
             }
         ],
+        "Complementos": [
+            {
+                "img": "postre.png",
+                "nombre": "Barra de Postres"
+            },
+            {
+                "img": "yogurt.png",
+                "nombre": "Yogurt"
+            }
+        ]
+    },
+    "Miércoles": {
         "Menú del día": [
             {
                 "img": "arroz.png",
@@ -197,33 +123,83 @@
                 "img": "huevos.png",
                 "nombre": "Huevos Cocidos"
             }
+        ],
+        "Menú alternativo": [
+            {
+                "img": "tortilla.png",
+                "nombre": "Tortilla de Vegetales"
+            },
+            {
+                "img": "salchicha.png",
+                "nombre": "Salchicha Casera"
+            },
+            {
+                "img": "lechuga.png",
+                "nombre": "Ensalada de Lechuga"
+            }
+        ],
+        "Complementos": [
+            {
+                "img": "frutas.png",
+                "nombre": "Barra de Frutas"
+            },
+            {
+                "img": "agua.png",
+                "nombre": "Agua Saborizada"
+            }
         ]
     },
-    "Viernes": {
+    "Jueves": {
+        "Menú del día": [
+            {
+                "img": "arroz.png",
+                "nombre": "Arroz"
+            },
+            {
+                "img": "pollo.png",
+                "nombre": "Pollo Frito"
+            },
+            {
+                "img": "ensalada.png",
+                "nombre": "Ensalada"
+            }
+        ],
+        "Menú vegetariano": [
+            {
+                "img": "sopa.png",
+                "nombre": "Sopa de Ahuyama"
+            },
+            {
+                "img": "pan.png",
+                "nombre": "Pan artesanal"
+            }
+        ],
+        "Menú alternativo": [
+            {
+                "img": "pasta.png",
+                "nombre": "Pasta en salsa Napolitana"
+            },
+            {
+                "img": "pescado.png",
+                "nombre": "Salmon Ahumado"
+            },
+            {
+                "img": "coliflor.png",
+                "nombre": "Coliflor cocida"
+            }
+        ],
         "Complementos": [
             {
                 "img": "postre.png",
                 "nombre": "Barra de Postres"
             },
             {
-                "img": "yogurt.png",
-                "nombre": "Yogurt"
+                "img": "frutas.png",
+                "nombre": "Barra de Frutas"
             }
-        ],
-        "Menú alternativo": [
-            {
-                "img": "lasana.png",
-                "nombre": "Lasaña"
-            },
-            {
-                "img": "pollo_teriyaki.png",
-                "nombre": "Pollo Teriyaki"
-            },
-            {
-                "img": "repollo.png",
-                "nombre": "Ensalada de Repollo"
-            }
-        ],
+        ]
+    },
+    "Viernes": {
         "Menú del día": [
             {
                 "img": "papas.png",
@@ -246,6 +222,30 @@
             {
                 "img": "aguacate.png",
                 "nombre": "Ensalada de Aguacate"
+            }
+        ],
+        "Menú alternativo": [
+            {
+                "img": "lasana.png",
+                "nombre": "Lasaña"
+            },
+            {
+                "img": "pollo_teriyaki.png",
+                "nombre": "Pollo Teriyaki"
+            },
+            {
+                "img": "repollo.png",
+                "nombre": "Ensalada de Repollo"
+            }
+        ],
+        "Complementos": [
+            {
+                "img": "postre.png",
+                "nombre": "Barra de Postres"
+            },
+            {
+                "img": "yogurt.png",
+                "nombre": "Yogurt"
             }
         ]
     }

@@ -20,8 +20,8 @@ body {
 .planning__group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-    padding: 40px;
+    gap: 20px;
+    padding: 35px;
 }
 
 .form-group {

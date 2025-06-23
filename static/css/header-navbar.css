@@ -20,7 +20,7 @@ header.navbar {
 }
 
 .navbar__link {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     color: var(--color-white);
     font-weight: 700;
     letter-spacing: 1.5px;
@@ -28,15 +28,19 @@ header.navbar {
 
 .navbar__link .danger {
     color: var(--color-danger);
-    font-size: 1.3rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: var(--fw-bold);
 }
 
-.navbar__brand:hover .navbar__link,
-.navbar__brand:hover .danger {
-    color: var(--color-blue-aqua); 
-    
+.navbar__brand:hover .navbar__link{
+    color: var(--color-accent);
+    border-bottom: 3px solid  var(--color-accent);     
 }
+
+.navbar__brand:hover .danger{
+    color: var(--color-white);
+}
+
  
 .navbar__list {
     display: flex;
@@ -48,20 +52,20 @@ header.navbar {
 .navbar__item a {
     font-size: 1.3rem;
     color: var(--color-white);
-    font-weight: 500;
+    font-weight: var(--fw-regular);
     letter-spacing: 1px;
     transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 .navbar__item a:hover {
-    color: var(--color-blue-aqua);
-    border-bottom: 2px solid var(--color-blue-aqua);
+    color: var(--color-hover);
+    border-bottom: 3px solid var(--color-hover);
     font-size: 1.4rem;
     letter-spacing: .4px;
 }
 
 .navbar__btn a {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     color: var(--color-white);
     padding: 5px 15px;
     border-radius: 8px;
@@ -70,6 +74,8 @@ header.navbar {
 }
 
 .navbar__btn a:hover {
-    background-color: var(--color-blue-aqua);
-    border: 2px solid transparent;
+    background-color: var(--color-hover);
+    border: 2px solid transparent;    
+    transform: scale(1.10);
+    
 }

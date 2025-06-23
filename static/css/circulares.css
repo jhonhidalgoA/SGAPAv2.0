@@ -11,6 +11,15 @@ body {
   color: #fff;
 }
 
+header.navbar.down {
+    background: var(--color-title);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: 0.5s;
+}
+
 .circulares__lista{   
    max-width: 1200px;
    width: 1000px;

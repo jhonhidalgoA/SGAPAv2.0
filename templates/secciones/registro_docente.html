@@ -337,14 +337,12 @@
                 this.classList.remove("input-error");
             });
         });
-    }
-
-   
+    }   
 });
 </script>
 
 <script>
-    /*Funcion modal */
+    
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
     }

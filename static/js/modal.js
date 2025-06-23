@@ -1,4 +1,4 @@
-let currentAction = null;
+
 
 function showModal(title, message, action) {
     document.getElementById("modalTitle").innerText = title;

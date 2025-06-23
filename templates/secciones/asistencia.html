@@ -1,7 +1,7 @@
 {% extends "main.html" %}
-{% include "components/modal.html" %}
+
 {% from "macros/header-block.j2" import header_block %}
-{% from "macros/buttons.j2" import btn  %}
+{% from "macros/buttons.j2" import btn %}
 
 {% block title %} M. DOCENTE | SGAPA{% endblock %}
 
@@ -14,92 +14,73 @@
     <div class="assistance" id="asistencia">
 
         {{ header_block('app_registration', 'Asistencia', 'var(--color-orange-card)') }}
-
-        <div class="assistance__group">
-            <div class="group">
-                <label for="grados-select">Grupo:</label>
-                <select id="grados-select" name="grados" aria-label="Selecciona un grado">
-                    <option value="">Seleccionar</option>
-                    <option value="601">Grado 601</option>
-                    <option value="602">Grado 602</option>
-                    <option value="603">Grado 603</option>
-                    <option value="604">Grado 604</option>
-                    <option value="605">Grado 605</option>
-                </select>
+        <form  action="" method="post" id="asistencia-form">
+            <div class="assistance__group">
+                <div class="group">
+                    <label for="grados-select">Grupo:</label>
+                    <select id="grados-select" name="grados" aria-label="Selecciona un grado">
+                        <option value="">Seleccionar</option>
+                        <option value="6">Grado Sexto </option>
+                        <option value="7">Grado Séptimo</option>
+                        <option value="8">Grado Octavo</option>
+                        <option value="8">Grado Noveno</option>
+                        <option value="10">Grado Décimo</option>
+                        <option value="11">Grado Undécimo</option>
+                    </select>
+                </div>
+                <div class="subjects">
+                    <label for="grados-select">Asignatura:</label>
+                    <select id="asignatura-select" name="grados" aria-label="Selecciona una asignatura">
+                        <option value="">Seleccionar</option>
+                        <option value="1">Matemáticas</option>
+                        <option value="2">Castellano</option>
+                        <option value="3">Tecnología</option>
+                        <option value="4">Ética</option>
+                        <option value="5">Artistica</option>
+                    </select>
+                </div>
+                <div class="period">
+                    <label for="periodos-select">Periodo:</label>
+                    <select id="periodos-select" name="periodos" aria-label="Selecciona un Periodo">
+                        <option value="">Seleccionar</option>
+                        <option value="1">Primero</option>
+                        <option value="2">Segundo</option>
+                        <option value="3">Tercero</option>
+                        <option value="4">Cuarto</option>
+                    </select>
+                </div>
             </div>
-            <div class="subjects">
-                <label for="grados-select">Asignatura:</label>
-                <select id="grados-select" name="grados" aria-label="Selecciona una asignatura">
-                    <option value="">Seleccionar</option>
-                    <option value="matematicas">Matemáticas</option>
-                    <option value="catellano">Castellano</option>
-                    <option value="tecnologia">Tecnología</option>
-                    <option value="etica">Ética</option>
-                    <option value="artistica">Artistica</option>
-                </select>
+            <div class="assistance__buttons">
+                {{ btn(icono="add", texto="Cargar", color="load") }}
+                {{ btn(icono="save", texto="Guardar", color="save") }}
+                {{ btn(icono="delete", texto="Eliminar", color="delete") }}
+                {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view") }}
             </div>
-            <div class="period">
-                <label for="grados-select">Periodo:</label>
-                <select id="grados-select" name="grados" aria-label="Selecciona un Periodo">
-                    <option value="primero">Primero</option>
-                    <option value="segundo">Segundo</option>
-                    <option value="tercero">Terecero</option>
-                    <option value="cuarto">Cuarto</option>
-                </select>
+            <div class="assistance__notes">
+                <table class="table__edit">
+                    <thead>
+                        <tr>
+                            <th class="table__name">Apellidos</th>
+                            <th class="table__name">Nombres</th>
+                            <th class="table__notes">Ausente</th>
+                            <th class="table__notes">Retardo</th>
+                            <th class="table__notes">Fuga</th>
+                            <th class="table__notes">Excusa</th>
+                            <th class="table__notes">Total</th>
+                            <th class="table__name">Observación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-asistencia">
+                        <!-- Aquí se cargan los estudiantes -->
+                    </tbody>
+                </table>
             </div>
-        </div>
-        <div class="assistance__buttons">
-            {{ btn(icono="add", texto="Cargar", color="load") }}
-            {{ btn(icono="save", texto="Guardar", color="save") }}
-            {{ btn(icono="delete", texto="Eliminar", color="delete") }}
-            {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view") }}
-        </div>
-        <div class="assistance__notes">
-            <table class="table__edit">
-                <thead>
-                    <tr>
-                        <th class="table__name">Apellidos</th>
-                        <th class="table__name">Nombres</th>
-                        <th class="table__notes">Ausente</th>
-                        <th class="table__notes">Retardo</th>
-                        <th class="table__notes">Fuga</th>
-                        <th class="table__notes">Excusa</th>
-                        <th class="table__notes">Total</th>
-                        <th class="table__name">Observación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Pérez</td>
-                        <td>Juan</td>
-                        <td><input type="checkbox" class="attendance-check" name="ausente_1" aria-label="ausente"></td>
-                        <td><input type="checkbox" class="attendance-check" name="retardo_1" aria-label="retardo"></td>
-                        <td><input type="checkbox" class="attendance-check" name="fuga_1" aria-label="fuga"></td>
-                        <td><input type="checkbox" class="attendance-check" name="excusa_1" aria-label="excusa"></td>
-                        <td class="total-cell">0</td>
-                        <td><input type="text" class="observation-input" name="observacion_1" aria-label="observacion">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Giraldo </td>
-                        <td>Alejandra</td>
-                        <td><input type="checkbox" class="attendance-check" name="ausente_1" aria-label="ausente"></td>
-                        <td><input type="checkbox" class="attendance-check" name="retardo_1" aria-label="retardo"></td>
-                        <td><input type="checkbox" class="attendance-check" name="fuga_1" aria-label="fuga"></td>
-                        <td><input type="checkbox" class="attendance-check" name="excusa_1" aria-label="excusa"></td>
-                        <td class="total-cell">0</td>
-                        <td><input type="text" class="observation-input" name="observacion_1" aria-label="observacion">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        </form>
     </div>
 </div>
-<!--end asistencia-->
+
 {% block extra_js %}
 <script>
-    /*Funcion salir al index.html*/
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
     }
@@ -121,6 +102,82 @@
 
     document.getElementById("modalCancel").addEventListener("click", function () {
         document.getElementById("confirmModal").style.display = "none";
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("asistencia-form");
+        const gradoSelect = document.getElementById("grados-select");
+        const asignaturaSelect = document.getElementById("asignaturas-select");
+        const tbody = document.getElementById("tabla-asistencia");
+
+        // Cargar alumnos cuando se envíe el formulario
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const grupo = gradoSelect.value;
+            const asignatura = asignaturaSelect.value;
+
+            fetch(`/cargar-alumnos?grupo=${grupo}`)
+                .then(res => res.json())
+                .then(alumnos => {
+                    tbody.innerHTML = "";
+                    alumnos.forEach(alumno => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                        <td>${alumno.apellido}</td>
+                        <td>${alumno.nombre}</td>
+                        
+                        <td><input type="checkbox" class="attendance-check" data-id="${alumno.student_id}" data-type="ausente"></td>
+                        <td><input type="checkbox" class="attendance-check" data-id="${alumno.student_id}" data-type="tarde"></td>
+                        <td><input type="checkbox" class="attendance-check" data-id="${alumno.student_id}" data-type="fuga"></td>
+                        <td><input type="checkbox" class="attendance-check" data-id="${alumno.student_id}" data-type="justificado"></td>
+                        <td><input type="text" class="observation-input" data-id="${alumno.student_id}" placeholder="Observación..."></td>
+                    `;
+                        tbody.appendChild(tr);
+                    });
+                });
+        });
+
+        // Manejar cambios de checkboxes
+        tbody.addEventListener("change", function (e) {
+            if (e.target.classList.contains("attendance-check")) {
+                const studentId = e.target.getAttribute("data-id");
+                const type = e.target.getAttribute("data-type");
+
+                // Desactivar otros checkboxes del mismo estudiante
+                const allChecks = document.querySelectorAll(`.attendance-check[data-id='${studentId}']`);
+                allChecks.forEach(cb => {
+                    if (cb !== e.target) cb.checked = false;
+                });
+
+                // Guardar estado actual
+                window.attendanceData = window.attendanceData || [];
+                const index = window.attendanceData.findIndex(d => d.student_id == studentId);
+
+                const payload = {
+                    student_id: parseInt(studentId),
+                    subject_id: parseInt(document.getElementById("asignaturas-select").value),
+                    status: type
+                };
+
+                if (index > -1) {
+                    window.attendanceData[index] = payload;
+                } else {
+                    window.attendanceData.push(payload);
+                }
+            }
+        });
+
+        // Enviar datos al hacer clic en "Guardar"
+        document.querySelector(".btn--save").addEventListener("click", function () {
+            fetch("/guardar-asistencia", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(window.attendanceData || [])
+            }).then(res => res.json()).then(data => {
+                alert("Asistencia guardada correctamente.");
+            });
+        });
     });
 </script>
 {% endblock %}
