@@ -4,7 +4,6 @@
 {% from "macros/buttons.j2" import btn with context %}
 {% block title %} MODULO ADMINISTRADOR | SGAPA {% endblock %}
 
-
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/registro_docente.css') }}">
 {% endblock %}
@@ -174,10 +173,7 @@
 </div>
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
-<script src="{{url_for('static', filename='js/tabs-modal.js') }}"></script>
-<script src="{{url_for('static', filename='js/photo-student.js' ) }}"></script>
-
+<script src="{{url_for('static', filename='js/photo-student.js') }}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
     const VALIDATIONS = {
@@ -339,32 +335,6 @@
         });
     }   
 });
-</script>
-
-<script>
-    
-    function confirmLogout() {
-        window.location.href = "{{ url_for('auth.logout') }}";
-    }
-
-    function showModal(title, message, action) {
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalMessage").innerText = message;
-        window.modalAction = action;
-
-        const modal = document.getElementById("confirmModal");
-        modal.style.display = "flex";
-    }
-    document.getElementById("modalConfirm").addEventListener("click", function () {
-        if (typeof modalAction === 'function') {
-            modalAction();
-        }
-        document.getElementById("confirmModal").style.display = "none";
-    });
-
-    document.getElementById("modalCancel").addEventListener("click", function () {
-        document.getElementById("confirmModal").style.display = "none";
-    });
 </script>
 {% endblock %}
 {% endblock %}
