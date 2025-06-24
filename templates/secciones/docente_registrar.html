@@ -2,21 +2,22 @@
 {% include "components/modal.html" %}
 {% from "macros/macros.j2" import header %}
 {% from "macros/buttons.j2" import btn with context %}
-{% block title %} MODULO ADMINISTRADOR | SGAPA {% endblock %}
+{% block title %} M. ADMINISTRADOR | SGAPA {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/registro_docente.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/docente_registrar.css') }}">
 {% endblock %}
 
 {% block content %}
 <div class="tabs">
     {{ header(titulo="Registro Docente", color__fondo="var(--color-green-emerald)") }}
-
+   
     <ul class="tab-nav">
         <li class="active" data-tab="tab1">Datos del Docente</li>
         <li data-tab="tab2">Información Profesional</li>
     </ul>
 
+     <!-- Llamada a campos vacíos desde Flask -->    
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -26,7 +27,9 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
+    <!------------------>
 
+   
     <form action="{{ url_for('secciones.guardar_docente') }}" method="post" id="teacherRegistrationForm"
         class="registration__form" enctype="multipart/form-data">
         <div class="tab-content active" id="tab1">
@@ -170,9 +173,75 @@
         </div>
     </form>
 </div>
+{% endblock %}
 
 {% block extra_js %}
-<script src="{{url_for('static', filename='js/photo-student.js') }}"></script>
-<script src="{{url_for('static', filename='js/registro_docente_valid.js') }}"></script>
-{% endblock %}
+<script src="{{ url_for('static' , filename='js/docente_registrar.js')}}"></script>
+<script>
+    // === 1. Función confirmLogout() - Salir
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+
+    // === 2. Función showModal() - Modal personalizado
+    function showModal(title, message, action) {
+        const modal = document.getElementById("confirmModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalMessage = document.getElementById("modalMessage");
+
+        if (!modal || !modalTitle || !modalMessage) {
+            console.error("No se encontró uno o más elementos del modal");
+            alert(`Error: ${message}`);
+            return;
+        }
+
+        modalTitle.innerText = title;
+        modalMessage.innerText = message;
+        window.modalAction = action;
+
+        modal.style.display = "flex";
+    }
+
+    // === 3. Eventos del modal (Aceptar / Cancelar)
+    document.addEventListener("DOMContentLoaded", function () {
+        const modalConfirm = document.getElementById("modalConfirm");
+        const modalCancel = document.getElementById("modalCancel");
+
+        if (modalConfirm) {
+            modalConfirm.addEventListener("click", function () {
+                if (typeof modalAction === 'function') {
+                    modalAction();
+                }
+                document.getElementById("confirmModal").style.display = "none";
+            });
+        }
+
+        if (modalCancel) {
+            modalCancel.addEventListener("click", function () {
+                document.getElementById("confirmModal").style.display = "none";
+            });
+        }
+
+        // === 4. Validación de campos vacíos desde Flask ===
+        const urlParams = new URLSearchParams(window.location.search);
+        const camposVacios = urlParams.get('campos_vacios');
+
+        if (camposVacios) {
+            const listaCampos = camposVacios.split(',');
+            listaCampos.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.classList.add('input-error');
+                }
+            });
+        }
+
+        // === 5. Limpiar error al escribir ===
+        document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
+            input.addEventListener('input', function () {
+                this.classList.remove('input-error');
+            });
+        });
+    });
+</script>
 {% endblock %}

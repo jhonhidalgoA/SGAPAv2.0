@@ -15,17 +15,17 @@
 
 
 # ─────────────────────────────────────────────────────
-# 📦 IMPORTACIONES ESTÁNDAR
+# IMPORTACIONES ESTÁNDAR
 # ─────────────────────────────────────────────────────
 import os
 import re
 import json
-import datetime
+from datetime import datetime
 from io import BytesIO
 from functools import reduce
 
 # ─────────────────────────────────────────────────────
-# 🌐 FLASK Y EXTENSIONES
+# FLASK Y EXTENSIONES
 # ─────────────────────────────────────────────────────
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
@@ -35,13 +35,13 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 
 # ─────────────────────────────────────────────────────
-# 🐬 BASE DE DATOS (MySQL / Conexiones)
+# BASE DE DATOS (MySQL / Conexiones)
 # ─────────────────────────────────────────────────────
 import pymysql
 from db import get_connection as get_db
 
 # ─────────────────────────────────────────────────────
-# 📄 GENERACIÓN DE DOCUMENTOS (PDF / Word)
+# GENERACIÓN DE DOCUMENTOS (PDF / Word)
 # ─────────────────────────────────────────────────────
 # ReportLab (PDF)
 from reportlab.lib.pagesizes import letter, A4
@@ -60,11 +60,11 @@ from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 # ─────────────────────────────────────────────────────
-# 🧰 UTILIDADES PERSONALIZADAS
+# UTILIDADES PERSONALIZADAS
 # ─────────────────────────────────────────────────────
 from utils.consecutivo import obtener_siguiente_consecutivo
 
-
+print(" Archivo routes.py cargado correctamente")
 
 secciones = Blueprint('secciones', __name__, url_prefix='/secciones')
 
@@ -78,7 +78,7 @@ ORDEN_CATEGORIAS = [
 
 
 # ─────────────────────────────────────────────────────
-# 1. 🧠 MATRÍCULA ESTUDIANTES  
+# MATRÍCULA ESTUDIANTES  
 # ─────────────────────────────────────────────────────
 @secciones.route('/matricula', methods=['GET', 'POST'])
 def matricula():
@@ -307,12 +307,11 @@ def limpiar_datos():
     return redirect(url_for('secciones.matricula'))
 
 
-# ─────────────────────────────────────────────────────
-# 📄 REGISTRO DOCENTE
-# ─────────────────────────────────────────────────────
+# Registrar Docente
+
 @secciones.route('/registro_docente', methods=['GET', 'POST'])
 def registro_docente():
-    return render_template('secciones/registro_docente.html')
+    return render_template('secciones/docente_registrar.html')
 
 @secciones.route('/guardar_docente', methods=['POST'])
 def guardar_docente():
@@ -334,12 +333,12 @@ def guardar_docente():
         telefono = request.form.get('teacher_phone')
         correo = request.form.get('teacher_email')
         profesion = request.form.get('profession')
-        area = request.form.get('area')  # ← Debe venir de <select name="area">
+        area = request.form.get('area')       # ← Debe venir de <select name="area">
         resolucion = request.form.get('resolucion')
         escalafon = request.form.get('scale')  # ← Debe venir de <select name="scale">
         foto = request.files.get('student_photo')
 
-        # Validación: Campos obligatorios
+        # Validación básica de campos obligatorios
         if not all([nombres, apellidos, tipo_documento, numero_documento, area, escalafon]):
             flash("❌ Todos los campos obligatorios deben estar llenos", "danger")
             return redirect(url_for('secciones.registro_docente'))
@@ -349,7 +348,7 @@ def guardar_docente():
             flash("❌ El número de documento debe contener solo números", "danger")
             return redirect(url_for('secciones.registro_docente'))
 
-        # Validar correo electrónico si se proporciona
+        # Validar correo si se proporciona
         if correo and '@' not in correo:
             flash("❌ El correo electrónico no es válido", "danger")
             return redirect(url_for('secciones.registro_docente'))
@@ -362,7 +361,6 @@ def guardar_docente():
         # Verificar si ya existe el docente
         cursor.execute("SELECT teacher_id FROM docentes_datos WHERE document_number = %s", (numero_documento,))
         docente_existe = cursor.fetchone()
-
         if docente_existe:
             flash("⚠️ Este docente ya está registrado", "warning")
             return redirect(url_for('secciones.registro_docente'))
@@ -371,7 +369,7 @@ def guardar_docente():
         photo_path = None
         if foto and foto.filename != '':
             filename = secure_filename(foto.filename)
-            upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            upload_path = os.path.join('.', 'static', 'uploads', filename)
             foto.save(upload_path)
             photo_path = filename
         else:
@@ -386,13 +384,11 @@ def guardar_docente():
             INSERT INTO users (
                 full_name, role_id, username, password_hash, document_number, email
             ) VALUES (%s, %s, %s, %s, %s, %s)
-        """, (
-            f"{nombres} {apellidos}", 2, numero_documento, password_hash, numero_documento, correo
-        ))
+        """, (f"{nombres} {apellidos}", 2, numero_documento, password_hash, numero_documento, correo))
         db.commit()
         user_id = cursor.lastrowid
 
-        # Insertar en tabla docente_datos
+        # Insertar en tabla docentes_datos
         cursor.execute("""
             INSERT INTO docentes_datos (
                 first_name, last_name, registration_date, code,
@@ -408,39 +404,27 @@ def guardar_docente():
         ))
         db.commit()
 
-        # Mostrar mensaje de éxito
+        # Mensaje de éxito
         flash("✅ Docente matriculado correctamente", "success")
 
     except Exception as e:
         db.rollback()
-        print(f"Error al registrar docente: {e}") 
+        print(f"Error al registrar docente: {e}")
         flash(f"❌ Error al registrar docente: {str(e)}", "danger")
+    finally:
+        cursor.close()
+        db.close()
 
     return redirect(url_for('secciones.registro_docente'))
 
 
 
 
-@secciones.route('/tareas', methods=['GET', 'POST'])
-def tareas():
-    return render_template('secciones/tareas.html')
 
-@secciones.route('/horario', methods=['GET', 'POST'])
-def horario():
-    return render_template('secciones/horario.html')
-
-
-@secciones.route('/usuarios', methods=['GET', 'POST'])
-def usuarios():
-    return render_template('secciones/usuarios.html')
-
-@secciones.route('/eventos')
-def eventos():
-    return render_template('secciones/eventos.html')  
 
 
 # ─────────────────────────────────────────────────────
-# 3. 📄  CIRCULARES
+# CIRCULARES
 # ─────────────────────────────────────────────────────
 @secciones.route('/circulares', methods=['GET', 'POST'])
 def circulares():    
@@ -457,7 +441,7 @@ def circulares():
 
 
 # ─────────────────────────────────────────────────────
-# 4. 📄  REGISTRAR CALIFICACIONES
+# REGISTRAR CALIFICACIONES
 # ─────────────────────────────────────────────────────
 @secciones.route('/calificaciones', methods=['GET', 'POST'])
 def calificaciones():
@@ -670,7 +654,7 @@ def get_notas_estudiante():
     
 
 # ─────────────────────────────────────────────────────
-# 5. 📄  MENÚ ESCOLAR
+# MENU ESCOLAR
 # ─────────────────────────────────────────────────────
 def reordenar_menu(menu):
     ordered = {}
@@ -743,7 +727,7 @@ def cargar_menu():
     return reordenar_menu(menu)
 
 # ─────────────────────────────────────────────────────
-# 6. 📄  CALENDARIO
+# CALENDARIO
 # ─────────────────────────────────────────────────────
 @secciones.route('/calendario')
 def calendario():
@@ -882,7 +866,7 @@ def ver_calendario():
     return render_template('secciones/calendario_ver.html')
 
 # ─────────────────────────────────────────────────────
-# 📄  PLANEACIÓN
+# PLANEACIÓN
 # ─────────────────────────────────────────────────────
 
 @secciones.route('/generar_pdf', methods=['POST'])
@@ -1122,7 +1106,7 @@ def editar_consecutivo(id):
         db.close()
 
 # ─────────────────────────────────────────────────────
-# 8. 📄  REPORTES
+# REPORTES
 # ─────────────────────────────────────────────────────
 
 @secciones.route('/reportes', methods=['GET', 'POST'])
@@ -1225,7 +1209,7 @@ def generar_boletin_word():
         }), 500
     
 # ─────────────────────────────────────────────────────
-# 9. 📄  ASISTENCIA
+#  ASISTENCIA
 # ─────────────────────────────────────────────────────
 @secciones.route('/asistencia', methods=['GET', 'POST'])
 def asistencia():
@@ -1243,3 +1227,22 @@ def asistencia():
 
     return render_template('secciones/asistencia.html')
 
+
+
+
+@secciones.route('/tareas', methods=['GET', 'POST'])
+def tareas():
+    return render_template('secciones/tareas.html')
+
+@secciones.route('/horario', methods=['GET', 'POST'])
+def horario():
+    return render_template('secciones/horario.html')
+
+
+@secciones.route('/usuarios', methods=['GET', 'POST'])
+def usuarios():
+    return render_template('secciones/usuarios.html')
+
+@secciones.route('/eventos')
+def eventos():
+    return render_template('secciones/eventos.html')  

@@ -2,46 +2,46 @@
     "Lunes": {
         "Menú del día": [
             {
-                "nombre": "Arroz con leche y Coco",
+                "nombre": "Arroz con Leche de Cabra",
                 "img": "arroz.png"
             },
             {
-                "nombre": "Pollo Apanado Frisby",
+                "nombre": "Pollo Frito frisby",
                 "img": "pollo.png"
             },
             {
-                "img": "ensalada.png",
-                "nombre": "Ensalada de Pollo y Quinua"
+                "nombre": "Pan Artesanal",
+                "img": "pan.png"
             }
         ],
         "Menú vegetariano": [
             {
-                "img": "sopa.png",
-                "nombre": "Sopa de Ahuyama"
+                "nombre": "Sopa de Caracol",
+                "img": "postre.png"
             },
             {
-                "img": "pan.png",
-                "nombre": "Pan de la Casa"
+                "nombre": "Pan de la Casa",
+                "img": "pan.png"
             }
         ],
         "Menú alternativo": [
             {
-                "img": "pasta.png",
-                "nombre": "Pasta en salsa Napolitana"
+                "nombre": "Pasta en salsa Napolitana",
+                "img": "pasta.png"
             },
             {
-                "img": "pescado.png",
-                "nombre": "Filete de Salmon a la Plancha"
+                "nombre": "Filete de Salmon",
+                "img": "filete.png"
             },
             {
-                "img": "coliflor.png",
-                "nombre": "Coliflor cocida"
+                "nombre": "Coliflor cocida",
+                "img": "ensalada.png"
             }
         ],
         "Complementos": [
             {
-                "img": "postre.png",
-                "nombre": "Barra de Postres"
+                "nombre": "Barra de Postres",
+                "img": "postre.png"
             },
             {
                 "img": "frutas.png",
@@ -56,8 +56,8 @@
                 "nombre": "Papas criollas en salsa"
             },
             {
-                "img": "cerdo.png",
-                "nombre": "Pernil de Cerdo"
+                "nombre": "Pernil de Cerdo",
+                "img": "cerdo.png"
             },
             {
                 "img": "vegetales_2.png",
@@ -66,12 +66,12 @@
         ],
         "Menú vegetariano": [
             {
-                "img": "sopa.png",
-                "nombre": "Sopa de Lentejas"
+                "nombre": "Sopa de Calabaza",
+                "img": "sopa.png"
             },
             {
-                "img": "aguacate.png",
-                "nombre": "Ensalada de Aguacate"
+                "nombre": "Ensalada",
+                "img": "lechuga.png"
             }
         ],
         "Menú alternativo": [
@@ -80,8 +80,8 @@
                 "nombre": "Lasaña"
             },
             {
-                "img": "pollo_teriyaki.png",
-                "nombre": "Pollo Teriyaki"
+                "nombre": "Pollo Apanado",
+                "img": "pollo_teriyaki.png"
             },
             {
                 "img": "repollo.png",
@@ -102,8 +102,8 @@
     "Miércoles": {
         "Menú del día": [
             {
-                "img": "arroz.png",
-                "nombre": "Arroz"
+                "nombre": "Arroz con Verduras",
+                "img": "arroz.png"
             },
             {
                 "img": "bistec.png",
@@ -126,12 +126,12 @@
         ],
         "Menú alternativo": [
             {
-                "img": "tortilla.png",
-                "nombre": "Tortilla de Vegetales"
+                "nombre": "Tortilla de Vegetales",
+                "img": "tortilla.png"
             },
             {
-                "img": "salchicha.png",
-                "nombre": "Salchicha Casera"
+                "nombre": "Salchicha Casera BBQ",
+                "img": "salchicha.png"
             },
             {
                 "img": "lechuga.png",
@@ -152,8 +152,8 @@
     "Jueves": {
         "Menú del día": [
             {
-                "img": "arroz.png",
-                "nombre": "Arroz"
+                "nombre": "Arroz Español",
+                "img": "arroz.png"
             },
             {
                 "img": "pollo.png",
@@ -190,12 +190,12 @@
         ],
         "Complementos": [
             {
-                "img": "postre.png",
-                "nombre": "Barra de Postres"
+                "nombre": "Barra de Postres23",
+                "img": "pescado.png"
             },
             {
-                "img": "frutas.png",
-                "nombre": "Barra de Frutas"
+                "nombre": "Barra de Frutas",
+                "img": "pan.png"
             }
         ]
     },
@@ -220,22 +220,22 @@
                 "nombre": "Sopa de Lentejas"
             },
             {
-                "img": "aguacate.png",
-                "nombre": "Ensalada de Aguacate"
+                "nombre": "Ensalada de Aguacate",
+                "img": "aguacate.png"
             }
         ],
         "Menú alternativo": [
             {
-                "img": "lasana.png",
-                "nombre": "Lasaña"
+                "nombre": "Huevos Cocidos en salsa",
+                "img": "huevos.png"
             },
             {
-                "img": "pollo_teriyaki.png",
-                "nombre": "Pollo Teriyaki"
+                "nombre": "Pollo Teriyaki",
+                "img": "pollo_teriyaki.png"
             },
             {
-                "img": "repollo.png",
-                "nombre": "Ensalada de Repollo"
+                "nombre": "Ensalada de Repollo",
+                "img": "vegetales_2.png"
             }
         ],
         "Complementos": [
@@ -244,8 +244,8 @@
                 "nombre": "Barra de Postres"
             },
             {
-                "img": "yogurt.png",
-                "nombre": "Yogurt"
+                "nombre": "Jugos de Sabores",
+                "img": "jugo.png"
             }
         ]
     }

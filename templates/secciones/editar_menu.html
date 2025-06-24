@@ -8,9 +8,9 @@
 {% endblock %}
 
 {% block content %}
- 
-<div class="edit__menu"> 
-    {{ header(titulo="Editar Ménu Escolar ", color__fondo="var(--color-button-generate)") }}     
+
+<div class="edit__menu">
+    {{ header(titulo="Editar Ménu Escolar ", color__fondo="var(--color-button-generate)") }}
     <div class="menu__container">
         <div class="left">
             <div class="left__title">
@@ -109,7 +109,7 @@
 
 </div>
 {% block extra_js %}
-<script>   
+<script>
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
     }
@@ -187,9 +187,11 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    showModal("Éxito", "Plato actualizado correctamente", function () {
+                    document.getElementById("editarModal").style.display = "none";
+                    showModal("Éxito", "Plato actualizado correctamente", function () {                        
                         location.reload();
                     });
+                    
                 } else {
                     showModal("Error", "No se pudo actualizar el plato", null);
                 }

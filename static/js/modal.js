@@ -1,5 +1,3 @@
-
-
 function showModal(title, message, action) {
     document.getElementById("modalTitle").innerText = title;
     document.getElementById("modalMessage").innerText = message;
