@@ -82,6 +82,26 @@ body{
     background-color: #f8f8f8;
 }
 
+
+.photo__label.input-error {
+    border-color: #ff0000;
+    background-color: #fff0f0;
+    animation: pulse-border 1.5s infinite;
+}
+
+
+.photo__label.has-image {
+    border-color: #ccc;
+    background-color: #f8f8f8;
+}
+
+/* Animación opcional para el borde rojo */
+@keyframes pulse-border {
+    0% { border-color: #ff0000; }
+    50% { border-color: #ff6666; }
+    100% { border-color: #ff0000; }
+}
+
 .photo__label span {
     position: absolute;
     top: 50%;
@@ -171,4 +191,382 @@ body{
 #registration_date_teacher {
     border: 2px solid #4CAF50;
     background-color: #e8f5e8;
+}
+
+
+/* Modal de Búsqueda de Docentes - Estilos Modernos */
+
+/* Overlay del modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Contenedor principal del modal */
+.modal-content {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    margin: 2% auto;
+    padding: 0;
+    border: none;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 85vh;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Botón de cerrar */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 28px;
+    font-weight: 300;
+    color: #64748b;
+    cursor: pointer;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.close-btn:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Modal de Búsqueda de Docentes - Estilos Modernos */
+
+/* Overlay del modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Contenedor principal del modal */
+.modal-content {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    margin: 2% auto;
+    padding: 0;
+    border: none;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 85vh;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Botón de cerrar */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 28px;
+    font-weight: 300;
+    color: #64748b;
+    cursor: pointer;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.close-btn:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Encabezado del modal */
+.modal-content h3 {
+    margin: 0;
+    padding: 30px 40px 20px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1e293b;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Campo de búsqueda */
+.searchTeacherInput {
+    width: calc(100% - 80px);
+    margin: 20px 40px;
+    padding: 14px 20px;
+    font-size: 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    font-family: inherit;
+}
+
+.searchTeacherInput:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+.searchTeacherInput::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+/* Contenedor de la tabla */
+.teacher-table {
+    width: calc(100% - 80px);
+    margin: 0 40px 30px;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    table-layout: fixed;
+}
+
+/* Contenedor con scroll para la tabla */
+.teacher-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border-radius: 12px;
+}
+
+/* Encabezado de la tabla */
+.teacher-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.teacher-table thead tr {
+    width: 100%;
+}
+
+.teacher-table th {
+    padding: 16px 20px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    position: relative;
+    width: 25%;
+}
+
+.teacher-table th:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 25%;
+    height: 50%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Cuerpo de la tabla */
+.teacher-table tbody {
+
+}
+
+.teacher-table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.teacher-table tbody tr:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    transform: scale(1.01);
+}
+
+.teacher-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.teacher-table td {
+    padding: 16px 20px;
+    color: #334155;
+    font-size: 14px;
+    border: none;
+    vertical-align: middle;
+    text-align: center;
+    width: 25%;
+}
+
+.teacher-table td:first-child {
+    font-weight: 600;
+    color: #667eea;
+}
+
+/* Botones de opciones */
+.teacher-table .btn-option {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.teacher-table .btn-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+/* Scrollbar personalizada para la tabla */
+.teacher-table::-webkit-scrollbar {
+    width: 8px;
+}
+
+.teacher-table::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.teacher-table::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+}
+
+.teacher-table::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+/* Estado vacío */
+.teacher-table tbody tr.no-results {
+    text-align: center;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.teacher-table tbody tr.no-results td {
+    padding: 40px 20px;
+    background: #f8fafc;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        max-height: 90vh;
+    }
+    
+    .modal-content h3 {
+        padding: 25px 20px 15px;
+        font-size: 20px;
+    }
+    
+    .searchTeacherInput {
+        width: calc(100% - 40px);
+        margin: 15px 20px;
+        padding: 12px 16px;
+    }
+    
+    .teacher-table {
+        width: calc(100% - 40px);
+        margin: 0 20px 20px;
+        font-size: 13px;
+    }
+    
+    .teacher-table th,
+    .teacher-table td {
+        padding: 12px 16px;
+    }
+    
+    .close-btn {
+        top: 15px;
+        right: 15px;
+        font-size: 24px;
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .teacher-table th:first-child,
+    .teacher-table td:first-child {
+        display: none;
+    }
+    
+    .teacher-table th,
+    .teacher-table td {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .teacher-table .btn-option {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
 }

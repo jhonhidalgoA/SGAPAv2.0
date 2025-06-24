@@ -103,6 +103,7 @@ input[type="time"] {
 
 input[type="time"]::-webkit-calendar-picker-indicator {
     display: none;
+    font-size:20px;
     /* Oculta el ícono del reloj */
 }
 

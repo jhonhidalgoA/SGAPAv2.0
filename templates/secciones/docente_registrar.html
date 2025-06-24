@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+{% include "components/modal_buscar_docente.html" %}
 {% include "components/modal.html" %}
 {% from "macros/macros.j2" import header %}
 {% from "macros/buttons.j2" import btn with context %}
@@ -68,7 +69,7 @@
                         </div>
                         <div class="group">
                             <label for="teacher_age">Edad:</label>
-                            <input type="number" id="teacher_age" name="teacher_age">
+                            <input type="number" id="teacher_age" name="teacher_age" readonly>
                         </div>
                         <div class="group">
                             <label for="teacher_gender">Género:</label>
@@ -143,7 +144,8 @@
                         </div>
                         <div class="group">
                             <label for="scale">Escalafón:</label>
-                            <select id="scale" name="scale" required>
+                            <select id="scale" name="scale">
+                                <option value="">Seleccionar</option>
                                 <option value="1a">1A</option>
                                 <option value="1b">1B</option>
                                 <option value="1c">1C</option>
@@ -166,10 +168,11 @@
             <!-- Información Profesional -->
         </div>
         <div class="ratings__buttons">
-            {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }}
+            {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }} 
+            {{ btn(icono="edit", texto="Editar", color="edit", tipo="button", onclick="openSearchModal()") }}           
+            {{ btn(icono="delete", texto="Borrar", color="delete", tipo="button", id="btnLimpiar") }}
             {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }}
-            {{ btn(icono="delete", texto="Borrar", color="delete") }}
-            {{ btn(icono="print", texto="Imprimir", color="print") }}
+            
         </div>
     </form>
 </div>

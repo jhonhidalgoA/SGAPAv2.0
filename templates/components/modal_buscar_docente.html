@@ -1,0 +1,26 @@
+<!-- templates/components/modal_buscar_docente.html -->
+<div id="searchTeacherModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeSearchModal()">&times;</span>
+        <h3>Lista de Docentes</h3>
+
+        <input type="text" class="searchTeacherInput" id="searchTeacherInput"
+            placeholder="Buscar por nombre o apellido..." onkeyup="filterTeachersTable()">
+        <div class="teacher-table-container">
+            <table class="teacher-table" id="teacherTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody id="teacherTableBody">
+                    <!-- Datos cargados dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>

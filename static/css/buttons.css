@@ -96,3 +96,11 @@
 .btn__send:hover{
   background-color: var(--color-button-send-hover);   
 } 
+
+.btn__edit{
+    background-color: var(--color-button-edit);
+}
+
+.btn__edit:hover{
+    background-color: var(--color-button-edit-hover);
+}
