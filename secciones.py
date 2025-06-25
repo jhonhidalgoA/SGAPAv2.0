@@ -452,7 +452,85 @@ def get_docentes():
         cursor.close()
         conn.close()
 
+@secciones.route('/actualizar_docente/<int:id>', methods=['POST'])
+def actualizar_docente(id):
+    try:
+        # Recibir datos del formulario
+        first_name = request.form['teacher_name']
+        last_name = request.form['teacher_lastname']
+        document_type = request.form['teacher_document_type']
+        document_number = request.form['teacher_document_number']
+        phone = request.form['teacher_phone']
+        email = request.form['teacher_email']
+        profession = request.form['profession']
+        subject_area = request.form['area']
+        resolution_number = request.form.get('resolucion')
+        scale = request.form['scale']
 
+        # Campos adicionales
+        registration_date = request.form.get('registration_date_teacher')
+        code = request.form.get('codigo_teacher')
+        birth_date = request.form.get('teacher_birth_date')
+        age = request.form.get('teacher_age')
+        gender = request.form.get('teacher_gender')
+        birth_place = request.form.get('teacher_birth_place')
+
+        # Manejo de la foto (opcional)
+        photo = request.files.get('student_photo')
+        photo_path = None
+
+        if photo and photo.filename != '':
+            filename = secure_filename(photo.filename)
+            upload_folder = current_app.config['UPLOAD_FOLDER']
+            photo.save(os.path.join(upload_folder, filename))
+            photo_path = os.path.join('uploads', filename)
+        else:
+            # Mantener foto anterior si no se carga una nueva
+            conn = get_db()
+            cursor = conn.cursor()
+            cursor.execute("SELECT photo_path FROM docentes_datos WHERE teacher_id = %s", (id,))
+            result = cursor.fetchone()
+            if result:
+                photo_path = result[0]
+
+        # Actualizar en la base de datos
+        conn = get_db()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE docentes_datos
+            SET first_name = %s, last_name = %s, document_type = %s,
+                document_number = %s, phone = %s, email = %s,
+                profession = %s, subject_area = %s, resolution_number = %s,
+                scale = %s, code = %s, birth_date = %s, age = %s,
+                gender = %s, birth_place = %s
+            WHERE teacher_id = %s
+        """, (
+            first_name, last_name, document_type, document_number,
+            phone, email, profession, subject_area, resolution_number,
+            scale, code, birth_date, age, gender, birth_place, id
+        ))
+
+        # Solo actualizar foto si se subió una nueva
+        if photo_path:
+            cursor.execute("""
+                UPDATE docentes_datos
+                SET photo_path = %s
+                WHERE teacher_id = %s
+            """, (photo_path, id))
+
+        conn.commit()
+
+        flash("Docente actualizado correctamente", "success")
+        return redirect(url_for('secciones.registro_docente'))
+
+    except Exception as e:
+        conn.rollback()
+        flash(f"Error al actualizar el docente: {str(e)}", "danger")
+        return redirect(url_for('secciones.registro_docente'))
+    finally:
+        cursor.close()
+        conn.close()
 
 # ─────────────────────────────────────────────────────
 # CIRCULARES
