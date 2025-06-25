@@ -418,9 +418,107 @@ def guardar_docente():
     return redirect(url_for('secciones.registro_docente'))
 
 
+@secciones.route('/api/docentes')
+def get_docentes():
+    try:
+        conn = get_db()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("""
+            SELECT 
+                teacher_id AS id,
+                first_name AS teacher_name,
+                last_name AS teacher_lastname,
+                document_type AS teacher_document_type,
+                document_number AS teacher_document_number,
+                phone AS teacher_phone,
+                email AS teacher_email,
+                profession,
+                subject_area AS area,
+                resolution_number AS resolucion,
+                scale,
+                birth_date AS teacher_birth_date,
+                age AS teacher_age,
+                gender AS teacher_gender,
+                birth_place AS teacher_birth_place,
+                code AS codigo_teacher,
+                photo_path
+            FROM docentes_datos
+        """)
+        docentes = cursor.fetchall()
+        return jsonify(docentes)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
 
+@secciones.route('/actualizar_docente/<int:id>', methods=['POST'])
+def actualizar_docente(id):
+    try:
+        # Recibir datos del formulario
+        first_name = request.form['teacher_name']
+        last_name = request.form['teacher_lastname']
+        document_type = request.form['teacher_document_type']
+        document_number = request.form['teacher_document_number']
+        phone = request.form['teacher_phone']
+        email = request.form['teacher_email']
+        profession = request.form['profession']
+        subject_area = request.form['area']
+        resolution_number = request.form.get('resolucion')
+        scale = request.form['scale']
 
+        # Campos adicionales
+        registration_date = request.form.get('registration_date_teacher')
+        code = request.form.get('codigo_teacher')
+        birth_date = request.form.get('teacher_birth_date')
+        age = request.form.get('teacher_age')
+        gender = request.form.get('teacher_gender')
+        birth_place = request.form.get('teacher_birth_place')
 
+        # Manejo de la foto (opcional)
+        photo = request.files.get('student_photo')
+        photo_path = None
+        if photo and photo.filename != '':
+            filename = secure_filename(photo.filename)
+            upload_folder = current_app.config['UPLOAD_FOLDER']
+            photo.save(os.path.join(upload_folder, filename))
+            photo_path = os.path.join('uploads', filename)
+
+        # Actualizar en la base de datos
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("""
+            UPDATE docentes_datos
+            SET first_name = %s, last_name = %s, document_type = %s,
+                document_number = %s, phone = %s, email = %s,
+                profession = %s, subject_area = %s, resolution_number = %s,
+                scale = %s, code = %s, birth_date = %s, age = %s,
+                gender = %s, birth_place = %s
+            WHERE teacher_id = %s
+        """, (
+            first_name, last_name, document_type, document_number,
+            phone, email, profession, subject_area, resolution_number,
+            scale, code, birth_date, age, gender, birth_place, id
+        ))
+
+        # Si hay nueva foto, actualízala
+        if photo_path:
+            cursor.execute("""
+                UPDATE docentes_datos
+                SET photo_path = %s
+                WHERE teacher_id = %s
+            """, (photo_path, id))
+
+        conn.commit()
+
+        flash("Docente actualizado correctamente", "success")
+        return redirect(url_for('secciones.docente_registro'))
+    except Exception as e:
+        flash(f"Error al actualizar el docente: {str(e)}", "danger")
+        return redirect(url_for('secciones.docente_registro'))
+    finally:
+        cursor.close()
+        conn.close()
 
 
 # ─────────────────────────────────────────────────────
@@ -1226,8 +1324,6 @@ def asistencia():
    
 
     return render_template('secciones/asistencia.html')
-
-
 
 
 @secciones.route('/tareas', methods=['GET', 'POST'])

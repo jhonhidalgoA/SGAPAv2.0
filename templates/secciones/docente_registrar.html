@@ -12,13 +12,13 @@
 {% block content %}
 <div class="tabs">
     {{ header(titulo="Registro Docente", color__fondo="var(--color-green-emerald)") }}
-   
+
     <ul class="tab-nav">
         <li class="active" data-tab="tab1">Datos del Docente</li>
         <li data-tab="tab2">Información Profesional</li>
     </ul>
 
-     <!-- Llamada a campos vacíos desde Flask -->    
+    <!-- Llamada a campos vacíos desde Flask -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -30,9 +30,9 @@
     {% endwith %}
     <!------------------>
 
-   
-    <form action="{{ url_for('secciones.guardar_docente') }}" method="post" id="teacherRegistrationForm"
-        class="registration__form" enctype="multipart/form-data">
+
+    <form action="{% if docente %}/actualizar_docente/{{ docente.id }}{% else %}{{ url_for('secciones.guardar_docente') }}{% endif %}"
+        method="post" id="teacherRegistrationForm" class="registration__form" enctype="multipart/form-data">
         <div class="tab-content active" id="tab1">
             <div class="student__photo">
                 <div class="photo__container">
@@ -168,18 +168,19 @@
             <!-- Información Profesional -->
         </div>
         <div class="ratings__buttons">
-            {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }} 
-            {{ btn(icono="edit", texto="Editar", color="edit", tipo="button", onclick="openSearchModal()") }}           
+            {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }}
+            {{ btn(icono="edit", texto="Editar", color="edit", tipo="button", onclick="openSearchModal()") }}
             {{ btn(icono="delete", texto="Borrar", color="delete", tipo="button", id="btnLimpiar") }}
             {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }}
-            
+
         </div>
     </form>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static' , filename='js/docente_registrar.js')}}"></script>
+<script src="{{ url_for('static', filename='js/docente_registrar.js') }}"></script>
+
 <script>
     // === 1. Función confirmLogout() - Salir
     function confirmLogout() {
@@ -246,5 +247,93 @@
             });
         });
     });
+</script>
+<script>
+    // === Funciones para el modal editar docente ===
+    function openSearchModal() {
+        document.getElementById("searchTeacherModal").style.display = "block";
+        loadTeachers(); // Carga los datos
+    }
+
+    function closeSearchModal() {
+        document.getElementById("searchTeacherModal").style.display = "none";
+    }
+
+    async function loadTeachers() {
+        try {
+            const response = await fetch("/secciones/api/docentes");
+            const teachers = await response.json();
+            const tbody = document.getElementById("teacherTableBody");
+            tbody.innerHTML = "";
+
+            teachers.forEach((teacher, index) => {
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${teacher.teacher_name}</td>
+                <td>${teacher.teacher_lastname}</td>
+                <td class="options">
+                    
+                    <button onclick='editTeacher(${JSON.stringify(teacher)})'>Editar</button>
+                </td>
+            `;
+
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            console.error("Error al cargar docentes:", error);
+        }
+    }
+
+    function filterTeachersTable() {
+        const term = document.getElementById("searchTeacherInput").value.toLowerCase();
+        const rows = document.querySelectorAll("#teacherTableBody tr");
+
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(term) ? "" : "none";
+        });
+    }
+
+    function viewTeacher(teacher) {
+        alert("Mostrar detalles de: " + teacher.teacher_name + " " + teacher.teacher_lastname);
+    }
+
+    function editTeacher(teacher) {
+    document.getElementById("teacher_name").value = teacher.teacher_name;
+    document.getElementById("teacher_lastname").value = teacher.teacher_lastname;
+    document.getElementById("teacher_document_type").value = teacher.teacher_document_type;
+    document.getElementById("teacher_document_number").value = teacher.teacher_document_number;
+    document.getElementById("teacher_phone").value = teacher.teacher_phone;
+    document.getElementById("teacher_email").value = teacher.teacher_email;
+    document.getElementById("profession").value = teacher.profession;
+    document.getElementById("area").value = teacher.area;
+    document.getElementById("resolucion").value = teacher.resolucion;
+    document.getElementById("scale").value = teacher.scale;   
+    document.getElementById("codigo_teacher").value = teacher.codigo_teacher || "";
+    document.getElementById("teacher_birth_date").value = teacher.teacher_birth_date || "";
+    document.getElementById("teacher_age").value = teacher.teacher_age || "";
+    document.getElementById("teacher_gender").value = teacher.teacher_gender || "";
+    document.getElementById("teacher_birth_place").value = teacher.teacher_birth_place || "";
+
+    // Foto
+    const preview = document.getElementById("photoPreview");
+    if (teacher.photo_path) {
+        preview.style.backgroundImage = `url('${teacher.photo_path}')`;
+        preview.style.display = "block";
+    } else {
+        preview.style.backgroundImage = "";
+        preview.style.display = "none";
+    }
+
+    // Cambiar acción del formulario
+    const form = document.getElementById("teacherRegistrationForm");
+    form.action = `/actualizar_docente/${teacher.id}`;
+
+    closeSearchModal(); 
+}
+
+
 </script>
 {% endblock %}
