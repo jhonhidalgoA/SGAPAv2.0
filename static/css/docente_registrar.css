@@ -436,7 +436,7 @@ body{
 }
 
 .options button{
-    background-color: yellow;
+    background-color: #FFC107;
     font-size:18px;
     cursor:pointer;
     border-radius: 8px;
