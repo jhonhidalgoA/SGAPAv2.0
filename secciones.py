@@ -455,7 +455,7 @@ def get_docentes():
 @secciones.route('/actualizar_docente/<int:id>', methods=['POST'])
 def actualizar_docente(id):
     try:
-        # Recibir datos del formulario
+        # Obtener datos del formulario
         first_name = request.form['teacher_name']
         last_name = request.form['teacher_lastname']
         document_type = request.form['teacher_document_type']
@@ -467,7 +467,6 @@ def actualizar_docente(id):
         resolution_number = request.form.get('resolucion')
         scale = request.form['scale']
 
-        # Campos adicionales
         registration_date = request.form.get('registration_date_teacher')
         code = request.form.get('codigo_teacher')
         birth_date = request.form.get('teacher_birth_date')
@@ -475,31 +474,27 @@ def actualizar_docente(id):
         gender = request.form.get('teacher_gender')
         birth_place = request.form.get('teacher_birth_place')
 
-        # Manejo de la foto (opcional)
+        # Manejo opcional de foto
         photo = request.files.get('student_photo')
-        photo_path = None
+        upload_folder = current_app.config['UPLOAD_FOLDER']
 
-        if photo and photo.filename != '':
-            filename = secure_filename(photo.filename)
-            upload_folder = current_app.config['UPLOAD_FOLDER']
-            photo.save(os.path.join(upload_folder, filename))
-            photo_path = os.path.join('uploads', filename)
-        else:
-            # Mantener foto anterior si no se carga una nueva
-            conn = get_db()
-            cursor = conn.cursor()
-            cursor.execute("SELECT photo_path FROM docentes_datos WHERE teacher_id = %s", (id,))
-            result = cursor.fetchone()
-            if result:
-                photo_path = result[0]
-
-        # Actualizar en la base de datos
+        # Obtener foto actual desde DB
         conn = get_db()
-        cursor = conn.cursor()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT photo_path FROM docentes_datos WHERE teacher_id = %s", (id,))
+        existing = cursor.fetchone()
+        photo_path = existing['photo_path'] if existing else None
 
+        # Si hay nueva foto, guardarla y actualizar ruta
+        if photo and photo.filename.strip() != '':
+            filename = secure_filename(photo.filename)
+            photo.save(os.path.join(upload_folder, filename))
+            photo_path = f"uploads/{filename}"
+
+        # Actualizar datos del docente
         cursor.execute("""
-            UPDATE docentes_datos
-            SET first_name = %s, last_name = %s, document_type = %s,
+            UPDATE docentes_datos SET 
+                first_name = %s, last_name = %s, document_type = %s,
                 document_number = %s, phone = %s, email = %s,
                 profession = %s, subject_area = %s, resolution_number = %s,
                 scale = %s, code = %s, birth_date = %s, age = %s,
@@ -511,13 +506,9 @@ def actualizar_docente(id):
             scale, code, birth_date, age, gender, birth_place, id
         ))
 
-        # Solo actualizar foto si se subió una nueva
+        # Solo actualizar foto si se carga una nueva
         if photo_path:
-            cursor.execute("""
-                UPDATE docentes_datos
-                SET photo_path = %s
-                WHERE teacher_id = %s
-            """, (photo_path, id))
+            cursor.execute("UPDATE docentes_datos SET photo_path = %s WHERE teacher_id = %s", (photo_path, id))
 
         conn.commit()
 
@@ -1071,7 +1062,7 @@ def generar_pdf():
 
     # Fecha de generación
     story.append(Spacer(1, 24))
-    fecha_generacion = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    fecha_generacion = datetime.now().strftime("%d/%m/%Y %H:%M")
     story.append(Paragraph(f"Documento generado el: {fecha_generacion}", styles['NormalEspaciado']))
 
     # Tabla de firmas
@@ -1227,7 +1218,7 @@ def generar_boletin_word():
     data = request.get_json()
     grupo = data.get('grupo')
     estudiante_id = data.get('estudiante_id')
-    
+
     if not grupo or not estudiante_id:
         return jsonify({"error": "Faltan parámetros obligatorios"}), 400
 
@@ -1260,54 +1251,66 @@ def generar_boletin_word():
         # Función para reemplazar texto con formato
         def replace_with_format(paragraph, placeholder, text, bold=False, uppercase=False):
             if placeholder in paragraph.text:
-                # Dividir el texto para mantener el contexto
                 before, after = paragraph.text.split(placeholder, 1)
-                
-                # Limpiar el párrafo
                 paragraph.clear()
-                
-                
                 if before:
                     paragraph.add_run(before)
-                
-                # Procesar el texto
                 processed_text = text.upper() if uppercase else text
-                
-                # Agregar el texto con formato
                 run = paragraph.add_run(processed_text)
                 run.bold = bold
-                
-                # Agregar la parte posterior normal
                 if after:
                     paragraph.add_run(after)
 
-        # Reemplazar los placeholders con formato
+        # === Obtener fecha actual y formatearla ===
+        fecha_actual = datetime.now()
+        dia_actual = str(fecha_actual.day)
+
+        MESES_ESPANOL = {
+            "January": "Enero",
+            "February": "Febrero",
+            "March": "Marzo",
+            "April": "Abril",
+            "May": "Mayo",
+            "June": "Junio",
+            "July": "Julio",
+            "August": "Agosto",
+            "September": "Septiembre",
+            "October": "Octubre",
+            "November": "Noviembre",
+            "December": "Diciembre"
+        }
+
+        mes_actual = fecha_actual.strftime("%B")  # Mes en inglés
+        mes_actual_espanol = MESES_ESPANOL.get(mes_actual, mes_actual)  # Traducir a español
+        año_actual = str(fecha_actual.year)
+
+        # Reemplazar los placeholders
         for paragraph in doc.paragraphs:
             replace_with_format(paragraph, '{nombre}', estudiante['full_name'], bold=True, uppercase=True)
             replace_with_format(paragraph, '{documento}', str(estudiante['document_number']))
             replace_with_format(paragraph, '{grado}', str(grupo))
             replace_with_format(paragraph, '{jornada}', 'única')
-            replace_with_format(paragraph, '{año}', '2025')
-            replace_with_format(paragraph, '{día}', '18')
-            replace_with_format(paragraph, '{mes}', 'Junio')
-            replace_with_format(paragraph, '{año de fecha}', '2025')
+            replace_with_format(paragraph, '{año}', año_actual)
+            replace_with_format(paragraph, '{día}', dia_actual)
+            replace_with_format(paragraph, '{mes}', mes_actual_espanol)
+            replace_with_format(paragraph, '{año de fecha}', año_actual)
 
         # Guardar archivo temporal
-        archivo_temporal = f"boletin_{estudiante_id}.docx"
+        archivo_temporal = f"Certificado_{estudiante_id}.docx"
         doc.save(archivo_temporal)
 
-        # Enviar el archivo y luego eliminarlo
+        # Enviar archivo al cliente
         response = send_file(
             archivo_temporal,
             as_attachment=True,
-            download_name=f"Boletin_{estudiante['full_name'].replace(' ', '_')}.docx"
+            download_name=f"Certificado_{estudiante['full_name'].replace(' ', '_')}.docx"
         )
-        
+
         # Eliminar el archivo temporal después de enviarlo
         try:
             os.remove(archivo_temporal)
-        except:
-            pass
+        except Exception as e:
+            print(f"[ERROR] No se pudo eliminar el archivo temporal: {e}")
 
         return response
 
@@ -1316,7 +1319,7 @@ def generar_boletin_word():
             "error": "Error interno del servidor",
             "details": str(e)
         }), 500
-    
+
 # ─────────────────────────────────────────────────────
 #  ASISTENCIA
 # ─────────────────────────────────────────────────────

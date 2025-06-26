@@ -28,6 +28,7 @@ function validarCampos() {
 
     if (!grupo.value) {
         grupo.style.borderColor = '#ff4d4d';
+        grupo.style.backgroundColor = '#f2dede';
         mensajes.push("Grupo");
         valid = false;
     } else {
@@ -36,6 +37,7 @@ function validarCampos() {
 
     if (!asignatura.value) {
         asignatura.style.borderColor = '#ff4d4d';
+        asignatura.style.backgroundColor = '#f2dede';
         mensajes.push("Asignatura");
         valid = false;
     } else {
@@ -44,6 +46,7 @@ function validarCampos() {
 
     if (!periodo.value) {
         periodo.style.borderColor = '#ff4d4d';
+        periodo.style.backgroundColor = '#f2dede';
         mensajes.push("Período");
         valid = false;
     } else {

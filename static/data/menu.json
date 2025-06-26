@@ -2,7 +2,7 @@
     "Lunes": {
         "Menú del día": [
             {
-                "nombre": "Arroz con Leche de Cabra",
+                "nombre": "Arroz con Leche de Pato",
                 "img": "arroz.png"
             },
             {
@@ -31,7 +31,7 @@
             },
             {
                 "nombre": "Filete de Salmon",
-                "img": "filete.png"
+                "img": "bistec.png"
             },
             {
                 "nombre": "Coliflor cocida",
@@ -156,8 +156,8 @@
                 "img": "arroz.png"
             },
             {
-                "img": "pollo.png",
-                "nombre": "Pollo Frito"
+                "nombre": "Pollo Frito",
+                "img": "pollo_teriyaki.png"
             },
             {
                 "img": "ensalada.png",
@@ -191,7 +191,7 @@
         "Complementos": [
             {
                 "nombre": "Barra de Postres23",
-                "img": "pescado.png"
+                "img": "postre.png"
             },
             {
                 "nombre": "Barra de Frutas",

@@ -31,7 +31,8 @@
     <!------------------>
 
 
-    <form action="{% if docente %}/actualizar_docente/{{ docente.id }}{% else %}{{ url_for('secciones.guardar_docente') }}{% endif %}"
+    <form
+        action="{% if docente %}/actualizar_docente/{{ docente.id }}{% else %}{{ url_for('secciones.guardar_docente') }}{% endif %}"
         method="post" id="teacherRegistrationForm" class="registration__form" enctype="multipart/form-data">
         <div class="tab-content active" id="tab1">
             <div class="student__photo">
@@ -301,61 +302,76 @@
     }
 
     function editTeacher(teacher) {
-    // Campos obligatorios
-    document.getElementById("teacher_name").value = teacher.teacher_name || "";
-    document.getElementById("teacher_lastname").value = teacher.teacher_lastname || "";
-    document.getElementById("teacher_document_type").value = teacher.teacher_document_type.toLowerCase() || "";
-    document.getElementById("teacher_document_number").value = teacher.teacher_document_number || "";
-    document.getElementById("area").value = teacher.area || "";
-    document.getElementById("scale").value = teacher.scale || "";
+        // Campos obligatorios
+        document.getElementById("teacher_name").value = teacher.teacher_name || "";
+        document.getElementById("teacher_lastname").value = teacher.teacher_lastname || "";
+        document.getElementById("teacher_document_type").value = teacher.teacher_document_type.toLowerCase() || "";
+        document.getElementById("teacher_document_number").value = teacher.teacher_document_number || "";
+        document.getElementById("area").value = teacher.area || "";
+        document.getElementById("scale").value = teacher.scale || "";
 
-    // Información de contacto
-    document.getElementById("teacher_phone").value = teacher.teacher_phone || "";
-    document.getElementById("teacher_email").value = teacher.teacher_email || "";
+        // Información de contacto
+        document.getElementById("teacher_phone").value = teacher.teacher_phone || "";
+        document.getElementById("teacher_email").value = teacher.teacher_email || "";
+
+        // Profesión y resolución
+        document.getElementById("profession").value = teacher.profession || "";
+        document.getElementById("resolucion").value = teacher.resolucion || "";
+
+        // Campos adicionales
+        document.getElementById("codigo_teacher").value = teacher.codigo_teacher || "";
+
+        // Fecha de nacimiento (formateada a YYYY-MM-DD)
+        if (teacher.teacher_birth_date) {
+            const date = new Date(teacher.teacher_birth_date);
+            const formattedDate = date.toISOString().split('T')[0]; // → "YYYY-MM-DD"
+            document.getElementById("teacher_birth_date").value = formattedDate;
+        } else {
+            document.getElementById("teacher_birth_date").value = "";
+        }
+
+        // Edad
+        document.getElementById("teacher_age").value = teacher.teacher_age || "";
+
+        // Género y lugar de nacimiento
+        document.getElementById("teacher_gender").value = teacher.teacher_gender || "";
+        document.getElementById("teacher_birth_place").value = teacher.teacher_birth_place || "";
+
+        // Foto (si existe)
+        const photoPreview = document.getElementById("photoPreview");
+        if (teacher.photo_path && photoPreview) {
+            // Asegúrate de que sea una URL válida
+            photoPreview.style.backgroundImage = teacher.photo_path.startsWith("http")
+                ? `url('${teacher.photo_path}')`
+                : `url('/static/${teacher.photo_path}')`;
+            photoPreview.style.display = "block";
+        } else if (photoPreview) {
+            photoPreview.style.backgroundImage = "";
+            photoPreview.style.display = "none";
+        }
+
+        // Cambiar acción del formulario para editar
+        const form = document.getElementById("teacherRegistrationForm");
+        if (teacher.id) {
+            form.action = `/secciones/actualizar_docente/${teacher.id}`;
+        }
+
+        // Cerrar modal
+        closeSearchModal();
+    }
     
-    // Profesión y resolución
-    document.getElementById("profession").value = teacher.profession || "";
-    document.getElementById("resolucion").value = teacher.resolucion || "";
+    document.getElementById('btnLimpiar').addEventListener('click', function () {
+        const formulario = document.getElementById('teacherRegistrationForm');
+        formulario.reset();
+    });
 
-    // Campos adicionales
-    document.getElementById("codigo_teacher").value = teacher.codigo_teacher || "";
-
-    // Fecha de nacimiento (formateada a YYYY-MM-DD)
-    if (teacher.teacher_birth_date) {
-        const date = new Date(teacher.teacher_birth_date);
-        const formattedDate = date.toISOString().split('T')[0]; // → "YYYY-MM-DD"
-        document.getElementById("teacher_birth_date").value = formattedDate;
-    } else {
-        document.getElementById("teacher_birth_date").value = "";
-    }
-
-    // Edad
-    document.getElementById("teacher_age").value = teacher.teacher_age || "";
-
-    // Género y lugar de nacimiento
-    document.getElementById("teacher_gender").value = teacher.teacher_gender || "";
-    document.getElementById("teacher_birth_place").value = teacher.teacher_birth_place || "";
-
-    // Foto (si existe)
-    const preview = document.getElementById("photoPreview");
-    if (teacher.photo_path) {
-        // Asegúrate de que photo_path sea accesible desde static/uploads/
-        preview.style.backgroundImage = `url('/static/uploads/${teacher.photo_path}')`;
-        preview.style.display = "block";
-    } else {
-        preview.style.backgroundImage = "";
-        preview.style.display = "none";
-    }
-
-    // Cambiar acción del formulario para editar
-    const form = document.getElementById("teacherRegistrationForm");
-    if (teacher.id) {
-        form.action = `/secciones/actualizar_docente/${teacher.id}`;
-    }
-
-    // Cerrar modal
-    closeSearchModal();
-}
 
 </script>
+
+
+
+
+
+
+
 {% endblock %}

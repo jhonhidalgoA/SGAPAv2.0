@@ -104,3 +104,12 @@
 .btn__edit:hover{
     background-color: var(--color-button-edit-hover);
 }
+
+.btn__clean{
+    background-color: var(--color-button-clean);
+}
+
+.btn__clean:hover{
+    background-color: var(--color-button-clean-hover);
+    color:var(--background-dark);
+}

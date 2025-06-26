@@ -12,7 +12,7 @@
 <div class="container">
 
   {{ header_block('edit_note', 'Planes de Clase', '#27AE60') }}
-  
+
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
   {% for category, message in messages %}
@@ -161,70 +161,119 @@
 
 {% block extra_js %}
 <script>
+  // === 1. Función confirmLogout() - Salir
   function confirmLogout() {
-    window.location.href = "{{ url_for('auth.logout') }}";
+    showModal(
+      "Cerrar Sesión",
+      "¿Estás seguro de que deseas cerrar sesión?",
+      function () {
+        window.location.href = "{{ url_for('auth.logout') }}";
+      },
+      true
+    );
   }
 
-  function showModal(title, message, action) {
-    document.getElementById("modalTitle").innerText = title;
-    document.getElementById("modalMessage").innerText = message;
-    window.modalAction = action;
+  // === 2. Función showModal() 
+  function showModal(title, message, action, showCancel = true) {
     const modal = document.getElementById("confirmModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMessage = document.getElementById("modalMessage");
+    const btnCancel = document.getElementById("modalCancel");
+    const btnConfirm = document.getElementById("modalConfirm");
+
+    if (!modal || !modalTitle || !modalMessage || !btnCancel || !btnConfirm) {
+      console.error("No se encontró uno o más elementos del modal");
+      alert(`Error: ${message}`);
+      return;
+    }
+
+    modalTitle.innerText = title;
+    modalMessage.innerText = message;
+    window.modalAction = action;
+
+    btnCancel.style.display = showCancel ? "inline-flex" : "none";
+
+    btnConfirm.innerHTML = `<i class="material-symbols-outlined">check_circle</i> Confirmar`;
+    btnCancel.innerHTML = `<i class="material-symbols-outlined">cancel</i> Cancelar`;
+
     modal.style.display = "flex";
   }
 
-  document.getElementById("modalConfirm").addEventListener("click", function () {
-    if (typeof modalAction === 'function') {
-      modalAction();
+  // === 3. Eventos del modal (Aceptar / Cancelar)
+  document.addEventListener("DOMContentLoaded", function () {
+    const modalConfirm = document.getElementById("modalConfirm");
+    const modalCancel = document.getElementById("modalCancel");
+
+    if (modalConfirm) {
+      modalConfirm.addEventListener("click", function () {
+        if (typeof window.modalAction === 'function') {
+          window.modalAction();
+        }
+        document.getElementById("confirmModal").style.display = "none";
+      });
     }
-    document.getElementById("confirmModal").style.display = "none";
+
+    if (modalCancel) {
+      modalCancel.addEventListener("click", function () {
+        document.getElementById("confirmModal").style.display = "none";
+      });
+    }
+
+    // === 4. Validación de campos vacíos desde Flask ===
+    const urlParams = new URLSearchParams(window.location.search);
+    const camposVacios = urlParams.get('campos_vacios');
+    if (camposVacios) {
+      const listaCampos = camposVacios.split(',');
+      listaCampos.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.classList.add('input-error');
+        }
+      });
+    }
+
+    // === 5. Limpiar error al escribir ===
+    document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
+      input.addEventListener('input', function () {
+        this.classList.remove('input-error');
+      });
+    });
   });
 
-  document.getElementById("modalCancel").addEventListener("click", function () {
-    document.getElementById("confirmModal").style.display = "none";
-  });
-</script>
-
-<!--Validacion formulario-->
-<script>
   function limpiarFormulario() {
     document.querySelector('form').reset();
   }
+
   document.addEventListener("DOMContentLoaded", function () {
-    // Campos obligatorios del formulario de planeación
     const REQUIRED_FIELDS = [
       { id: "dateStar", name: "Fecha de Inicio" },
       { id: "dateEnd", name: "Fecha de Fin" },
       { id: "periodo", name: "Periodo" },
       { id: "grado", name: "Grado" },
-      { id: "asignatura", name: "Asignatura" }
+      { id: "asignatura", name: "Asignatura" },
+      { id: "tipo", name: "Tipo" },
+      { id: "proyecto_transversal", name: "Proyecto Transversal" }
     ];
 
     const form = document.querySelector("form");
-
     if (!form) return;
 
-    // Escuchar evento submit
     form.addEventListener("submit", function (e) {
       clearPreviousErrors();
-
       const missingFields = validateRequiredFields(REQUIRED_FIELDS);
-
       if (missingFields.length > 0) {
         e.preventDefault();
-        showModal("⚠️ Advertencia", "Por favor complete los siguientes campos obligatorios:\n\n" +
-          missingFields.map(f => f.name).join("\n"), null);
+        showModal("⚠️ Advertencia", "Por favor complete los siguientes campos obligatorios:\n" +
+          missingFields.map(f => f.name).join("\n"), null, false);
       }
     });
 
-    // Limpiar errores previos
     function clearPreviousErrors() {
       document.querySelectorAll(".input-error").forEach(input => {
         input.classList.remove("input-error");
       });
     }
 
-    // Validar campos requeridos
     function validateRequiredFields(fields) {
       const missing = [];
       fields.forEach(field => {
@@ -237,33 +286,33 @@
       return missing;
     }
 
-    // Añadir escuchadores para quitar clase 'input-error' al completar el campo
     document.querySelectorAll('#dateStar, #dateEnd, #periodo, #grado, #asignatura').forEach(input => {
       input.addEventListener('input', function () {
         this.classList.remove('input-error');
       });
     });
-  });
 
-  const textarea = document.getElementById('competencias');
-  const objetivos = document.getElementById('objetivos');
+    const textarea = document.getElementById('competencias');
+    const objetivos = document.getElementById('objetivos');
 
-  textarea.addEventListener('input', function () {
-    const lines = textarea.value.split('\n');
-    textarea.value = lines.map(line => {
-      if (line.trim().startsWith('•')) return line;
-      return '• ' + line.trim();
-    }).join('\n');
-  });
+    textarea.addEventListener('input', function () {
+      const lines = textarea.value.split('\n');
+      textarea.value = lines.map(line => {
+        if (line.trim().startsWith('•')) return line;
+        return '• ' + line.trim();
+      }).join('\n');
+    });
 
-  objetivos.addEventListener('input', function () {
-    const lines = objetivos.value.split('\n');
-    objetivos.value = lines.map(line => {
-      if (line.trim().startsWith('•')) return line;
-      return '• ' + line.trim();
-    }).join('\n');
+    objetivos.addEventListener('input', function () {
+      const lines = objetivos.value.split('\n');
+      objetivos.value = lines.map(line => {
+        if (line.trim().startsWith('•')) return line;
+        return '• ' + line.trim();
+      }).join('\n');
+    });
   });
 </script>
+
 {% endblock %}
 
 {% endblock %}

@@ -57,53 +57,137 @@
       <label for="report"> Tipo de Reporte:</label>
       <select id="report" name="report" aria-label="Selecciona un Reporte">
         <option value="">Seleccionar</option>
-        <option value="boletin">Boletin de Calificaciones</option>
-        <option value="certificado">Certificado Escolar</option>
-        <option value="concentrador">Concentrador de Notas por Período</option>
-        <option value="informe">Informe de Aprobación y Reprobación</option>
-        <option value="plan">Plan de Ajuste Razonable PIAR</option>
+        <option value="certificado">Boletin de Calificaciones</option>
+        <option value="boletin">Certificado Escolar</option>        
       </select>
     </div>
     <div class="report__buttons">
       {{ btn(icono="picture_as_pdf", texto="Generar", color="generate", id="btn-generar-word") }}
+      {{ btn(icono="cleaning_services", texto="Limpiar", color="clean", tipo="button", onclick="limpiarFormulario()") }}
     </div>
   </div>
 </div>
 {% block extra_js %}
-<script>
+<script> 
+
+  // === Función confirmLogout() ===
   function confirmLogout() {
-    window.location.href = "{{ url_for('auth.logout') }}";
+    showModal(
+      "Cerrar Sesión",
+      "¿Estás seguro de que deseas cerrar sesión?",
+      () => window.location.href = "{{ url_for('auth.logout') }}",
+      true
+    );
   }
 
-  function showModal(title, message, action) {
-    document.getElementById("modalTitle").innerText = title;
-    document.getElementById("modalMessage").innerText = message;
+  // === Función showModal() ===
+  function showModal(title, message, action, showCancel = true) {
+    const modal = document.getElementById("confirmModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMessage = document.getElementById("modalMessage");
+    const btnCancel = document.getElementById("modalCancel");
+    const btnConfirm = document.getElementById("modalConfirm");
+
+    if (!modal || !modalTitle || !modalMessage || !btnCancel || !btnConfirm) {
+      console.error("No se encontró uno o más elementos del modal");
+      alert(`Error: ${message}`);
+      return;
+    }
+
+    modalTitle.innerText = title;
+    modalMessage.innerText = message;
     window.modalAction = action;
 
-    const modal = document.getElementById("confirmModal");
+    btnCancel.style.display = showCancel ? "inline-flex" : "none";
+    btnConfirm.innerHTML = `<i class="material-symbols-outlined">check_circle</i> Confirmar`;
+    btnCancel.innerHTML = `<i class="material-symbols-outlined">cancel</i> Cancelar`;
+
     modal.style.display = "flex";
   }
-  document.getElementById("modalConfirm").addEventListener("click", function () {
-    if (typeof modalAction === 'function') {
-      modalAction();
+
+  // === Eventos del modal (Aceptar / Cancelar) ===
+  document.addEventListener("DOMContentLoaded", () => {
+    const modalConfirm = document.getElementById("modalConfirm");
+    const modalCancel = document.getElementById("modalCancel");
+
+    if (modalConfirm) {
+      modalConfirm.addEventListener("click", () => {
+        if (typeof window.modalAction === 'function') window.modalAction();
+        document.getElementById("confirmModal").style.display = "none";
+      });
     }
-    document.getElementById("confirmModal").style.display = "none";
+
+    if (modalCancel) {
+      modalCancel.addEventListener("click", () => {
+        document.getElementById("confirmModal").style.display = "none";
+      });
+    }
+
+    // Validación desde Flask
+    const urlParams = new URLSearchParams(window.location.search);
+    const camposVacios = urlParams.get('campos_vacios');
+    if (camposVacios) {
+      const listaCampos = camposVacios.split(',');
+      listaCampos.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.classList.add('input-error');
+      });
+    }
+
+    // Limpiar error al escribir
+    document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
+      input.addEventListener('input', () => input.classList.remove('input-error'));
+    });
   });
 
-  document.getElementById("modalCancel").addEventListener("click", function () {
-    document.getElementById("confirmModal").style.display = "none";
-  });
-</script>
-<script>
+  // === Validación campos obligatorios ===
+  function clearPreviousErrors() {
+    document.querySelectorAll(".input-error").forEach(input => {
+      input.classList.remove("input-error");
+    });
+  }
+
+  function validateRequiredFields(fields) {
+    const missing = [];
+    fields.forEach(field => {
+      const input = document.getElementById(field.id);
+      if (input && !input.value.trim()) {
+        input.classList.add("input-error");
+        missing.push(field);
+      }
+    });
+    return missing;
+  }  
+  
+  // === Limpiar formulario ===
+  function limpiarFormulario() {
+    const selects = document.querySelectorAll("select");
+    selects.forEach(select => {
+      select.selectedIndex = 0; 
+      if (select.classList.contains("input-error")) {
+        select.classList.remove("input-error");
+      }
+    });    
+    const textareas = document.querySelectorAll("textarea");
+    textareas.forEach(ta => ta.value = "");
+
+    const inputs = document.querySelectorAll("input[type='text'], input[type='date']");
+    inputs.forEach(input => {
+      input.value = "";
+      if (input.classList.contains("input-error")) {
+        input.classList.remove("input-error");
+      }
+    });
+  }
+
+
+  // === Validacion Certificado ===
   document.addEventListener("DOMContentLoaded", function () {
-    // Escuchar cambios en grado para cargar estudiantes
     const gradosSelect = document.getElementById('grados-select');
     const estudiantesSelect = document.getElementById('name-student');
     const reporteSelect = document.getElementById('report');
     const btnGenerar = document.getElementById('btn-generar-word');
-    const periodo = document.getElementById('periodos-select').value || '1';
 
-    // Cargar estudiantes cuando se selecciona un grupo
     gradosSelect.addEventListener('change', async function () {
       const grupo = this.value;
       if (!grupo) {
@@ -125,7 +209,6 @@
         }
 
         estudiantesSelect.innerHTML = '<option value="">Selecciona un estudiante</option>';
-
         data.data.forEach(est => {
           const option = document.createElement('option');
           option.value = est.student_id;
@@ -141,7 +224,6 @@
       }
     });
 
-    // Habilitar botón solo si se selecciona Boletín + grado + estudiante
     function validarFormulario() {
       const grupo = gradosSelect.value;
       const estudiante = estudiantesSelect.value;
@@ -153,13 +235,33 @@
       el.addEventListener('change', validarFormulario);
     });
 
-    // Generar boletín Word rellenado
-    btnGenerar.addEventListener('click', async () => {
+    btnGenerar.addEventListener('click', () => {
+      const REQUIRED_FIELDS = [
+        { id: "grados-select", name: "Grupo" },
+        { id: "name-student", name: "Estudiante" },
+        { id: "report", name: "Tipo de Reporte" }
+      ];
+
+      clearPreviousErrors();
+      const missingFields = validateRequiredFields(REQUIRED_FIELDS);
+
+      if (missingFields.length > 0) {
+        showModal(
+          "Advertencia",
+          "Por favor complete los siguientes campos obligatorios:\n" +
+            missingFields.map(f => f.name).join("\n"),
+          null,
+          false
+        );
+      } else {
+        generateReport();
+      }
+    });
+
+    async function generateReport() {
       const grupo = gradosSelect.value;
       const estudiante_id = estudiantesSelect.value;
       const periodo = document.getElementById('periodos-select').value || '1';
-
-      if (!grupo || !estudiante_id) return alert("⚠️ Faltan datos");
 
       try {
         const response = await fetch('/secciones/generar-boletin-word', {
@@ -173,14 +275,15 @@
         const blob = await response.blob();
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
-        link.download = `boletin_${estudiante_id}.docx`;
+        link.download = `Certificado_${estudiante_id}.docx`;
         link.click();
 
       } catch (error) {
-        alert(`❌ ${error.message}`);
+        showModal("❌ Error", error.message, null, false);
       }
-    });
+    }
   });
 </script>
+
 {% endblock %}
 {% endblock %}

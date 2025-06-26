@@ -98,8 +98,8 @@ textarea {
 
 
 .input-error {
-    border-color: #f44336 !important;
-    outline: none;
+   border: 1px solid red !important;
+   background-color: #ffe6e6 !important;
 }
 
 .following{

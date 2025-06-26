@@ -142,8 +142,9 @@ body{
 }
 
 .input-error {
-    border-color: #ff4d4d !important;
+    border: 2px solid red !important;    
     background-color: #ffe6e6 !important;
+    
 }
 
 .nota-final {
