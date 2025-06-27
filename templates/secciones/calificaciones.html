@@ -41,7 +41,7 @@
                 <label for="asignatura-select">Asignatura:</label>
                 <select id="asignatura-select" name="grados" aria-label="Selecciona una asignatura">
                     <option value="">Seleccionar</option>
-                     <!-- Aquí se insertan las asignaturas dinámicamente -->
+                    <!-- Aquí se insertan las asignaturas dinámicamente -->
                 </select>
             </div>
             <div class="period">
@@ -76,7 +76,7 @@
                     </tr>
                 </thead>
                 <tbody id="tabla-cuerpo">
-                    <!-- Aquí se insertan las filas dinámicamente -->
+                    <!-- Aquí se insertan los nombres dinámicamente -->
                 </tbody>
             </table>
         </div>
@@ -84,9 +84,11 @@
 </div>
 <!-- Modal - ver notas -->
 <div id="verNotasModal" class="modal-notas">
-    <div class="modal-notas-content">
-        <span class="modal-notas-close" id="btnCerrarModalNotas">&times;</span>
-        <h2 id="modalNotasTitulo">Notas del Grupo</h2>
+    <div class="modal-notas-content">        
+        <div class="modal-header">
+            <h2 id="modalNotasTitulo">Notas del Grupo</h2>
+            <span class="modal-notas-close" id="btnCerrarModalNotas">&times;</span>
+        </div>
         <div id="modalNotasMensaje"></div>
     </div>
 </div>
@@ -102,7 +104,6 @@
             true
         );
     }
-
     // === Función showModal()
     function showModal(title, message, action, showCancel = true) {
         const modal = document.getElementById("confirmModal");
@@ -258,16 +259,16 @@
                 const notaEncontrada = dataNotas.data.find(n => n.student_id === parseInt(est.student_id)) || {};
                 return {
                     ...est,
-                    nota1: notaEncontrada.nota1 || "",
-                    nota2: notaEncontrada.nota2 || "",
-                    nota3: notaEncontrada.nota3 || "",
-                    nota4: notaEncontrada.nota4 || "",
-                    nota5: notaEncontrada.nota5 || ""
+                    nota1: notaEncontrada.nota1 || "1",
+                    nota2: notaEncontrada.nota2 || "1",
+                    nota3: notaEncontrada.nota3 || "1",
+                    nota4: notaEncontrada.nota4 || "1",
+                    nota5: notaEncontrada.nota5 || "1"
                 };
             });
 
             // Mostrar modal con las notas finales
-            showModalVerNotas("Notas del Grupo", datosCombinados, grupoVal, asignaturaVal);
+            showModalVerNotas("Notas del Grado", datosCombinados, grupoVal, asignaturaVal);
 
         } catch (error) {
             console.error("Error al cargar notas:", error);
@@ -275,7 +276,7 @@
         }
     }
 
-    // === Función showModalVerNotas() - Mostrar tabla de notas finales
+    // === Función Mostrar tabla de notas finales
     function showModalVerNotas(title, estudiantes, grupo, asignatura) {
         const modal = document.getElementById("verNotasModal");
         const modalTitle = document.getElementById("modalNotasTitulo");
@@ -285,12 +286,44 @@
             console.error("No se encontró uno o más elementos del nuevo modal");
             return;
         }
-
         // Limpiar contenido previo
         modalMessage.innerHTML = "";
 
+        // Mapear grupo
+        const nombresGrados = {
+            "6": "Sexto",
+            "7": "Séptimo",
+            "8": "Octavo",
+            "9": "Noveno",
+            "10": "Décimo",
+            "11": "Undécimo"
+        };
+
+        const nombreGrado = nombresGrados[grupo] || `Grado ${grupo}`;
+
+        // Mapear asignatura
+        const nombresAsignaturas = {
+            "1": "Matemáticas",
+            "2": "Castellano",
+            "3": "Sociales",
+            "4": "Ciencias Naturales",
+            "5": "Tecnología",
+            "6": "Artistica",
+            "7": "Educación Física",
+        };
+
+        const nombreAsignatura = nombresAsignaturas[asignatura] || `Asignatura ${asignatura}`;
+
+        const periodoSelect = document.getElementById("periodos-select");
+        const nombrePeriodo = periodoSelect.options[periodoSelect.selectedIndex]?.text || "Desconocido";
+
+
         // Establecer título
-        modalTitle.innerText = `${title}: ${grupo}, Asignatura: ${asignatura}`;
+        modalTitle.innerHTML = `
+        <span>Notas del Grado: ${nombreGrado}</span>
+        <span>Asignatura: ${nombreAsignatura}</span>
+        <span>Período: ${nombrePeriodo}</span>
+       `;
 
         // Crear tabla
         const table = document.createElement("table");
@@ -332,7 +365,9 @@
             <td>${index + 1}</td>
             <td>${estudiante.apellidos}</td>
             <td>${estudiante.nombres}</td>
-            <td style="color: black;">${promedio}</td>
+            <td style="color: ${parseFloat(promedio) < 3.2 ? 'red' : 'black'}">
+                ${promedio}
+            </td>
             <td>${estado}</td>
         `;
             tbody.appendChild(tr);
@@ -356,7 +391,7 @@
         }
     });
 
-      // === Escuchar cambios en los selects para limpiar errores visuales
+    // === Escuchar cambios en los selects para limpiar errores visuales
     document.addEventListener("DOMContentLoaded", () => {
         const grupo = document.getElementById("grados-select");
         const asignatura = document.getElementById("asignatura-select");
@@ -372,32 +407,32 @@
     });
 
     // === Cargar asignaturas dinámicamente desde Flask
-async function cargarAsignaturas() {
-    try {
-        const res = await fetch("/secciones/api/asignaturas");
-        if (!res.ok) throw new Error("Error al cargar asignaturas");
+    async function cargarAsignaturas() {
+        try {
+            const res = await fetch("/secciones/api/asignaturas");
+            if (!res.ok) throw new Error("Error al cargar asignaturas");
 
-        const data = await res.json();
-        const select = document.getElementById("asignatura-select");
-        select.innerHTML = '<option value="">Seleccionar</option>';
+            const data = await res.json();
+            const select = document.getElementById("asignatura-select");
+            select.innerHTML = '<option value="">Seleccionar</option>';
 
-        data.data.forEach(asig => {
-            const option = document.createElement("option");
-            option.value = asig.id;
-            option.textContent = asig.nombre;
-            select.appendChild(option);
-        });
+            data.data.forEach(asig => {
+                const option = document.createElement("option");
+                option.value = asig.id;
+                option.textContent = asig.nombre;
+                select.appendChild(option);
+            });
 
-    } catch (error) {
-        console.error("❌ Error al cargar asignaturas:", error);
-        mostrarAlerta("No se pudieron cargar las asignaturas", "danger");
+        } catch (error) {
+            console.error("❌ Error al cargar asignaturas:", error);
+            mostrarAlerta("No se pudieron cargar las asignaturas", "danger");
+        }
     }
-}
 
-// === Ejecutar al cargar la página
-document.addEventListener("DOMContentLoaded", () => {
-    cargarAsignaturas(); // Cargar asignaturas dinámicamente
-});
+    // === Ejecutar al cargar la página
+    document.addEventListener("DOMContentLoaded", () => {
+        cargarAsignaturas(); // Cargar asignaturas dinámicamente
+    });
 
 </script>
 {% endblock %}

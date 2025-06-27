@@ -1335,20 +1335,10 @@ def generar_boletin_word():
 #  ASISTENCIA
 # ─────────────────────────────────────────────────────
 @secciones.route('/asistencia', methods=['GET', 'POST'])
-def asistencia():
-    db = get_db()
-    cursor = db.cursor(pymysql.cursors.DictCursor)
-    if request.method == 'POST':
-        grupo = request.form.get('grupo')
-        asignatura = request.form.get('asignatura')
-
-        cursor.execute("SELECT * FROM estudiante WHERE grupo = %s ORDER BY apellido, nombre", (grupo,))
-        alumnos = cursor.fetchall()
-
-        return render_template('asistencia.html', alumnos=alumnos, grupo=grupo, asignatura=asignatura)
-   
-
+def asistencia(): 
     return render_template('secciones/asistencia.html')
+
+
 
 
 @secciones.route('/tareas', methods=['GET', 'POST'])
