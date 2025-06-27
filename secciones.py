@@ -717,7 +717,7 @@ def cargar_notas():
 def get_notas_estudiante():
     grupo = request.args.get('grupo')
     estudiante_id = request.args.get('estudiante')
-    periodo = request.args.get('periodo') or '1'  # Por defecto
+    periodo = request.args.get('periodo') or '1'  
 
     if not all([grupo, estudiante_id]):
         return jsonify({"error": "Faltan parámetros"}), 400
@@ -749,6 +749,17 @@ def get_notas_estudiante():
             "notas": notas
         })
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500    
+    
+@secciones.route('/api/asignaturas', methods=['GET'])
+def get_asignaturas():
+    try:
+        db = get_db()
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT subject_id AS id, name AS nombre FROM asignaturas ORDER BY name ASC")
+        asignaturas = cursor.fetchall()
+        return jsonify({"data": asignaturas})
     except Exception as e:
         return jsonify({"error": str(e)}), 500    
     

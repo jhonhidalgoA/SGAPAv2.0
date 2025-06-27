@@ -70,7 +70,6 @@
 </div>
 {% block extra_js %}
 <script> 
-
   // === Función confirmLogout() ===
   function confirmLogout() {
     showModal(
@@ -80,7 +79,6 @@
       true
     );
   }
-
   // === Función showModal() ===
   function showModal(title, message, action, showCancel = true) {
     const modal = document.getElementById("confirmModal");
@@ -106,7 +104,7 @@
     modal.style.display = "flex";
   }
 
-  // === Eventos del modal (Aceptar / Cancelar) ===
+  // === Eventos del modal (Aceptar / Cancelar)
   document.addEventListener("DOMContentLoaded", () => {
     const modalConfirm = document.getElementById("modalConfirm");
     const modalCancel = document.getElementById("modalCancel");
@@ -124,7 +122,7 @@
       });
     }
 
-    // Validación desde Flask
+    // === Validación desde Flask
     const urlParams = new URLSearchParams(window.location.search);
     const camposVacios = urlParams.get('campos_vacios');
     if (camposVacios) {
@@ -180,7 +178,6 @@
       }
     });
   }
-
 
   // === Validacion Certificado ===
   document.addEventListener("DOMContentLoaded", function () {

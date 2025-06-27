@@ -10,9 +10,9 @@
 
 {% block content %}
 <div class="container">
-    
+
     {{ header_block('edit_note', 'Calificaciones', 'var(--color-blue-card)') }}
-    
+
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -24,124 +24,65 @@
     {% endwith %}
 
     <form action="{{ url_for('secciones.guardar_notas') }}" method="POST" id="form-notas">
-    <div class="ratings__group">
-        <div class="group">
-            <label for="grados-select">Grupo:</label>
-            <select id="grados-select" name="grados" aria-label="Selecciona un grado">
-                <option value="">Seleccionar</option>
-                <option value="6">Grado Sexto </option>
-                <option value="7">Grado Séptimo</option>
-                <option value="8">Grado Octavo</option>
-                <option value="8">Grado Noveno</option>
-                <option value="10">Grado Décimo</option>
-                <option value="11">Grado Undécimo</option>
-            </select>
+        <div class="ratings__group">
+            <div class="group">
+                <label for="grados-select">Grupo:</label>
+                <select id="grados-select" name="grados" aria-label="Selecciona un grado">
+                    <option value="">Seleccionar</option>
+                    <option value="6">Grado Sexto </option>
+                    <option value="7">Grado Séptimo</option>
+                    <option value="8">Grado Octavo</option>
+                    <option value="8">Grado Noveno</option>
+                    <option value="10">Grado Décimo</option>
+                    <option value="11">Grado Undécimo</option>
+                </select>
+            </div>
+            <div class="subjects">
+                <label for="asignatura-select">Asignatura:</label>
+                <select id="asignatura-select" name="grados" aria-label="Selecciona una asignatura">
+                    <option value="">Seleccionar</option>
+                     <!-- Aquí se insertan las asignaturas dinámicamente -->
+                </select>
+            </div>
+            <div class="period">
+                <label for="periodos-select">Periodo:</label>
+                <select id="periodos-select" name="periodos" aria-label="Selecciona un Periodo">
+                    <option value="">Seleccionar</option>
+                    <option value="1">Primero</option>
+                    <option value="2">Segundo</option>
+                    <option value="3">Tercero</option>
+                    <option value="4">Cuarto</option>
+                </select>
+            </div>
         </div>
-        <div class="subjects">
-            <label for="asignatura-select">Asignatura:</label>
-            <select id="asignatura-select" name="grados" aria-label="Selecciona una asignatura">
-                <option value="">Seleccionar</option>
-                <option value="1">Matemáticas</option>
-                <option value="2">Castellano</option>
-                <option value="3">Tecnología</option>
-                <option value="4">Ética</option>
-                <option value="5">Artistica</option>
-            </select>
+        <div class="ratings__buttons">
+            {{ btn(icono="add", texto="Cargar", color="load", id="btn-cargar") }}
+            {{ btn(icono="save", texto="Guardar", color="save", id="btn-guardar") }}
+            {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view", id="btn-ver-notas") }}
         </div>
-        <div class="period">
-            <label for="periodos-select">Periodo:</label>
-            <select id="periodos-select" name="periodos" aria-label="Selecciona un Periodo">
-                <option value="">Seleccionar</option>
-                <option value="1">Primero</option>
-                <option value="2">Segundo</option>
-                <option value="3">Tercero</option>
-                <option value="4">Cuarto</option>
-            </select>
+        <div id="alerta" class="alerta"></div>
+        <div class="table-container">
+            <table id="tabla-calificaciones" class="tabla-editable">
+                <thead>
+                    <tr>
+                        <th>Apellidos</th>
+                        <th>Nombres</th>
+                        <th>Nota 1</th>
+                        <th>Nota 2</th>
+                        <th>Nota 3</th>
+                        <th>Nota 4</th>
+                        <th>Nota 5</th>
+                        <th>Nota Final</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-cuerpo">
+                    <!-- Aquí se insertan las filas dinámicamente -->
+                </tbody>
+            </table>
         </div>
-    </div>
-    <div class="ratings__buttons">
-        {{ btn(icono="add", texto="Cargar", color="load", id="btn-cargar") }}        
-        {{ btn(icono="save", texto="Guardar", color="save", id="btn-guardar") }}            
-        {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view", id="btn-ver-notas") }}
-    </div>
-    <div id="alerta" class="alerta"></div>
-    <div class="table-container">
-        <table id="tabla-calificaciones" class="tabla-editable">
-            <thead>
-                <tr>
-                    <th>Apellidos</th>
-                    <th>Nombres</th>
-                    <th>Nota 1</th>
-                    <th>Nota 2</th>
-                    <th>Nota 3</th>
-                    <th>Nota 4</th>
-                    <th>Nota 5</th>
-                    <th>Nota Final</th>
-                </tr>
-            </thead>
-            <tbody id="tabla-cuerpo">
-                <!-- Aquí se insertan las filas dinámicamente -->
-            </tbody>
-        </table>
-    </div>
     </form>
 </div>
-<style>
-.modal-notas {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.6);
-}
-
-.modal-notas-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 20px;
-    border-radius: 8px;
-    width: 80%;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    position: relative;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.modal-notas-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #aaa;
-}
-
-.modal-notas-close:hover {
-    color: black;
-}
-
-.tabla-modal-notas {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.tabla-modal-notas th,
-.tabla-modal-notas td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-.tabla-modal-notas th {
-    background-color: #f2f2f2;
-}
-</style>
-<!-- Nuevo Modal - Ver Notas -->
+<!-- Modal - ver notas -->
 <div id="verNotasModal" class="modal-notas">
     <div class="modal-notas-content">
         <span class="modal-notas-close" id="btnCerrarModalNotas">&times;</span>
@@ -149,79 +90,216 @@
         <div id="modalNotasMensaje"></div>
     </div>
 </div>
-
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/calificaciones.js') }}"></script>
 <script>
-// === Función verNotas() - Cargar y mostrar notas desde la base de datos
-async function verNotas() {
-    const grupo = document.getElementById("grados-select").value;
-    const asignatura = document.getElementById("asignatura-select").value;
-    const periodo = document.getElementById("periodos-select").value;
-
-    if (!grupo || !asignatura || !periodo) {
-        showModal("Error", "Por favor seleccione grupo, asignatura y periodo.", null, false);
-        return;
+    // === Función confirmLogout()
+    function confirmLogout() {
+        showModal(
+            "Cerrar Sesión",
+            "¿Estás seguro de que deseas cerrar sesión?",
+            () => window.location.href = "{{ url_for('auth.logout') }}",
+            true
+        );
     }
 
-    try {
-        // Obtener estudiantes del grupo seleccionado
-        const resEstudiantes = await fetch(`/secciones/api/estudiantes/${grupo}`);
-        if (!resEstudiantes.ok) throw new Error("No se encontraron estudiantes");
-        const dataEstudiantes = await resEstudiantes.json();
+    // === Función showModal()
+    function showModal(title, message, action, showCancel = true) {
+        const modal = document.getElementById("confirmModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalMessage = document.getElementById("modalMessage");
+        const btnCancel = document.getElementById("modalCancel");
+        const btnConfirm = document.getElementById("modalConfirm");
 
-        // Obtener notas desde la API
-        const resNotas = await fetch(`/secciones/api/cargar-notas?grupo=${grupo}&asignatura=${asignatura}&periodo=${periodo}`);
-        if (!resNotas.ok) throw new Error(`HTTP error! status: ${resNotas.status}`);
-        const dataNotas = await resNotas.json();
+        if (!modal || !modalTitle || !modalMessage || !btnCancel || !btnConfirm) {
+            console.error("No se encontró uno o más elementos del modal");
+            alert(`Error: ${message}`);
+            return;
+        }
 
-        // Combinar datos por student_id
-        const datosCombinados = dataEstudiantes.data.map(est => {
-            const notaEncontrada = dataNotas.data.find(n => n.student_id === parseInt(est.student_id)) || {};
-            return {
-                ...est,
-                nota1: notaEncontrada.nota1 || "",
-                nota2: notaEncontrada.nota2 || "",
-                nota3: notaEncontrada.nota3 || "",
-                nota4: notaEncontrada.nota4 || "",
-                nota5: notaEncontrada.nota5 || ""
-            };
+        modalTitle.innerText = title;
+        modalMessage.innerText = message;
+        window.modalAction = action;
+
+        btnCancel.style.display = showCancel ? "inline-flex" : "none";
+        btnConfirm.innerHTML = `<i class="material-symbols-outlined">check_circle</i> Confirmar`;
+        btnCancel.innerHTML = `<i class="material-symbols-outlined">cancel</i> Cancelar`;
+
+        modal.style.display = "flex";
+    }
+
+    // === Eventos del modal (Aceptar / Cancelar)
+    document.addEventListener("DOMContentLoaded", function () {
+        const modalConfirm = document.getElementById("modalConfirm");
+        const modalCancel = document.getElementById("modalCancel");
+
+
+        if (modalConfirm) {
+            modalConfirm.addEventListener("click", function () {
+                if (typeof window.modalAction === 'function') window.modalAction();
+                document.getElementById("confirmModal").style.display = "none";
+            });
+        }
+
+        if (modalCancel) {
+            modalCancel.addEventListener("click", function () {
+                document.getElementById("confirmModal").style.display = "none";
+            });
+        }
+
+        // === Validación desde Flask 
+        const urlParams = new URLSearchParams(window.location.search);
+        const camposVacios = urlParams.get('campos_vacios');
+        if (camposVacios) {
+            const listaCampos = camposVacios.split(',');
+            listaCampos.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) input.classList.add('input-error');
+            });
+        }
+
+        // === 5. Limpiar error al escribir ===
+        document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
+            input.addEventListener('input', function () {
+                this.classList.remove('input-error');
+            });
         });
+    });
 
-        // Mostrar modal con las notas finales
-        showModalVerNotas("Notas del Grupo", datosCombinados, grupo, asignatura);
+    // === Variables globales
+    var containerTabla = document.getElementById("tabla-cuerpo");
 
-    } catch (error) {
-        console.error("Error al cargar notas:", error);
-        showModal("Error", "No se pudieron cargar las notas. Inténtelo nuevamente.", null, false);
+    // === Mostrar alerta temporal
+    function mostrarAlerta(mensaje, tipo = "danger") {
+        const alertaDiv = document.getElementById("alerta");
+        if (!alertaDiv) return;
+
+        alertaDiv.textContent = mensaje;
+        alertaDiv.className = `alerta ${tipo}`;
+        alertaDiv.classList.remove("ocultar");
+        alertaDiv.style.display = "block";
+
+        setTimeout(() => {
+            alertaDiv.classList.add("ocultar");
+            setTimeout(() => {
+                alertaDiv.style.display = "none";
+            }, 300);
+        }, 3000);
     }
-}
 
-// === Función showModalVerNotas() - Mostrar tabla de notas finales
-function showModalVerNotas(title, estudiantes, grupo, asignatura) {
-    const modal = document.getElementById("verNotasModal");
-    const modalTitle = document.getElementById("modalNotasTitulo");
-    const modalMessage = document.getElementById("modalNotasMensaje");
+    // === Validación de campos vacíos
+    function validarCampos() {
+        const grupo = document.getElementById("grados-select");
+        const asignatura = document.getElementById("asignatura-select");
+        const periodo = document.getElementById("periodos-select");
+        let mensajes = [];
 
-    if (!modal || !modalTitle || !modalMessage) {
-        console.error("No se encontró uno o más elementos del nuevo modal");
-        return;
+        if (!grupo.value) {
+            grupo.classList.add("input-error");
+            mensajes.push("Grupo");
+        } else {
+            grupo.classList.remove("input-error");
+        }
+
+        if (!asignatura.value) {
+            asignatura.classList.add("input-error");
+            mensajes.push("Asignatura");
+        } else {
+            asignatura.classList.remove("input-error");
+        }
+
+        if (!periodo.value) {
+            periodo.classList.add("input-error");
+            mensajes.push("Período");
+        } else {
+            periodo.classList.remove("input-error");
+        }
+
+        if (mensajes.length > 0) {
+            showModal(
+                "",
+                "Por favor complete los siguientes campos obligatorios:\n" + mensajes.join("\n"),
+                null,
+                false
+            );
+            return false;
+        }
+
+        return true;
+    }
+</script>
+<script>
+    // === Función verNotas() - Cargar y mostrar notas en nuevo modal
+    async function verNotas() {
+        const grupo = document.getElementById("grados-select");
+        const asignatura = document.getElementById("asignatura-select");
+        const periodo = document.getElementById("periodos-select");
+
+        // Validar campos obligatorios usando la función existente
+        if (!validarCampos()) return;
+
+        const grupoVal = grupo.value;
+        const asignaturaVal = asignatura.value;
+        const periodoVal = periodo.value;
+
+        try {
+            // Obtener estudiantes del grupo seleccionado
+            const resEstudiantes = await fetch(`/secciones/api/estudiantes/${grupoVal}`);
+            if (!resEstudiantes.ok) throw new Error("No se encontraron estudiantes");
+            const dataEstudiantes = await resEstudiantes.json();
+
+            // Obtener notas desde la API
+            const resNotas = await fetch(`/secciones/api/cargar-notas?grupo=${grupoVal}&asignatura=${asignaturaVal}&periodo=${periodoVal}`);
+            if (!resNotas.ok) throw new Error(`HTTP error! status: ${resNotas.status}`);
+            const dataNotas = await resNotas.json();
+
+            // Combinar datos por student_id
+            const datosCombinados = dataEstudiantes.data.map(est => {
+                const notaEncontrada = dataNotas.data.find(n => n.student_id === parseInt(est.student_id)) || {};
+                return {
+                    ...est,
+                    nota1: notaEncontrada.nota1 || "",
+                    nota2: notaEncontrada.nota2 || "",
+                    nota3: notaEncontrada.nota3 || "",
+                    nota4: notaEncontrada.nota4 || "",
+                    nota5: notaEncontrada.nota5 || ""
+                };
+            });
+
+            // Mostrar modal con las notas finales
+            showModalVerNotas("Notas del Grupo", datosCombinados, grupoVal, asignaturaVal);
+
+        } catch (error) {
+            console.error("Error al cargar notas:", error);
+            showModal("Error", "No se pudieron cargar las notas. Inténtelo nuevamente.", null, false);
+        }
     }
 
-    // Limpiar contenido previo
-    modalMessage.innerHTML = "";
+    // === Función showModalVerNotas() - Mostrar tabla de notas finales
+    function showModalVerNotas(title, estudiantes, grupo, asignatura) {
+        const modal = document.getElementById("verNotasModal");
+        const modalTitle = document.getElementById("modalNotasTitulo");
+        const modalMessage = document.getElementById("modalNotasMensaje");
 
-    // Establecer título
-    modalTitle.innerText = `${title} - Grupo: ${grupo}, Asignatura: ${asignatura}`;
+        if (!modal || !modalTitle || !modalMessage) {
+            console.error("No se encontró uno o más elementos del nuevo modal");
+            return;
+        }
 
-    // Crear tabla
-    const table = document.createElement("table");
-    table.classList.add("tabla-modal-notas");
-    const thead = document.createElement("thead");
-    const tbody = document.createElement("tbody");
+        // Limpiar contenido previo
+        modalMessage.innerHTML = "";
 
-    // Encabezado de la tabla
-    thead.innerHTML = `
+        // Establecer título
+        modalTitle.innerText = `${title}: ${grupo}, Asignatura: ${asignatura}`;
+
+        // Crear tabla
+        const table = document.createElement("table");
+        table.classList.add("tabla-modal-notas");
+        const thead = document.createElement("thead");
+        const tbody = document.createElement("tbody");
+
+        // Encabezado de la tabla
+        thead.innerHTML = `
         <tr>
             <th>No.</th>
             <th>Apellidos</th>
@@ -230,53 +308,97 @@ function showModalVerNotas(title, estudiantes, grupo, asignatura) {
             <th>Estado</th>
         </tr>
     `;
-    table.appendChild(thead);
+        table.appendChild(thead);
 
-    // Filas de datos
-    estudiantes.forEach((estudiante, index) => {
-        const promedio = calcularPromedio([
-            estudiante.nota1,
-            estudiante.nota2,
-            estudiante.nota3,
-            estudiante.nota4,
-            estudiante.nota5
-        ]);
+        // Filas de datos
+        estudiantes.forEach((estudiante, index) => {
+            const promedio = calcularPromedio([
+                estudiante.nota1,
+                estudiante.nota2,
+                estudiante.nota3,
+                estudiante.nota4,
+                estudiante.nota5
+            ]);
 
-        let estado = "Reprobado";
-        if (parseFloat(promedio) >= 4.5) {
-            estado = "Excelente";
-        } else if (parseFloat(promedio) >= 3.2) {
-            estado = "Aprobado";
-        }
+            let estado = "Reprobado";
+            if (parseFloat(promedio) >= 4.5) {
+                estado = "Excelente";
+            } else if (parseFloat(promedio) >= 3.2) {
+                estado = "Aprobado";
+            }
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
             <td>${index + 1}</td>
             <td>${estudiante.apellidos}</td>
             <td>${estudiante.nombres}</td>
             <td style="color: black;">${promedio}</td>
             <td>${estado}</td>
         `;
-        tbody.appendChild(tr);
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+        modalMessage.appendChild(table);
+        modal.style.display = "flex";
+    }
+
+    // === Evento para cerrar el modal
+    document.getElementById("btnCerrarModalNotas").addEventListener("click", () => {
+        document.getElementById("verNotasModal").style.display = "none";
     });
 
-    table.appendChild(tbody);
-    modalMessage.appendChild(table);
-    modal.style.display = "flex";
+    // === Evento para abrir el modal
+    document.addEventListener("DOMContentLoaded", () => {
+        const btnVerNotas = document.getElementById("btn-ver-notas");
+        if (btnVerNotas) {
+            btnVerNotas.addEventListener("click", verNotas);
+        }
+    });
+
+      // === Escuchar cambios en los selects para limpiar errores visuales
+    document.addEventListener("DOMContentLoaded", () => {
+        const grupo = document.getElementById("grados-select");
+        const asignatura = document.getElementById("asignatura-select");
+        const periodo = document.getElementById("periodos-select");
+
+        [grupo, asignatura, periodo].forEach(select => {
+            select.addEventListener("change", () => {
+                if (select.value) {
+                    select.classList.remove("input-error");
+                }
+            });
+        });
+    });
+
+    // === Cargar asignaturas dinámicamente desde Flask
+async function cargarAsignaturas() {
+    try {
+        const res = await fetch("/secciones/api/asignaturas");
+        if (!res.ok) throw new Error("Error al cargar asignaturas");
+
+        const data = await res.json();
+        const select = document.getElementById("asignatura-select");
+        select.innerHTML = '<option value="">Seleccionar</option>';
+
+        data.data.forEach(asig => {
+            const option = document.createElement("option");
+            option.value = asig.id;
+            option.textContent = asig.nombre;
+            select.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error("❌ Error al cargar asignaturas:", error);
+        mostrarAlerta("No se pudieron cargar las asignaturas", "danger");
+    }
 }
 
-// === Evento para cerrar el modal
-document.getElementById("btnCerrarModalNotas").addEventListener("click", () => {
-    document.getElementById("verNotasModal").style.display = "none";
+// === Ejecutar al cargar la página
+document.addEventListener("DOMContentLoaded", () => {
+    cargarAsignaturas(); // Cargar asignaturas dinámicamente
 });
 
-// === Evento para abrir el modal
-document.addEventListener("DOMContentLoaded", () => {
-    const btnVerNotas = document.getElementById("btn-ver-notas");
-    if (btnVerNotas) {
-        btnVerNotas.addEventListener("click", verNotas);
-    }
-});
 </script>
 {% endblock %}
 

@@ -29,8 +29,6 @@
     {% endif %}
     {% endwith %}
     <!------------------>
-
-
     <form
         action="{% if docente %}/actualizar_docente/{{ docente.id }}{% else %}{{ url_for('secciones.guardar_docente') }}{% endif %}"
         method="post" id="teacherRegistrationForm" class="registration__form" enctype="multipart/form-data">
@@ -364,14 +362,5 @@
         const formulario = document.getElementById('teacherRegistrationForm');
         formulario.reset();
     });
-
-
 </script>
-
-
-
-
-
-
-
 {% endblock %}
