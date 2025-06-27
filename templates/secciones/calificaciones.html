@@ -62,7 +62,7 @@
     <div class="ratings__buttons">
         {{ btn(icono="add", texto="Cargar", color="load", id="btn-cargar") }}        
         {{ btn(icono="save", texto="Guardar", color="save", id="btn-guardar") }}            
-        {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view") }}
+        {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view", id="btn-ver-notas") }}
     </div>
     <div id="alerta" class="alerta"></div>
     <div class="table-container">
@@ -86,77 +86,198 @@
     </div>
     </form>
 </div>
+<style>
+.modal-notas {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-notas-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-notas-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.modal-notas-close:hover {
+    color: black;
+}
+
+.tabla-modal-notas {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tabla-modal-notas th,
+.tabla-modal-notas td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.tabla-modal-notas th {
+    background-color: #f2f2f2;
+}
+</style>
+<!-- Nuevo Modal - Ver Notas -->
+<div id="verNotasModal" class="modal-notas">
+    <div class="modal-notas-content">
+        <span class="modal-notas-close" id="btnCerrarModalNotas">&times;</span>
+        <h2 id="modalNotasTitulo">Notas del Grupo</h2>
+        <div id="modalNotasMensaje"></div>
+    </div>
+</div>
 
 {% block extra_js %}
-<script>
-    // === 1. Función confirmLogout() - Salir
-    function confirmLogout() {
-        window.location.href = "{{ url_for('auth.logout') }}";
-    }
-
-    // === 2. Función showModal() - Modal personalizado
-    function showModal(title, message, action) {
-        const modal = document.getElementById("confirmModal");
-        const modalTitle = document.getElementById("modalTitle");
-        const modalMessage = document.getElementById("modalMessage");
-
-        if (!modal || !modalTitle || !modalMessage) {
-            console.error("No se encontró uno o más elementos del modal");
-            alert(`Error: ${message}`);
-            return;
-        }
-
-        modalTitle.innerText = title;
-        modalMessage.innerText = message;
-        window.modalAction = action;
-
-        modal.style.display = "flex";
-    }
-
-    // === 3. Eventos del modal (Aceptar / Cancelar)
-    document.addEventListener("DOMContentLoaded", function () {
-        const modalConfirm = document.getElementById("modalConfirm");
-        const modalCancel = document.getElementById("modalCancel");
-
-        if (modalConfirm) {
-            modalConfirm.addEventListener("click", function () {
-                if (typeof modalAction === 'function') {
-                    modalAction();
-                }
-                document.getElementById("confirmModal").style.display = "none";
-            });
-        }
-
-        if (modalCancel) {
-            modalCancel.addEventListener("click", function () {
-                document.getElementById("confirmModal").style.display = "none";
-            });
-        }
-
-        // === 4. Validación de campos vacíos desde Flask ===
-        const urlParams = new URLSearchParams(window.location.search);
-        const camposVacios = urlParams.get('campos_vacios');
-
-        if (camposVacios) {
-            const listaCampos = camposVacios.split(',');
-            listaCampos.forEach(id => {
-                const input = document.getElementById(id);
-                if (input) {
-                    input.classList.add('input-error');
-                }
-            });
-        }
-
-        // === 5. Limpiar error al escribir ===
-        document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
-            input.addEventListener('input', function () {
-                this.classList.remove('input-error');
-            });
-        });
-    });
-</script>
 <script src="{{ url_for('static', filename='js/calificaciones.js') }}"></script>
+<script>
+// === Función verNotas() - Cargar y mostrar notas desde la base de datos
+async function verNotas() {
+    const grupo = document.getElementById("grados-select").value;
+    const asignatura = document.getElementById("asignatura-select").value;
+    const periodo = document.getElementById("periodos-select").value;
 
+    if (!grupo || !asignatura || !periodo) {
+        showModal("Error", "Por favor seleccione grupo, asignatura y periodo.", null, false);
+        return;
+    }
+
+    try {
+        // Obtener estudiantes del grupo seleccionado
+        const resEstudiantes = await fetch(`/secciones/api/estudiantes/${grupo}`);
+        if (!resEstudiantes.ok) throw new Error("No se encontraron estudiantes");
+        const dataEstudiantes = await resEstudiantes.json();
+
+        // Obtener notas desde la API
+        const resNotas = await fetch(`/secciones/api/cargar-notas?grupo=${grupo}&asignatura=${asignatura}&periodo=${periodo}`);
+        if (!resNotas.ok) throw new Error(`HTTP error! status: ${resNotas.status}`);
+        const dataNotas = await resNotas.json();
+
+        // Combinar datos por student_id
+        const datosCombinados = dataEstudiantes.data.map(est => {
+            const notaEncontrada = dataNotas.data.find(n => n.student_id === parseInt(est.student_id)) || {};
+            return {
+                ...est,
+                nota1: notaEncontrada.nota1 || "",
+                nota2: notaEncontrada.nota2 || "",
+                nota3: notaEncontrada.nota3 || "",
+                nota4: notaEncontrada.nota4 || "",
+                nota5: notaEncontrada.nota5 || ""
+            };
+        });
+
+        // Mostrar modal con las notas finales
+        showModalVerNotas("Notas del Grupo", datosCombinados, grupo, asignatura);
+
+    } catch (error) {
+        console.error("Error al cargar notas:", error);
+        showModal("Error", "No se pudieron cargar las notas. Inténtelo nuevamente.", null, false);
+    }
+}
+
+// === Función showModalVerNotas() - Mostrar tabla de notas finales
+function showModalVerNotas(title, estudiantes, grupo, asignatura) {
+    const modal = document.getElementById("verNotasModal");
+    const modalTitle = document.getElementById("modalNotasTitulo");
+    const modalMessage = document.getElementById("modalNotasMensaje");
+
+    if (!modal || !modalTitle || !modalMessage) {
+        console.error("No se encontró uno o más elementos del nuevo modal");
+        return;
+    }
+
+    // Limpiar contenido previo
+    modalMessage.innerHTML = "";
+
+    // Establecer título
+    modalTitle.innerText = `${title} - Grupo: ${grupo}, Asignatura: ${asignatura}`;
+
+    // Crear tabla
+    const table = document.createElement("table");
+    table.classList.add("tabla-modal-notas");
+    const thead = document.createElement("thead");
+    const tbody = document.createElement("tbody");
+
+    // Encabezado de la tabla
+    thead.innerHTML = `
+        <tr>
+            <th>No.</th>
+            <th>Apellidos</th>
+            <th>Nombres</th>
+            <th>Nota Final</th>
+            <th>Estado</th>
+        </tr>
+    `;
+    table.appendChild(thead);
+
+    // Filas de datos
+    estudiantes.forEach((estudiante, index) => {
+        const promedio = calcularPromedio([
+            estudiante.nota1,
+            estudiante.nota2,
+            estudiante.nota3,
+            estudiante.nota4,
+            estudiante.nota5
+        ]);
+
+        let estado = "Reprobado";
+        if (parseFloat(promedio) >= 4.5) {
+            estado = "Excelente";
+        } else if (parseFloat(promedio) >= 3.2) {
+            estado = "Aprobado";
+        }
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${estudiante.apellidos}</td>
+            <td>${estudiante.nombres}</td>
+            <td style="color: black;">${promedio}</td>
+            <td>${estado}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    modalMessage.appendChild(table);
+    modal.style.display = "flex";
+}
+
+// === Evento para cerrar el modal
+document.getElementById("btnCerrarModalNotas").addEventListener("click", () => {
+    document.getElementById("verNotasModal").style.display = "none";
+});
+
+// === Evento para abrir el modal
+document.addEventListener("DOMContentLoaded", () => {
+    const btnVerNotas = document.getElementById("btn-ver-notas");
+    if (btnVerNotas) {
+        btnVerNotas.addEventListener("click", verNotas);
+    }
+});
+</script>
 {% endblock %}
 
 {% endblock %}
