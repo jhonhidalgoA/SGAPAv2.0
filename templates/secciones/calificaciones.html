@@ -95,7 +95,7 @@
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/calificaciones.js') }}"></script>
 <script>
-    // === Función confirmLogout()
+    // === 1. Función confirmLogout()
     function confirmLogout() {
         showModal(
             "Cerrar Sesión",
@@ -104,7 +104,7 @@
             true
         );
     }
-    // === Función showModal()
+    // === 2. Función showModal()
     function showModal(title, message, action, showCancel = true) {
         const modal = document.getElementById("confirmModal");
         const modalTitle = document.getElementById("modalTitle");
@@ -129,7 +129,7 @@
         modal.style.display = "flex";
     }
 
-    // === Eventos del modal (Aceptar / Cancelar)
+    // === 3. Eventos del modal (Aceptar / Cancelar)
     document.addEventListener("DOMContentLoaded", function () {
         const modalConfirm = document.getElementById("modalConfirm");
         const modalCancel = document.getElementById("modalCancel");
@@ -148,7 +148,7 @@
             });
         }
 
-        // === Validación desde Flask 
+        // === 4. Validación desde Flask 
         const urlParams = new URLSearchParams(window.location.search);
         const camposVacios = urlParams.get('campos_vacios');
         if (camposVacios) {
@@ -167,10 +167,10 @@
         });
     });
 
-    // === Variables globales
+    // === 6. Variables globales
     var containerTabla = document.getElementById("tabla-cuerpo");
 
-    // === Mostrar alerta temporal
+    // === 7. Mostrar alerta temporal
     function mostrarAlerta(mensaje, tipo = "danger") {
         const alertaDiv = document.getElementById("alerta");
         if (!alertaDiv) return;
@@ -188,7 +188,7 @@
         }, 3000);
     }
 
-    // === Validación de campos vacíos
+    // === 8. Validación de campos vacíos
     function validarCampos() {
         const grupo = document.getElementById("grados-select");
         const asignatura = document.getElementById("asignatura-select");

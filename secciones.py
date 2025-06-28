@@ -550,7 +550,7 @@ def calificaciones():
 @secciones.route('/api/estudiantes/<string:grupo>', methods=['GET'])
 def api_estudiantes(grupo):
     db = get_db()
-    cursor = db.cursor()
+    cursor = db.cursor(pymysql.cursors.DictCursor)
     try:
         cursor.execute("""
             SELECT 
@@ -572,17 +572,21 @@ def api_estudiantes(grupo):
                 "message": f"No se encontraron estudiantes para el grupo {grupo}"
             })
 
-        data = [
-            {
-                "student_id": str(est["student_id"]),
-                "nombres": est["nombres"],
-                "apellidos": est["apellidos"],
-                "full_name": est["full_name"]
-            }
-            for est in estudiantes
-        ]
+        data = []
+        for est in estudiantes:
+            nombres_completos = est["full_name"].split(" ")
+            nombres = " ".join(nombres_completos[:2])       # Primeros dos elementos como nombres
+            apellidos = " ".join(nombres_completos[-2:])   # Últimos dos como apellidos
 
-        return jsonify({"data": data, "success": True})
+            data.append({
+                "student_id": str(est["student_id"]),
+                "full_name": est["full_name"],
+                "nombres": nombres,
+                "apellidos": apellidos
+            })
+
+        return jsonify({"data": data})
+            
 
     except Exception as e:
         print(f"❌ Error al cargar estudiantes: {str(e)}")
@@ -1334,12 +1338,62 @@ def generar_boletin_word():
 # ─────────────────────────────────────────────────────
 #  ASISTENCIA
 # ─────────────────────────────────────────────────────
+
 @secciones.route('/asistencia', methods=['GET', 'POST'])
 def asistencia(): 
     return render_template('secciones/asistencia.html')
 
+@secciones.route('/api/guardar-asistencia', methods=['POST'])
+def guardar_asistencia():
+    data = request.get_json()
+    if not data:
+        return jsonify({'success': False, 'message': 'No se recibieron datos'}), 400
 
+    grado = data.get('grado')
+    asignatura = data.get('asignatura')
+    periodo = data.get('periodo')
+    estudiantes = data.get('estudiantes')
+    fecha = data.get('fecha')
 
+    if not all([grado, asignatura, periodo, estudiantes, fecha]):
+        return jsonify({'success': False, 'message': 'Datos incompletos'}), 400
+
+    db = get_db()
+    cursor = db.cursor()
+
+    try:
+        for est in estudiantes:
+            student_id = est.get('student_id') or est.get('id')
+
+            # 🔍 Validación: Comprobar si el estudiante existe
+            cursor.execute("SELECT COUNT(*) AS count FROM estudiantes WHERE student_id = %s", (student_id,))
+            result = cursor.fetchone()
+            if not result or result['count'] == 0:
+                return jsonify({'success': False, 'message': f'El estudiante {student_id} no existe'}), 400
+
+            fallas = est.get('fallas', 0)
+            observacion = est.get('observacion', '').strip()
+
+            status = 'presente' if fallas == 0 else 'ausente'
+            if observacion:
+                status = 'justificado'
+
+            query = """
+                INSERT INTO asistencias (student_id, subject_id, date, status, notes)
+                VALUES (%s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    status = VALUES(status),
+                    notes = VALUES(notes)
+            """
+            params = (student_id, asignatura, fecha, status, observacion)
+            cursor.execute(query, params)
+
+        db.commit()
+        return jsonify({'success': True, 'message': 'Asistencia guardada correctamente'})
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({'success': False, 'message': f'Error al guardar: {str(e)}'}), 500
 
 @secciones.route('/tareas', methods=['GET', 'POST'])
 def tareas():

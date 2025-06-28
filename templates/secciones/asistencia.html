@@ -1,5 +1,5 @@
 {% extends "main.html" %}
-
+{% include "components/modal.html" %}
 {% from "macros/header-block.j2" import header_block %}
 {% from "macros/buttons.j2" import btn %}
 
@@ -14,7 +14,7 @@
     <div class="assistance" id="asistencia">
 
         {{ header_block('app_registration', 'Asistencia', 'var(--color-orange-card)') }}
-        <form  action="" method="post" id="asistencia-form">
+        <form action="" method="post" id="asistencia-form">
             <div class="assistance__group">
                 <div class="group">
                     <label for="grados-select">Grupo:</label>
@@ -23,20 +23,15 @@
                         <option value="6">Grado Sexto </option>
                         <option value="7">Grado Séptimo</option>
                         <option value="8">Grado Octavo</option>
-                        <option value="8">Grado Noveno</option>
+                        <option value="9">Grado Noveno</option>
                         <option value="10">Grado Décimo</option>
                         <option value="11">Grado Undécimo</option>
                     </select>
                 </div>
                 <div class="subjects">
                     <label for="grados-select">Asignatura:</label>
-                    <select id="asignatura-select" name="grados" aria-label="Selecciona una asignatura">
-                        <option value="">Seleccionar</option>
-                        <option value="1">Matemáticas</option>
-                        <option value="2">Castellano</option>
-                        <option value="3">Tecnología</option>
-                        <option value="4">Ética</option>
-                        <option value="5">Artistica</option>
+                    <select id="asignatura-select" name="grados" aria-label="Selecciona una asignatura">                        
+
                     </select>
                 </div>
                 <div class="period">
@@ -51,22 +46,18 @@
                 </div>
             </div>
             <div class="assistance__buttons">
-                {{ btn(icono="add", texto="Cargar", color="load") }}
-                {{ btn(icono="save", texto="Guardar", color="save") }}
-                {{ btn(icono="delete", texto="Eliminar", color="delete") }}
-                {{ btn(icono="eye_tracking ", texto="Ver Notas", color="view") }}
+                {{ btn(icono="add", texto="Cargar", color="load", id="btn-cargar") }}
+                {{ btn(icono="save", texto="Guardar", color="save", id="btn-save") }}
+
             </div>
             <div class="assistance__notes">
                 <table class="table__edit">
                     <thead>
                         <tr>
+                            <th class="table__name">No</th>
                             <th class="table__name">Apellidos</th>
                             <th class="table__name">Nombres</th>
-                            <th class="table__notes">Ausente</th>
-                            <th class="table__notes">Retardo</th>
-                            <th class="table__notes">Fuga</th>
-                            <th class="table__notes">Excusa</th>
-                            <th class="table__notes">Total</th>
+                            <th class="table__notes">Fallas</th>
                             <th class="table__name">Observación</th>
                         </tr>
                     </thead>
@@ -78,108 +69,526 @@
         </form>
     </div>
 </div>
-
 {% block extra_js %}
 <script>
+    // === 1. Función confirmLogout()
     function confirmLogout() {
-        window.location.href = "{{ url_for('auth.logout') }}";
+        showModal(
+            "Cerrar Sesión",
+            "¿Estás seguro de que deseas cerrar sesión?",
+            () => window.location.href = "{{ url_for('auth.logout') }}",
+            true
+        );
     }
 
-    function showModal(title, message, action) {
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalMessage").innerText = message;
+    // === 2. Función showModal()
+    function showModal(title, message, action, showCancel = true) {
+        const modal = document.getElementById("confirmModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalMessage = document.getElementById("modalMessage");
+        const btnCancel = document.getElementById("modalCancel");
+        const btnConfirm = document.getElementById("modalConfirm");
+
+        if (!modal || !modalTitle || !modalMessage || !btnCancel || !btnConfirm) {
+            console.error("No se encontró uno o más elementos del modal");
+            alert(`Error: ${message}`);
+            return;
+        }
+
+        modalTitle.innerText = title;
+        modalMessage.innerText = message;
         window.modalAction = action;
 
-        const modal = document.getElementById("confirmModal");
+        btnCancel.style.display = showCancel ? "inline-flex" : "none";
+        btnConfirm.innerHTML = `<i class="material-symbols-outlined">check_circle</i> Confirmar`;
+        btnCancel.innerHTML = `<i class="material-symbols-outlined">cancel</i> Cancelar`;
+
         modal.style.display = "flex";
     }
-    document.getElementById("modalConfirm").addEventListener("click", function () {
-        if (typeof modalAction === 'function') {
-            modalAction();
+
+    // === 3. Variables globales
+    var containerTabla = document.getElementById("tabla-cuerpo");
+
+    // === 4. Mostrar alerta temporal
+    function mostrarAlerta(mensaje, tipo = "danger") {
+        const alertaDiv = document.getElementById("alerta");
+        if (!alertaDiv) return;
+
+        alertaDiv.textContent = mensaje;
+        alertaDiv.className = `alerta ${tipo}`;
+        alertaDiv.classList.remove("ocultar");
+        alertaDiv.style.display = "block";
+
+        setTimeout(() => {
+            alertaDiv.classList.add("ocultar");
+            setTimeout(() => {
+                alertaDiv.style.display = "none";
+            }, 300);
+        }, 3000);
+    }
+
+    // === 5. Validación de campos vacíos
+    function validarCampos() {
+        const grupo = document.getElementById("grados-select");
+        const asignatura = document.getElementById("asignatura-select");
+        const periodo = document.getElementById("periodos-select");
+        let mensajes = [];
+
+        if (!grupo.value) {
+            grupo.classList.add("input-error");
+            mensajes.push("Grupo");
+        } else {
+            grupo.classList.remove("input-error");
         }
-        document.getElementById("confirmModal").style.display = "none";
-    });
 
-    document.getElementById("modalCancel").addEventListener("click", function () {
-        document.getElementById("confirmModal").style.display = "none";
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById("asistencia-form");
+        if (!asignatura.value) {
+            asignatura.classList.add("input-error");
+            mensajes.push("Asignatura");
+        } else {
+            asignatura.classList.remove("input-error");
+        }
+
+        if (!periodo.value) {
+            periodo.classList.add("input-error");
+            mensajes.push("Período");
+        } else {
+            periodo.classList.remove("input-error");
+        }
+
+        if (mensajes.length > 0) {
+            showModal(
+                "",
+                "Por favor complete los siguientes campos obligatorios:\n" + mensajes.join("\n"),
+                null,
+                false
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    // === Función para limpiar tabla
+    function limpiarTabla() {
+        const tablaAsistencia = document.getElementById("tabla-asistencia");
+        if (tablaAsistencia) {
+            tablaAsistencia.innerHTML = "";
+        }
+    }
+
+    // === Función para resetear formulario
+    function resetearFormulario() {
         const gradoSelect = document.getElementById("grados-select");
-        const asignaturaSelect = document.getElementById("asignaturas-select");
-        const tbody = document.getElementById("tabla-asistencia");
-
-        // Cargar alumnos cuando se envíe el formulario
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-            const grupo = gradoSelect.value;
-            const asignatura = asignaturaSelect.value;
-
-            fetch(`/cargar-alumnos?grupo=${grupo}`)
-                .then(res => res.json())
-                .then(alumnos => {
-                    tbody.innerHTML = "";
-                    alumnos.forEach(alumno => {
-                        const tr = document.createElement("tr");
-                        tr.innerHTML = `
-                        <td>${alumno.apellido}</td>
-                        <td>${alumno.nombre}</td>
-                        
-                        <td><input type="checkbox" class="attendance-check" data-id="${alumno.student_id}" data-type="ausente"></td>
-                        <td><input type="checkbox" class="attendance-check" data-id="${alumno.student_id}" data-type="tarde"></td>
-                        <td><input type="checkbox" class="attendance-check" data-id="${alumno.student_id}" data-type="fuga"></td>
-                        <td><input type="checkbox" class="attendance-check" data-id="${alumno.student_id}" data-type="justificado"></td>
-                        <td><input type="text" class="observation-input" data-id="${alumno.student_id}" placeholder="Observación..."></td>
-                    `;
-                        tbody.appendChild(tr);
-                    });
-                });
+        const asignaturaSelect = document.getElementById("asignatura-select");
+        const periodoSelect = document.getElementById("periodos-select");
+        
+        if (gradoSelect) gradoSelect.value = "";
+        if (asignaturaSelect) asignaturaSelect.value = "";
+        if (periodoSelect) periodoSelect.value = "";
+        
+        limpiarTabla();
+        
+        // Remover clases de error
+        document.querySelectorAll('.input-error').forEach(el => {
+            el.classList.remove('input-error');
         });
+    }
 
-        // Manejar cambios de checkboxes
-        tbody.addEventListener("change", function (e) {
-            if (e.target.classList.contains("attendance-check")) {
-                const studentId = e.target.getAttribute("data-id");
-                const type = e.target.getAttribute("data-type");
+    // === Función para validar datos de estudiante
+    function validarDatosEstudiante(fallas, observacion) {
+        const fallasNum = parseInt(fallas);
+        
+        if (isNaN(fallasNum) || fallasNum < 0) {
+            return { valido: false, mensaje: "Las fallas deben ser un número mayor o igual a 0" };
+        }
+        
+        if (fallasNum > 50) {
+            return { valido: false, mensaje: "El número de fallas parece excesivo. Verifique el dato." };
+        }
+        
+        if (observacion && observacion.length > 500) {
+            return { valido: false, mensaje: "La observación es demasiado larga (máximo 500 caracteres)" };
+        }
+        
+        return { valido: true };
+    }
 
-                // Desactivar otros checkboxes del mismo estudiante
-                const allChecks = document.querySelectorAll(`.attendance-check[data-id='${studentId}']`);
-                allChecks.forEach(cb => {
-                    if (cb !== e.target) cb.checked = false;
-                });
+    // === 6. Eventos del modal (Aceptar / Cancelar) y configuración inicial
+    document.addEventListener("DOMContentLoaded", function () {
+        const modalConfirm = document.getElementById("modalConfirm");
+        const modalCancel = document.getElementById("modalCancel");
+        const btnCargar = document.getElementById("btn-cargar");
+        const btnGuardar = document.getElementById("btn-save");
+        const btnReset = document.getElementById("btn-reset");
+        const gradoSelect = document.getElementById("grados-select");
+        const asignaturaSelect = document.getElementById("asignatura-select");
+        const periodoSelect = document.getElementById("periodos-select");
+        const tablaAsistencia = document.getElementById("tabla-asistencia");
 
-                // Guardar estado actual
-                window.attendanceData = window.attendanceData || [];
-                const index = window.attendanceData.findIndex(d => d.student_id == studentId);
+        // === 7. Eventos del modal ===
+        if (modalConfirm) {
+            modalConfirm.addEventListener("click", function () {
+                if (typeof window.modalAction === 'function') window.modalAction();
+                document.getElementById("confirmModal").style.display = "none";
+            });
+        }
 
-                const payload = {
-                    student_id: parseInt(studentId),
-                    subject_id: parseInt(document.getElementById("asignaturas-select").value),
-                    status: type
-                };
+        if (modalCancel) {
+            modalCancel.addEventListener("click", function () {
+                document.getElementById("confirmModal").style.display = "none";
+            });
+        }
 
-                if (index > -1) {
-                    window.attendanceData[index] = payload;
-                } else {
-                    window.attendanceData.push(payload);
+        // === Cerrar modal con ESC ===
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                const modal = document.getElementById("confirmModal");
+                if (modal && modal.style.display === "flex") {
+                    modal.style.display = "none";
                 }
             }
         });
 
-        // Enviar datos al hacer clic en "Guardar"
-        document.querySelector(".btn--save").addEventListener("click", function () {
-            fetch("/guardar-asistencia", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(window.attendanceData || [])
-            }).then(res => res.json()).then(data => {
-                alert("Asistencia guardada correctamente.");
+        // === 8. Validación desde Flask 
+        const urlParams = new URLSearchParams(window.location.search);
+        const camposVacios = urlParams.get('campos_vacios');
+        if (camposVacios) {
+            const listaCampos = camposVacios.split(',');
+            listaCampos.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) input.classList.add('input-error');
+            });
+        }
+
+        // === 9. Limpiar error al escribir ===
+        document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
+            input.addEventListener('input', function () {
+                this.classList.remove('input-error');
             });
         });
+
+        // === Cargar asignaturas al iniciar ===
+        async function cargarAsignaturas() {
+            try {
+                mostrarCargando(asignaturaSelect, true);
+                const res = await fetch("/secciones/api/asignaturas");
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+
+                const data = await res.json();
+                asignaturaSelect.innerHTML = '<option value="">Seleccionar asignatura</option>';
+
+                if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+                    data.data.forEach(asig => {
+                        const option = new Option(asig.nombre, asig.id);
+                        asignaturaSelect.add(option);
+                    });
+                } else {
+                    const option = new Option("No hay asignaturas disponibles", "");
+                    option.disabled = true;
+                    asignaturaSelect.add(option);
+                }
+            } catch (error) {
+                console.error("Error al cargar asignaturas:", error);
+                mostrarAlerta("Error al cargar las asignaturas: " + error.message, "danger");
+                asignaturaSelect.innerHTML = '<option value="">Error al cargar</option>';
+            } finally {
+                mostrarCargando(asignaturaSelect, false);
+            }
+        }
+
+        // === Función auxiliar para mostrar estado de carga ===
+        function mostrarCargando(elemento, cargando) {
+            if (cargando) {
+                elemento.disabled = true;
+                elemento.innerHTML = '<option value="">Cargando...</option>';
+            } else {
+                elemento.disabled = false;
+            }
+        }
+
+        // === Cargar estudiantes ===
+        async function cargarEstudiantes() {
+            if (!validarCampos()) return;
+
+            try {
+                const grado = gradoSelect.value;
+                mostrarAlerta("Cargando estudiantes...", "info");
+                
+                const res = await fetch(`/secciones/api/estudiantes/${encodeURIComponent(grado)}`);
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+
+                const data = await res.json();
+                tablaAsistencia.innerHTML = "";
+
+                if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+                    data.data.forEach((estudiante, index) => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td data-apellidos="${estudiante.apellidos}">${estudiante.apellidos}</td>
+                            <td data-nombres="${estudiante.nombres}">${estudiante.nombres}</td>
+                            <td>
+                                <input type="number" 
+                                       name="fallas" 
+                                       value="0" 
+                                       min="0" 
+                                       max="50"
+                                       class="input-fallas"
+                                       data-estudiante-id="${estudiante.student_id}">
+                            </td>
+                            <td>
+                                <input type="text" 
+                                       name="observacion" 
+                                       class="input-observacion"
+                                       maxlength="500"
+                                       placeholder="Observaciones (opcional)"
+                                       data-estudiante-id="${estudiante.id || index}">
+                            </td>
+                        `;
+                        tablaAsistencia.appendChild(tr);
+                    });
+                    
+                    // Agregar event listeners para validación en tiempo real
+                    agregarValidacionTiempoReal();
+                    mostrarAlerta(`${data.data.length} estudiantes cargados correctamente`, "success");
+                } else {
+                    tablaAsistencia.innerHTML = `
+                        <tr>
+                            <td colspan='5' style='text-align: center; padding: 20px; color: #666;'>
+                                No hay estudiantes registrados en este grupo
+                            </td>
+                        </tr>
+                    `;
+                    mostrarAlerta("No se encontraron estudiantes en este grupo", "warning");
+                }
+            } catch (error) {
+                console.error("Error al cargar estudiantes:", error);
+                mostrarAlerta("Error al cargar los estudiantes: " + error.message, "danger");
+                tablaAsistencia.innerHTML = `
+                    <tr>
+                        <td colspan='5' style='text-align: center; padding: 20px; color: #d32f2f;'>
+                            Error al cargar los datos
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // === Agregar validación en tiempo real a inputs ===
+        function agregarValidacionTiempoReal() {
+            const inputsFallas = document.querySelectorAll('.input-fallas');
+            const inputsObservacion = document.querySelectorAll('.input-observacion');
+            
+            inputsFallas.forEach(input => {
+                input.addEventListener('input', function() {
+                    const valor = parseInt(this.value);
+                    if (isNaN(valor) || valor < 0) {
+                        this.classList.add('input-error');
+                    } else if (valor > 50) {
+                        this.classList.add('input-warning');
+                        this.classList.remove('input-error');
+                    } else {
+                        this.classList.remove('input-error', 'input-warning');
+                    }
+                });
+            });
+            
+            inputsObservacion.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value.length > 500) {
+                        this.classList.add('input-error');
+                    } else {
+                        this.classList.remove('input-error');
+                    }
+                });
+            });
+        }
+
+        // === Guardar asistencia ===
+        async function guardarAsistencia() {
+            if (!validarCampos()) return;
+
+            const estudiantes = [];
+            const filas = tablaAsistencia.querySelectorAll("tr");
+
+            if (filas.length === 0) {
+                mostrarAlerta("No hay estudiantes para guardar", "warning");
+                return;
+            }
+
+            let erroresValidacion = [];
+            
+            filas.forEach((tr, index) => {
+                const celdas = tr.cells;
+                if (celdas.length >= 5) {
+                    const apellidos = celdas[1].textContent.trim();
+                    const nombres = celdas[2].textContent.trim();
+                    const inputFallas = celdas[3].querySelector("input");
+                    const inputObservacion = celdas[4].querySelector("input");
+                    
+                    if (inputFallas && inputObservacion) {
+                        const fallas = inputFallas.value;
+                        const observacion = inputObservacion.value.trim();
+                        
+                        const validacion = validarDatosEstudiante(fallas, observacion);
+                        if (!validacion.valido) {
+                            erroresValidacion.push(`Fila ${index + 1} (${nombres} ${apellidos}): ${validacion.mensaje}`);
+                            return;
+                        }
+                        
+                        estudiantes.push({
+                            apellidos: apellidos,
+                            nombres: nombres,
+                            fallas: parseInt(fallas) || 0,
+                            observacion: observacion,
+                            student_id: inputFallas.dataset.estudianteId 
+                        });
+                    }
+                }
+            });
+
+            if (erroresValidacion.length > 0) {
+                showModal(
+                    "Errores de Validación",
+                    "Se encontraron los siguientes errores:\n\n• " + erroresValidacion.join("\n• "),
+                    null,
+                    false
+                );
+                return;
+            }
+
+            if (estudiantes.length === 0) {
+                mostrarAlerta("No hay datos válidos para guardar", "warning");
+                return;
+            }
+
+            // Confirmar antes de guardar
+            showModal(
+                "Confirmar Guardado",
+                `¿Está seguro de que desea guardar la asistencia de ${estudiantes.length} estudiantes?`,
+                async () => {
+                    try {
+                        mostrarAlerta("Guardando asistencia...", "info");
+                        
+                        const res = await fetch("/secciones/api/guardar-asistencia", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-Requested-With": "XMLHttpRequest"
+                            },
+                            body: JSON.stringify({
+                                grado: gradoSelect.value,
+                                asignatura: asignaturaSelect.value,
+                                periodo: periodoSelect.value,
+                                estudiantes: estudiantes,
+                                fecha: new Date().toISOString().split('T')[0]
+                            })
+                        });
+
+                        const data = await res.json();
+                        
+                        if (res.ok && data.success) {
+                            mostrarAlerta(`Asistencia guardada correctamente para ${estudiantes.length} estudiantes`, "success");
+                            
+                            // Opcional: limpiar formulario después de guardar
+                            // resetearFormulario();
+                        } else {
+                            throw new Error(data.message || `Error del servidor: ${res.status}`);
+                        }
+                    } catch (error) {
+                        console.error("Error al guardar asistencia:", error);
+                        mostrarAlerta("Error al guardar la asistencia: " + error.message, "danger");
+                    }
+                },
+                true
+            );
+        }
+
+        // === Event listeners para botones ===
+        if (btnCargar) {
+            btnCargar.addEventListener("click", cargarEstudiantes);
+        }
+
+        if (btnGuardar) {
+            btnGuardar.addEventListener("click", guardarAsistencia);
+        }
+
+        if (btnReset) {
+            btnReset.addEventListener("click", function() {
+                showModal(
+                    "Resetear Formulario",
+                    "¿Está seguro de que desea limpiar todos los datos del formulario?",
+                    resetearFormulario,
+                    true
+                );
+            });
+        }
+
+        // === Event listeners para selects ===
+        if (gradoSelect) {
+            gradoSelect.addEventListener("change", function() {
+                limpiarTabla();
+                this.classList.remove('input-error');
+            });
+        }
+
+        if (asignaturaSelect) {
+            asignaturaSelect.addEventListener("change", function() {
+                this.classList.remove('input-error');
+            });
+        }
+
+        if (periodoSelect) {
+            periodoSelect.addEventListener("change", function() {
+                this.classList.remove('input-error');
+            });
+        }
+
+        // === Inicialización ===
+        console.log("Sistema de asistencia inicializado correctamente");
+        
+        // Cargar asignaturas al iniciar
+        cargarAsignaturas();
+        
+        // Mostrar mensaje de bienvenida
+        setTimeout(() => {
+            mostrarAlerta("Sistema de asistencia listo para usar", "info");
+        }, 500);
     });
+
+    // === Funciones globales adicionales ===
+    
+    // Función para exportar datos (opcional)
+    window.exportarAsistencia = function() {
+        const tabla = document.getElementById("tabla-asistencia");
+        if (!tabla || tabla.children.length === 0) {
+            mostrarAlerta("No hay datos para exportar", "warning");
+            return;
+        }
+        
+        // Aquí se podría implementar la lógica de exportación
+        mostrarAlerta("Función de exportación no implementada", "info");
+    };
+    
+    // Función para imprimir (opcional)
+    window.imprimirAsistencia = function() {
+        const tabla = document.getElementById("tabla-asistencia");
+        if (!tabla || tabla.children.length === 0) {
+            mostrarAlerta("No hay datos para imprimir", "warning");
+            return;
+        }
+        
+        window.print();
+    };
+
 </script>
+
 {% endblock %}
 
 {% endblock %}
