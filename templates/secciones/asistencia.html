@@ -55,10 +55,10 @@
                     <thead>
                         <tr>
                             <th class="table__name">No</th>
-                            <th class="table__name">Apellidos</th>
-                            <th class="table__name">Nombres</th>
-                            <th class="table__notes">Fallas</th>
-                            <th class="table__name">Observación</th>
+                            <th class="table__name">APELLIDOS</th>
+                            <th class="table__name">NOMBRES</th>
+                            <th class="table__notes">FALLAS</th>
+                            <th class="table__name">OBSERVACIÓN</th>
                         </tr>
                     </thead>
                     <tbody id="tabla-asistencia">
@@ -278,7 +278,7 @@
                 }
 
                 const data = await res.json();
-                asignaturaSelect.innerHTML = '<option value="">Seleccionar asignatura</option>';
+                asignaturaSelect.innerHTML = '<option value="">Seleccionar</option>';
 
                 if (data.data && Array.isArray(data.data) && data.data.length > 0) {
                     data.data.forEach(asig => {
@@ -347,7 +347,7 @@
                                        name="observacion" 
                                        class="input-observacion"
                                        maxlength="500"
-                                       placeholder="Observaciones (opcional)"
+                                       placeholder="Observaciones"
                                        data-estudiante-id="${estudiante.id || index}">
                             </td>
                         `;

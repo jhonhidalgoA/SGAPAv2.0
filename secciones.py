@@ -64,7 +64,7 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 # ─────────────────────────────────────────────────────
 from utils.consecutivo import obtener_siguiente_consecutivo
 
-print(" Archivo routes.py cargado correctamente")
+
 
 secciones = Blueprint('secciones', __name__, url_prefix='/secciones')
 
@@ -1394,6 +1394,9 @@ def guardar_asistencia():
     except Exception as e:
         db.rollback()
         return jsonify({'success': False, 'message': f'Error al guardar: {str(e)}'}), 500
+
+
+
 
 @secciones.route('/tareas', methods=['GET', 'POST'])
 def tareas():
