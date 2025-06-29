@@ -11,7 +11,7 @@
 {% block content %}
 <div class="container">
   {{ header_block('picture_as_pdf', 'Reportes Académicos', 'var(--color-button-generate)') }}
-  
+
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
   {% for category, message in messages %}
@@ -30,7 +30,7 @@
           <option value="6">Grado Sexto </option>
           <option value="7">Grado Séptimo</option>
           <option value="8">Grado Octavo</option>
-          <option value="8">Grado Noveno</option>
+          <option value="9">Grado Noveno</option>
           <option value="10">Grado Décimo</option>
           <option value="11">Grado Undécimo</option>
         </select>
@@ -57,9 +57,8 @@
       <label for="report"> Tipo de Reporte:</label>
       <select id="report" name="report" aria-label="Selecciona un Reporte">
         <option value="">Seleccionar</option>
-        <option value="certificado">Boletin de Calificaciones</option>
-        <option value="boletin">Certificado Escolar</option>
-        
+        <option value="boletin">Boletin de Calificaciones</option>
+        <option value="certificado">Certificado Escolar</option>
       </select>
     </div>
     <div class="report__buttons">
@@ -69,8 +68,8 @@
   </div>
 </div>
 {% block extra_js %}
-<script> 
-  // === Función confirmLogout() ===
+<script>
+  // === Función confirmLogout()
   function confirmLogout() {
     showModal(
       "Cerrar Sesión",
@@ -79,7 +78,8 @@
       true
     );
   }
-  // === Función showModal() ===
+
+  // === Función showModal()
   function showModal(title, message, action, showCancel = true) {
     const modal = document.getElementById("confirmModal");
     const modalTitle = document.getElementById("modalTitle");
@@ -104,25 +104,8 @@
     modal.style.display = "flex";
   }
 
-  // === Eventos del modal (Aceptar / Cancelar)
+  // === Validación desde Flask
   document.addEventListener("DOMContentLoaded", () => {
-    const modalConfirm = document.getElementById("modalConfirm");
-    const modalCancel = document.getElementById("modalCancel");
-
-    if (modalConfirm) {
-      modalConfirm.addEventListener("click", () => {
-        if (typeof window.modalAction === 'function') window.modalAction();
-        document.getElementById("confirmModal").style.display = "none";
-      });
-    }
-
-    if (modalCancel) {
-      modalCancel.addEventListener("click", () => {
-        document.getElementById("confirmModal").style.display = "none";
-      });
-    }
-
-    // === Validación desde Flask
     const urlParams = new URLSearchParams(window.location.search);
     const camposVacios = urlParams.get('campos_vacios');
     if (camposVacios) {
@@ -133,13 +116,23 @@
       });
     }
 
-    // Limpiar error al escribir
+    // Limpiar error al escribir o cambiar cualquier campo
     document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
-      input.addEventListener('input', () => input.classList.remove('input-error'));
+      input.addEventListener('input', () => {
+        if (input.classList.contains('input-error')) {
+          input.classList.remove('input-error');
+        }
+      });
+
+      input.addEventListener('change', () => {
+        if (input.classList.contains('input-error')) {
+          input.classList.remove('input-error');
+        }
+      });
     });
   });
 
-  // === Validación campos obligatorios ===
+  // === Validación campos obligatorios
   function clearPreviousErrors() {
     document.querySelectorAll(".input-error").forEach(input => {
       input.classList.remove("input-error");
@@ -156,17 +149,18 @@
       }
     });
     return missing;
-  }  
-  
-  // === Limpiar formulario ===
+  }
+
+  // === Limpiar formulario
   function limpiarFormulario() {
     const selects = document.querySelectorAll("select");
     selects.forEach(select => {
-      select.selectedIndex = 0; 
+      select.selectedIndex = 0;
       if (select.classList.contains("input-error")) {
         select.classList.remove("input-error");
       }
-    });    
+    });
+
     const textareas = document.querySelectorAll("textarea");
     textareas.forEach(ta => ta.value = "");
 
@@ -179,13 +173,15 @@
     });
   }
 
-  // === Validacion Certificado ===
+  // === Lógica principal del formulario de reportes
   document.addEventListener("DOMContentLoaded", function () {
     const gradosSelect = document.getElementById('grados-select');
     const estudiantesSelect = document.getElementById('name-student');
     const reporteSelect = document.getElementById('report');
+    const periodoSelect = document.getElementById('periodos-select');
     const btnGenerar = document.getElementById('btn-generar-word');
 
+    // Cargar estudiantes cuando cambie el grado
     gradosSelect.addEventListener('change', async function () {
       const grupo = this.value;
       if (!grupo) {
@@ -215,24 +211,37 @@
         });
 
         estudiantesSelect.disabled = false;
-
       } catch (error) {
         console.error("❌ Error al cargar estudiantes:", error);
         estudiantesSelect.innerHTML = '<option>Error al cargar</option>';
       }
     });
 
+    // === Validar formulario antes de generar
     function validarFormulario() {
       const grupo = gradosSelect.value;
       const estudiante = estudiantesSelect.value;
       const tipoReporte = reporteSelect.value;
-      btnGenerar.disabled = !(grupo && estudiante && tipoReporte === 'boletin');
+
+      // Lista de campos obligatorios
+      const REQUIRED_FIELDS = [
+        { id: "grados-select", name: "Grupo" },
+        { id: "name-student", name: "Estudiante" },
+        { id: "report", name: "Tipo de Reporte" }
+      ];
+
+      clearPreviousErrors();
+      const missingFields = validateRequiredFields(REQUIRED_FIELDS);
+
+      btnGenerar.disabled = missingFields.length > 0;
     }
 
+    // Escuchar cambios en campos obligatorios
     [gradosSelect, estudiantesSelect, reporteSelect].forEach(el => {
       el.addEventListener('change', validarFormulario);
     });
 
+    // Acción del botón Generar
     btnGenerar.addEventListener('click', () => {
       const REQUIRED_FIELDS = [
         { id: "grados-select", name: "Grupo" },
@@ -256,13 +265,34 @@
       }
     });
 
+    // === Generar reporte (boletín o certificado)
     async function generateReport() {
       const grupo = gradosSelect.value;
       const estudiante_id = estudiantesSelect.value;
-      const periodo = document.getElementById('periodos-select').value || '1';
+      const tipo_reporte = reporteSelect.value;
+      const periodo = periodoSelect.value || '1';
+
+      if (!grupo || !estudiante_id || !tipo_reporte) {
+        showModal("⚠️ Error", "Faltan campos obligatorios", null, false);
+        return;
+      }
+
+      let url = '';
+      let fileName = '';
+
+      if (tipo_reporte === 'boletin') {
+        url = '/secciones/generar-boletin-word';
+        fileName = `Boletin_${estudiante_id}_P${periodo}.docx`;
+      } else if (tipo_reporte === 'certificado') {
+        url = '/secciones/generar-certificado-word';
+        fileName = `Certificado_${estudiante_id}.docx`;
+      } else {
+        showModal("⚠️ Error", "Tipo de reporte no válido", null, false);
+        return;
+      }
 
       try {
-        const response = await fetch('/secciones/generar-boletin-word', {
+        const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ grupo, estudiante_id, periodo })
@@ -273,7 +303,7 @@
         const blob = await response.blob();
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
-        link.download = `Certificado_${estudiante_id}.docx`;
+        link.download = fileName;
         link.click();
 
       } catch (error) {
@@ -282,6 +312,7 @@
     }
   });
 </script>
+
 
 {% endblock %}
 {% endblock %}

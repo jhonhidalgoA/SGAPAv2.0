@@ -61,7 +61,7 @@ body {
   
 .report__buttons {
   display: flex;
-  justify-content: start;
+  justify-content: center;
   margin: 50px 0 20px 40px;
   gap:50px;
 }

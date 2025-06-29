@@ -1228,8 +1228,8 @@ def editar_consecutivo(id):
 def reportes():
     return render_template('secciones/reportes.html')
 
-@secciones.route('/generar-boletin-word', methods=['POST'])
-def generar_boletin_word():
+@secciones.route('/generar-certificado-word', methods=['POST'])
+def generar_certificado_word():
     data = request.get_json()
     grupo = data.get('grupo')
     estudiante_id = data.get('estudiante_id')
@@ -1330,10 +1330,199 @@ def generar_boletin_word():
         return response
 
     except Exception as e:
+        print(f"[ERROR] {str(e)}")
         return jsonify({
             "error": "Error interno del servidor",
             "details": str(e)
         }), 500
+
+@secciones.route('/generar-boletin-word', methods=['POST'])
+def generar_boletin_word():
+    data = request.get_json()
+    grupo = data.get('grupo')
+    estudiante_id = data.get('estudiante_id')
+    periodo = data.get('periodo', '1')
+
+    if not grupo or not estudiante_id:
+        return jsonify({"error": "Faltan parámetros obligatorios"}), 400
+
+    try:
+        db = get_db()
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+
+        # Obtener datos del estudiante
+        cursor.execute("""
+            SELECT 
+                e.student_id,
+                e.full_name,
+                e.document_number,
+                m.grade_id
+            FROM estudiantes e
+            JOIN matricula_estudiantes m ON e.student_id = m.student_id
+            WHERE e.student_id = %s AND m.grade_id = %s
+        """, (estudiante_id, grupo))
+        estudiante = cursor.fetchone()
+
+        if not estudiante:
+            return jsonify({"error": "Estudiante no encontrado en este grado"}), 404
+
+        # Cargar documento Word
+        try:
+            doc = Document("Boletin SGAPA.docx")
+        except Exception as e:
+            return jsonify({
+                "error": "No se encontró la plantilla Word",
+                "details": str(e)
+            }), 500
+
+        # Función para reemplazar texto con formato
+        def replace_with_format(paragraph, placeholder, text, bold=False, uppercase=False):
+            if placeholder in paragraph.text:
+                before, after = paragraph.text.split(placeholder, 1)
+                paragraph.clear()
+                if before:
+                    paragraph.add_run(before)
+                processed_text = text.upper() if uppercase else text
+                run = paragraph.add_run(processed_text)
+                run.bold = bold
+                if after:
+                    paragraph.add_run(after)
+
+        # === Obtener fecha actual ===
+        fecha_actual = datetime.now()
+        dia_actual = str(fecha_actual.day)
+
+        MESES_ESPANOL = {
+            "January": "Enero", "February": "Febrero", "March": "Marzo",
+            "April": "Abril", "May": "Mayo", "June": "Junio",
+            "July": "Julio", "August": "Agosto", "September": "Septiembre",
+            "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
+        }
+
+        mes_actual = fecha_actual.strftime("%B")
+        mes_actual_espanol = MESES_ESPANOL.get(mes_actual, mes_actual)
+        año_actual = str(fecha_actual.year)
+
+        # Obtener notas finales
+        cursor.execute("""
+            SELECT v.nota_final, s.name AS asignatura
+            FROM valor_notas v
+            JOIN asignaturas s ON v.subject_id = s.subject_id
+            WHERE v.grade_id = %s AND v.student_id = %s AND v.period_id = %s
+        """, (grupo, estudiante_id, periodo))
+        notas = cursor.fetchall()
+
+        # Obtener intensidad horaria SOLO de las asignaturas con notas (CORREGIDO)
+        cursor.execute("""
+            SELECT DISTINCT s.name, s.hours_per_week 
+            FROM asignaturas s
+            JOIN valor_notas v ON s.subject_id = v.subject_id
+            WHERE v.grade_id = %s AND v.student_id = %s AND v.period_id = %s
+        """, (grupo, estudiante_id, periodo))
+        intensidades = cursor.fetchall()
+
+        # Función para limpiar nombres de asignaturas para placeholders
+        def clean_name_for_placeholder(name):
+            import re
+            # Remover tildes y caracteres especiales, convertir a minúsculas
+            name = name.lower()
+            name = name.replace('á', 'a').replace('é', 'e').replace('í', 'i')
+            name = name.replace('ó', 'o').replace('ú', 'u').replace('ñ', 'n')
+            # Reemplazar espacios y caracteres especiales con guión bajo
+            name = re.sub(r'[^a-z0-9]', '_', name)
+            # Remover guiones bajos múltiples
+            name = re.sub(r'_+', '_', name)
+            # Remover guiones bajos al inicio y final
+            name = name.strip('_')
+            return name
+
+        # Crear diccionarios de reemplazo
+        nota_dict = {}
+        intensidad_dict = {}
+
+        # Mapear notas con nombres limpios
+        for nota in notas:
+            clean_name = clean_name_for_placeholder(nota['asignatura'])
+            placeholder = f"{{nota_{clean_name}}}"
+            nota_dict[placeholder] = str(nota['nota_final']) if nota['nota_final'] is not None else "0.0"
+
+        # Mapear intensidades horarias con nombres limpios
+        for intensidad in intensidades:
+            clean_name = clean_name_for_placeholder(intensidad['name'])
+            placeholder = f"{{intensidad_{clean_name}}}"
+            intensidad_dict[placeholder] = str(intensidad['hours_per_week']) if intensidad['hours_per_week'] is not None else "0"
+
+        # Crear diccionario completo de reemplazos
+        all_replacements = {
+            "{nombre}": estudiante['full_name'],
+            "{documento}": str(estudiante['document_number']),
+            "{grado}": str(grupo),
+            "{periodo}": str(periodo),
+            "{día}": dia_actual,
+            "{mes}": mes_actual_espanol,
+            "{año}": año_actual
+        }
+
+        # Agregar notas e intensidades
+        all_replacements.update(nota_dict)
+        all_replacements.update(intensidad_dict)
+
+        # Reemplazar en párrafos
+        for paragraph in doc.paragraphs:
+            original_text = paragraph.text
+            for placeholder, value in all_replacements.items():
+                if placeholder in original_text:
+                    # Para datos importantes usar formato especial
+                    if placeholder == "{nombre}":
+                        replace_with_format(paragraph, placeholder, value, bold=True, uppercase=True)
+                    else:
+                        replace_with_format(paragraph, placeholder, value)
+                    break  
+
+        # Reemplazar en tablas
+        for table in doc.tables:
+            for row in table.rows:
+                for cell in row.cells:
+                    for paragraph in cell.paragraphs:
+                        original_text = paragraph.text
+                        for placeholder, value in all_replacements.items():
+                            if placeholder in original_text:
+                                if placeholder == "{nombre}":
+                                    replace_with_format(paragraph, placeholder, value, bold=True, uppercase=True)
+                                else:
+                                    replace_with_format(paragraph, placeholder, value)
+                                break
+
+        # Guardar archivo temporal
+        archivo_temporal = f"Boletin_{estudiante_id}_{periodo}.docx"
+        doc.save(archivo_temporal)
+
+        # Crear nombre de descarga limpio
+        nombre_limpio = estudiante['full_name'].replace(' ', '_').replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')
+        download_name = f"Boletin_{nombre_limpio}_Periodo_{periodo}.docx"
+
+        # Enviar como descarga
+        response = send_file(
+            archivo_temporal,
+            as_attachment=True,
+            download_name=download_name
+        )
+
+        # Eliminar archivo temporal después de enviarlo
+        try:
+            os.remove(archivo_temporal)
+        except Exception as e:
+            print(f"[ERROR] No se pudo eliminar el archivo temporal: {e}")
+
+        return response
+
+    except Exception as e:
+        print(f"[ERROR] Error en generar_boletin_word: {str(e)}")
+        return jsonify({
+            "error": "Error interno del servidor",
+            "details": str(e)
+        }), 500
+
 
 # ─────────────────────────────────────────────────────
 #  ASISTENCIA
@@ -1394,8 +1583,6 @@ def guardar_asistencia():
     except Exception as e:
         db.rollback()
         return jsonify({'success': False, 'message': f'Error al guardar: {str(e)}'}), 500
-
-
 
 
 @secciones.route('/tareas', methods=['GET', 'POST'])
