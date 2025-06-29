@@ -1302,7 +1302,7 @@ def generar_certificado_word():
         # Reemplazar los placeholders
         for paragraph in doc.paragraphs:
             replace_with_format(paragraph, '{nombre}', estudiante['full_name'], bold=True, uppercase=True)
-            replace_with_format(paragraph, '{documento}', str(estudiante['document_number']))
+            replace_with_format(paragraph, '{documento}', str(estudiante['document_number'], bold=True))
             replace_with_format(paragraph, '{grado}', str(grupo))
             replace_with_format(paragraph, '{jornada}', 'única')
             replace_with_format(paragraph, '{año}', año_actual)
@@ -1467,31 +1467,74 @@ def generar_boletin_word():
         all_replacements.update(nota_dict)
         all_replacements.update(intensidad_dict)
 
-        # Reemplazar en párrafos
+        # Reemplazar en párrafos (MÉTODO MEJORADO)
         for paragraph in doc.paragraphs:
-            original_text = paragraph.text
-            for placeholder, value in all_replacements.items():
-                if placeholder in original_text:
-                    # Para datos importantes usar formato especial
-                    if placeholder == "{nombre}":
-                        replace_with_format(paragraph, placeholder, value, bold=True, uppercase=True)
+            texto_actual = paragraph.text
+            
+            # Verificar si hay placeholders para reemplazar
+            placeholders_encontrados = [p for p in all_replacements.keys() if p in texto_actual]
+            
+            if placeholders_encontrados:
+                print(f"[DEBUG] Reemplazando en párrafo: '{texto_actual}'")
+                
+                # Reemplazar todos los placeholders en el texto
+                for placeholder, value in all_replacements.items():
+                    if placeholder in texto_actual:
+                        texto_actual = texto_actual.replace(placeholder, str(value))
+                
+                # Limpiar el párrafo y agregar el texto modificado
+                paragraph.clear()
+                
+                # Si contiene el nombre, aplicar formato especial
+                if "{nombre}" in paragraph.text or "nombre" in texto_actual.lower():
+                    # Buscar el nombre en el texto y aplicar formato
+                    if estudiante['full_name'].upper() in texto_actual.upper():
+                        partes = texto_actual.split(estudiante['full_name'])
+                        if len(partes) > 1:
+                            paragraph.add_run(partes[0])
+                            run = paragraph.add_run(estudiante['full_name'].upper())
+                            run.bold = True
+                            paragraph.add_run(''.join(partes[1:]))
+                        else:
+                            paragraph.add_run(texto_actual)
                     else:
-                        replace_with_format(paragraph, placeholder, value)
-                    break  
+                        paragraph.add_run(texto_actual)
+                else:
+                    paragraph.add_run(texto_actual)
+                
+                print(f"[DEBUG] Resultado: '{paragraph.text}'")
 
-        # Reemplazar en tablas
+        # Reemplazar en tablas (MÉTODO MEJORADO)
         for table in doc.tables:
             for row in table.rows:
                 for cell in row.cells:
                     for paragraph in cell.paragraphs:
-                        original_text = paragraph.text
-                        for placeholder, value in all_replacements.items():
-                            if placeholder in original_text:
-                                if placeholder == "{nombre}":
-                                    replace_with_format(paragraph, placeholder, value, bold=True, uppercase=True)
+                        texto_actual = paragraph.text
+                        
+                        # Verificar si hay placeholders para reemplazar
+                        placeholders_encontrados = [p for p in all_replacements.keys() if p in texto_actual]
+                        
+                        if placeholders_encontrados:
+                            # Reemplazar todos los placeholders en el texto
+                            for placeholder, value in all_replacements.items():
+                                if placeholder in texto_actual:
+                                    texto_actual = texto_actual.replace(placeholder, str(value))
+                            
+                            # Limpiar el párrafo y agregar el texto modificado
+                            paragraph.clear()
+                            
+                            # Si contiene el nombre, aplicar formato especial
+                            if estudiante['full_name'].upper() in texto_actual.upper():
+                                partes = texto_actual.split(estudiante['full_name'])
+                                if len(partes) > 1:
+                                    paragraph.add_run(partes[0])
+                                    run = paragraph.add_run(estudiante['full_name'].upper())
+                                    run.bold = True
+                                    paragraph.add_run(''.join(partes[1:]))
                                 else:
-                                    replace_with_format(paragraph, placeholder, value)
-                                break
+                                    paragraph.add_run(texto_actual)
+                            else:
+                                paragraph.add_run(texto_actual)
 
         # Guardar archivo temporal
         archivo_temporal = f"Boletin_{estudiante_id}_{periodo}.docx"
@@ -1522,7 +1565,6 @@ def generar_boletin_word():
             "error": "Error interno del servidor",
             "details": str(e)
         }), 500
-
 
 # ─────────────────────────────────────────────────────
 #  ASISTENCIA
