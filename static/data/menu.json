@@ -2,22 +2,22 @@
     "Lunes": {
         "Menú del día": [
             {
-                "nombre": "Arroz con Leche de Pato",
+                "nombre": "Arroz con Leche",
                 "img": "arroz.png"
             },
             {
-                "nombre": "Pollo Frito frisby",
+                "nombre": "Pollo Asado",
                 "img": "pollo.png"
             },
             {
-                "nombre": "Pan Artesanal",
-                "img": "pan.png"
+                "nombre": "Vegetales Salteados",
+                "img": "vegetales.png"
             }
         ],
         "Menú vegetariano": [
             {
                 "nombre": "Sopa de Caracol",
-                "img": "postre.png"
+                "img": "sopa.png"
             },
             {
                 "nombre": "Pan de la Casa",
@@ -31,7 +31,7 @@
             },
             {
                 "nombre": "Filete de Salmon",
-                "img": "bistec.png"
+                "img": "pescado.png"
             },
             {
                 "nombre": "Coliflor cocida",
@@ -60,8 +60,8 @@
                 "img": "cerdo.png"
             },
             {
-                "img": "vegetales_2.png",
-                "nombre": "Vegetales Salteados"
+                "nombre": "Vegetales en Salsa de Soya",
+                "img": "vegetales.png"
             }
         ],
         "Menú vegetariano": [

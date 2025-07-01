@@ -1270,7 +1270,7 @@ def generar_certificado_word():
                 paragraph.clear()
                 if before:
                     paragraph.add_run(before)
-                processed_text = text.upper() if uppercase else text
+                    processed_text = text.upper() if uppercase else text
                 run = paragraph.add_run(processed_text)
                 run.bold = bold
                 if after:
@@ -1302,7 +1302,7 @@ def generar_certificado_word():
         # Reemplazar los placeholders
         for paragraph in doc.paragraphs:
             replace_with_format(paragraph, '{nombre}', estudiante['full_name'], bold=True, uppercase=True)
-            replace_with_format(paragraph, '{documento}', str(estudiante['document_number'], bold=True))
+            replace_with_format(paragraph, '{documento}', str(estudiante['document_number']), bold=True, uppercase=True)
             replace_with_format(paragraph, '{grado}', str(grupo))
             replace_with_format(paragraph, '{jornada}', 'única')
             replace_with_format(paragraph, '{año}', año_actual)

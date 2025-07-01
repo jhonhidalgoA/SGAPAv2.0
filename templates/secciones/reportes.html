@@ -181,6 +181,37 @@
     const periodoSelect = document.getElementById('periodos-select');
     const btnGenerar = document.getElementById('btn-generar-word');
 
+    // *** AGREGAR ESTOS EVENT LISTENERS DEL MODAL ***
+    const modalConfirm = document.getElementById("modalConfirm");
+    const modalCancel = document.getElementById("modalCancel");
+    
+    // Event listener para el botón Confirmar del modal
+    if (modalConfirm) {
+        modalConfirm.addEventListener("click", function () {
+            if (typeof window.modalAction === 'function') {
+                window.modalAction();
+            }
+            document.getElementById("confirmModal").style.display = "none";
+        });
+    }
+    
+    // Event listener para el botón Cancelar del modal
+    if (modalCancel) {
+        modalCancel.addEventListener("click", function () {
+            document.getElementById("confirmModal").style.display = "none";
+        });
+    }
+    
+    // Event listener para cerrar modal con ESC
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            const modal = document.getElementById("confirmModal");
+            if (modal && modal.style.display === "flex") {
+                modal.style.display = "none";
+            }
+        }
+    });
+
     // Cargar estudiantes cuando cambie el grado
     gradosSelect.addEventListener('change', async function () {
       const grupo = this.value;

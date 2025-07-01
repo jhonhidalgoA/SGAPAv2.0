@@ -13,7 +13,7 @@
 <div class="container" id="tareas">
 
     {{ header_block('format_list_numbered', 'Asignación Tareas', '#34495E') }}
-    
+
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -30,22 +30,25 @@
                     <label for="grados-select">Grupo:</label>
                     <select id="grados-select" name="grados" aria-label="Selecciona un grado">
                         <option value="">Seleccionar</option>
-                        <option value="601">Grado 601</option>
-                        <option value="602">Grado 602</option>
-                        <option value="603">Grado 603</option>
-                        <option value="604">Grado 604</option>
-                        <option value="605">Grado 605</option>
+                        <option value="6">Grado Sexto </option>
+                        <option value="7">Grado Séptimo</option>
+                        <option value="8">Grado Octavo</option>
+                        <option value="9">Grado Noveno</option>
+                        <option value="10">Grado Décimo</option>
+                        <option value="11">Grado Undécimo</option>
                     </select>
                 </div>
                 <div class="subjects">
-                    <label for="grados-select">Asignatura:</label>
-                    <select id="grados-select" name="grados" aria-label="Selecciona una asignatura">
+                    <label for="asignatura-select">Asignatura:</label>
+                    <select id="asignatura-select" name="asignatura" aria-label="Selecciona una asignatura">
                         <option value="">Seleccionar</option>
                         <option value="matematicas">Matemáticas</option>
                         <option value="catellano">Castellano</option>
+                        <option value="sociales">Sociales</option>
+                        <option value="ciencia_naturales">Ciencias Naturales</option>
                         <option value="tecnologia">Tecnología</option>
-                        <option value="etica">Ética</option>
                         <option value="artistica">Artistica</option>
+                        <option value="Educacion_fisica">Educación Fisica</option>
                     </select>
                 </div>
                 <div class="date__star">
@@ -90,34 +93,391 @@
                 </div>
             </div>
             <div class="task__students-list">
+                <!-- Aquí se insertan los nombres dinámicamente -->
             </div>
         </div>
     </div>
 </div>
 {% block extra_js %}
 <script>
-    
+    // === 1. Función confirmLogout()
     function confirmLogout() {
-        window.location.href = "{{ url_for('auth.logout') }}";
+        showModal(
+            "Cerrar Sesión",
+            "¿Estás seguro de que deseas cerrar sesión?",
+            () => window.location.href = "{{ url_for('auth.logout') }}",
+            true
+        );
     }
 
-    function showModal(title, message, action) {
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalMessage").innerText = message;
+    // === 2. Función showModal()
+    function showModal(title, message, action, showCancel = true) {
+        const modal = document.getElementById("confirmModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalMessage = document.getElementById("modalMessage");
+        const btnCancel = document.getElementById("modalCancel");
+        const btnConfirm = document.getElementById("modalConfirm");
+
+        if (!modal || !modalTitle || !modalMessage || !btnCancel || !btnConfirm) {
+            console.error("No se encontró uno o más elementos del modal");
+            alert(`Error: ${message}`);
+            return;
+        }
+
+        modalTitle.innerText = title;
+        modalMessage.innerText = message;
         window.modalAction = action;
 
-        const modal = document.getElementById("confirmModal");
+        btnCancel.style.display = showCancel ? "inline-flex" : "none";
+        btnConfirm.innerHTML = `<i class="material-symbols-outlined">check_circle</i> Confirmar`;
+        btnCancel.innerHTML = `<i class="material-symbols-outlined">cancel</i> Cancelar`;
+
         modal.style.display = "flex";
     }
-    document.getElementById("modalConfirm").addEventListener("click", function () {
-        if (typeof modalAction === 'function') {
-            modalAction();
-        }
-        document.getElementById("confirmModal").style.display = "none";
-    });
 
-    document.getElementById("modalCancel").addEventListener("click", function () {
-        document.getElementById("confirmModal").style.display = "none";
+    // === 3. Mostrar alerta temporal
+    function mostrarAlerta(mensaje, tipo = "danger") {
+        const alertaDiv = document.getElementById("alerta");
+        if (!alertaDiv) return;
+
+        alertaDiv.textContent = mensaje;
+        alertaDiv.className = `alerta ${tipo}`;
+        alertaDiv.classList.remove("ocultar");
+        alertaDiv.style.display = "block";
+
+        setTimeout(() => {
+            alertaDiv.classList.add("ocultar");
+            setTimeout(() => {
+                alertaDiv.style.display = "none";
+            }, 300);
+        }, 3000);
+    }
+
+    // === 4. Validación de campos obligatorios
+    function validarCampos() {
+        const grupo = document.getElementById("grados-select");
+        const asignatura = document.getElementById("asignatura-select");
+        const fechaInicio = document.getElementById("dateStar");
+        const fechaFin = document.getElementById("dateEnd");
+        const tema = document.getElementById("tema");
+        const descripcion = document.getElementById("description");
+        
+        let mensajes = [];
+
+        // Limpiar errores previos
+        document.querySelectorAll('.input-error').forEach(el => {
+            el.classList.remove('input-error');
+        });
+
+        if (!grupo.value) {
+            grupo.classList.add("input-error");
+            mensajes.push("Grupo");
+        }
+
+        if (!asignatura.value) {
+            asignatura.classList.add("input-error");
+            mensajes.push("Asignatura");
+        }
+
+        if (!fechaInicio.value) {
+            fechaInicio.classList.add("input-error");
+            mensajes.push("Fecha de inicio");
+        }
+
+        if (!fechaFin.value) {
+            fechaFin.classList.add("input-error");
+            mensajes.push("Fecha de fin");
+        }
+
+        if (!tema.value.trim()) {
+            tema.classList.add("input-error");
+            mensajes.push("Tema");
+        }
+
+        if (!descripcion.value.trim()) {
+            descripcion.classList.add("input-error");
+            mensajes.push("Descripción");
+        }
+
+        // Validar que la fecha de fin sea posterior a la fecha de inicio
+        if (fechaInicio.value && fechaFin.value) {
+            const inicio = new Date(fechaInicio.value);
+            const fin = new Date(fechaFin.value);
+            
+            if (fin <= inicio) {
+                fechaFin.classList.add("input-error");
+                mensajes.push("La fecha de fin debe ser posterior a la fecha de inicio");
+            }
+        }
+
+        if (mensajes.length > 0) {
+            showModal(
+                "Campos Obligatorios",
+                "Por favor complete los siguientes campos:\n\n• " + mensajes.join("\n• "),
+                null,
+                false
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    // === 5. Cargar estudiantes dinámicamente
+    async function cargarEstudiantes() {
+        const grupoSelect = document.getElementById("grados-select");
+        const listaEstudiantes = document.querySelector(".task__students-list");
+        
+        if (!grupoSelect.value) {
+            listaEstudiantes.innerHTML = '<p style="text-align: center; color: #666;">Selecciona un grupo para ver los estudiantes</p>';
+            return;
+        }
+
+        try {
+            listaEstudiantes.innerHTML = '<p style="text-align: center; color: #666;">Cargando estudiantes...</p>';
+            
+            const res = await fetch(`/secciones/api/estudiantes/${encodeURIComponent(grupoSelect.value)}`);
+            
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            const data = await res.json();
+            listaEstudiantes.innerHTML = "";
+
+            if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+                data.data.forEach((estudiante, index) => {
+                    const div = document.createElement("div");
+                    div.className = "student-item";
+                    div.innerHTML = `
+                        <label for="student-${estudiante.student_id}">
+                            ${estudiante.nombres} ${estudiante.apellidos}
+                        </label>
+                        <input type="checkbox" 
+                               name="students" 
+                               id="student-${estudiante.student_id}" 
+                               value="${estudiante.student_id}"
+                               class="student-checkbox">
+                    `;
+                    listaEstudiantes.appendChild(div);
+                });
+                
+                // Actualizar contador de estudiantes
+                actualizarContadorEstudiantes();
+                
+            } else {
+                listaEstudiantes.innerHTML = '<p style="text-align: center; color: #666;">No hay estudiantes registrados en este grupo</p>';
+            }
+        } catch (error) {
+            console.error("Error al cargar estudiantes:", error);
+            listaEstudiantes.innerHTML = '<p style="text-align: center; color: #d32f2f;">Error al cargar los estudiantes</p>';
+        }
+    }
+
+    // === 6. Manejar selección "Todos"
+    function manejarSeleccionTodos() {
+        const checkboxTodos = document.getElementById("students");
+        const checkboxesEstudiantes = document.querySelectorAll(".student-checkbox");
+        
+        checkboxesEstudiantes.forEach(checkbox => {
+            checkbox.checked = checkboxTodos.checked;
+        });
+        
+        actualizarContadorEstudiantes();
+    }
+
+    // === 7. Actualizar contador de estudiantes seleccionados
+    function actualizarContadorEstudiantes() {
+        const checkboxesEstudiantes = document.querySelectorAll(".student-checkbox");
+        const checkboxTodos = document.getElementById("students");
+        const seleccionados = Array.from(checkboxesEstudiantes).filter(cb => cb.checked);
+        
+        // Actualizar el checkbox "Todos"
+        if (seleccionados.length === checkboxesEstudiantes.length && checkboxesEstudiantes.length > 0) {
+            checkboxTodos.checked = true;
+        } else {
+            checkboxTodos.checked = false;
+        }
+        
+        // Actualizar texto del título
+        const titulo = document.querySelector(".task__students-title h3");
+        if (titulo) {
+            titulo.textContent = `Seleccionar Estudiantes (${seleccionados.length}/${checkboxesEstudiantes.length})`;
+        }
+    }
+
+    // === 8. Enviar tarea
+    async function enviarTarea() {
+        if (!validarCampos()) return;
+
+        const estudiantesSeleccionados = Array.from(document.querySelectorAll(".student-checkbox:checked"))
+            .map(cb => cb.value);
+
+        if (estudiantesSeleccionados.length === 0) {
+            showModal(
+                "Estudiantes Requeridos",
+                "Debe seleccionar al menos un estudiante para asignar la tarea.",
+                null,
+                false
+            );
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('grupo', document.getElementById("grados-select").value);
+        formData.append('asignatura', document.getElementById("asignatura-select").value);
+        formData.append('fecha_inicio', document.getElementById("dateStar").value);
+        formData.append('fecha_fin', document.getElementById("dateEnd").value);
+        formData.append('tema', document.getElementById("tema").value.trim());
+        formData.append('descripcion', document.getElementById("description").value.trim());
+        formData.append('url', document.getElementById("web").value.trim());
+        formData.append('estudiantes', JSON.stringify(estudiantesSeleccionados));
+        
+        const archivoAdjunto = document.getElementById("attached").files[0];
+        if (archivoAdjunto) {
+            formData.append('archivo', archivoAdjunto);
+        }
+
+        showModal(
+            "Confirmar Envío",
+            `¿Está seguro de que desea enviar esta tarea a ${estudiantesSeleccionados.length} estudiante(s)?`,
+            async () => {
+                try {
+                    const response = await fetch('/secciones/api/enviar-tarea', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        showModal(
+                            "Éxito",
+                            `Tarea enviada correctamente a ${estudiantesSeleccionados.length} estudiante(s)`,
+                            () => limpiarFormulario(),
+                            false
+                        );
+                    } else {
+                        throw new Error(data.message || 'Error al enviar la tarea');
+                    }
+                } catch (error) {
+                    console.error("Error al enviar tarea:", error);
+                    showModal(
+                        "Error",
+                        "Error al enviar la tarea: " + error.message,
+                        null,
+                        false
+                    );
+                }
+            },
+            true
+        );
+    }
+
+    // === 9. Limpiar formulario
+    function limpiarFormulario() {
+        // Limpiar selects
+        document.getElementById("grados-select").value = "";
+        document.getElementById("asignatura-select").value = "";
+        
+        // Limpiar inputs
+        document.getElementById("dateStar").value = "";
+        document.getElementById("dateEnd").value = "";
+        document.getElementById("tema").value = "";
+        document.getElementById("description").value = "";
+        document.getElementById("web").value = "";
+        document.getElementById("attached").value = "";
+        
+        // Limpiar checkboxes
+        document.getElementById("students").checked = false;
+        document.querySelectorAll(".student-checkbox").forEach(cb => cb.checked = false);
+        
+        // Limpiar lista de estudiantes
+        document.querySelector(".task__students-list").innerHTML = '<p style="text-align: center; color: #666;">Selecciona un grupo para ver los estudiantes</p>';
+        
+        // Remover clases de error
+        document.querySelectorAll('.input-error').forEach(el => {
+            el.classList.remove('input-error');
+        });
+        
+        // Resetear título
+        document.querySelector(".task__students-title h3").textContent = "Seleccionar Estudiantes";
+    }
+
+    // === 10. Inicialización del DOM
+    document.addEventListener("DOMContentLoaded", function () {
+        const modalConfirm = document.getElementById("modalConfirm");
+        const modalCancel = document.getElementById("modalCancel");
+        const btnEnviar = document.querySelector(".task__buttons .btn");
+        const grupoSelect = document.getElementById("grados-select");
+        const checkboxTodos = document.getElementById("students");
+
+        // === Event listeners del modal ===
+        if (modalConfirm) {
+            modalConfirm.addEventListener("click", function () {
+                if (typeof window.modalAction === 'function') {
+                    window.modalAction();
+                }
+                document.getElementById("confirmModal").style.display = "none";
+            });
+        }
+
+        if (modalCancel) {
+            modalCancel.addEventListener("click", function () {
+                document.getElementById("confirmModal").style.display = "none";
+            });
+        }
+
+        // === Cerrar modal con ESC ===
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                const modal = document.getElementById("confirmModal");
+                if (modal && modal.style.display === "flex") {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+        // === Event listener para cambio de grupo ===
+        if (grupoSelect) {
+            grupoSelect.addEventListener("change", function() {
+                this.classList.remove('input-error');
+                cargarEstudiantes();
+            });
+        }
+
+        // === Event listener para checkbox "Todos" ===
+        if (checkboxTodos) {
+            checkboxTodos.addEventListener("change", manejarSeleccionTodos);
+        }
+
+        // === Event listener para checkboxes individuales ===
+        document.addEventListener("change", function(event) {
+            if (event.target.classList.contains("student-checkbox")) {
+                actualizarContadorEstudiantes();
+            }
+        });
+
+        // === Event listener para botón Enviar ===
+        if (btnEnviar) {
+            btnEnviar.addEventListener("click", function(event) {
+                event.preventDefault();
+                enviarTarea();
+            });
+        }
+
+        // === Limpiar errores al escribir ===
+        document.querySelectorAll('input, select, textarea').forEach(input => {
+            input.addEventListener('input', function () {
+                this.classList.remove('input-error');
+            });
+            
+            input.addEventListener('change', function () {
+                this.classList.remove('input-error');
+            });
+        });
+
+        console.log("Sistema de tareas inicializado correctamente");
     });
 </script>
 {% endblock %}

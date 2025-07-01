@@ -46,7 +46,7 @@
                         <div class="stat-label">Horas Asignadas</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value" id="horas-restantes">40</div>
+                        <div class="stat-value" id="horas-restantes">45</div>
                         <div class="stat-label">Horas Restantes</div>
                     </div>
                     <div class="stat-item">
@@ -371,7 +371,7 @@
 
     const seleccionContador = {};
     let totalHorasAsignadas = 0;
-    const TOTAL_HORAS_DISPONIBLES = 40;
+    const TOTAL_HORAS_DISPONIBLES = 45;
 
 
     const subjectRows = document.querySelectorAll('#tablaMaterias tbody tr');
@@ -390,7 +390,7 @@
         const controls = document.querySelector('.controls');
         controls.insertAdjacentElement('afterend', messageDiv);
 
-        setTimeout(() => messageDiv.remove(), 4000);
+        setTimeout(() => messageDiv.remove(), 2000);
     }
 
     // Función para parsear hora a objeto Date
@@ -645,7 +645,7 @@
         tablaHorario.appendChild(nuevaFila);
         hacerHorasEditables();
 
-        mostrarMensaje('Nueva hora agregada correctamente', 'success');
+        
     });
 
     // Botón para limpiar horario
