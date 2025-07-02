@@ -66,7 +66,7 @@
                     <input type="text" name="tema" id="tema" placeholder="Escribe aquí...">
                 </div>
                 <div class="task__description">
-                    <label for="description">Descripción:</label>
+                    <label for="description">Descripción de la Actividad:</label>
                     <textarea name="description" id="description" cols="50" placeholder="Escribe aquí..."></textarea>
                 </div>
                 <div class="task__web">
@@ -79,7 +79,8 @@
                 </div>
             </div>
             <div class="task__buttons">
-                <button class="btn">Enviar<i class="material-symbols-outlined">schedule_send</i></button>
+                <button class="btn btn-enviar"><i class="material-symbols-outlined">attach_email</i>Enviar</button>
+                <button class="btn btn-borrar"><i class="material-symbols-outlined">delete</i>Borrar</button>
             </div>
         </div>
         <div class="task__right">
@@ -161,7 +162,7 @@
         const fechaFin = document.getElementById("dateEnd");
         const tema = document.getElementById("tema");
         const descripcion = document.getElementById("description");
-        
+
         let mensajes = [];
 
         // Limpiar errores previos
@@ -203,7 +204,7 @@
         if (fechaInicio.value && fechaFin.value) {
             const inicio = new Date(fechaInicio.value);
             const fin = new Date(fechaFin.value);
-            
+
             if (fin <= inicio) {
                 fechaFin.classList.add("input-error");
                 mensajes.push("La fecha de fin debe ser posterior a la fecha de inicio");
@@ -212,8 +213,8 @@
 
         if (mensajes.length > 0) {
             showModal(
-                "Campos Obligatorios",
-                "Por favor complete los siguientes campos:\n\n• " + mensajes.join("\n• "),
+                "",
+                "Por favor complete los siguientes campos obligatorios:\n\n• " + mensajes.join("\n• "),
                 null,
                 false
             );
@@ -227,7 +228,7 @@
     async function cargarEstudiantes() {
         const grupoSelect = document.getElementById("grados-select");
         const listaEstudiantes = document.querySelector(".task__students-list");
-        
+
         if (!grupoSelect.value) {
             listaEstudiantes.innerHTML = '<p style="text-align: center; color: #666;">Selecciona un grupo para ver los estudiantes</p>';
             return;
@@ -235,9 +236,9 @@
 
         try {
             listaEstudiantes.innerHTML = '<p style="text-align: center; color: #666;">Cargando estudiantes...</p>';
-            
+
             const res = await fetch(`/secciones/api/estudiantes/${encodeURIComponent(grupoSelect.value)}`);
-            
+
             if (!res.ok) {
                 throw new Error(`HTTP ${res.status}: ${res.statusText}`);
             }
@@ -261,10 +262,10 @@
                     `;
                     listaEstudiantes.appendChild(div);
                 });
-                
+
                 // Actualizar contador de estudiantes
                 actualizarContadorEstudiantes();
-                
+
             } else {
                 listaEstudiantes.innerHTML = '<p style="text-align: center; color: #666;">No hay estudiantes registrados en este grupo</p>';
             }
@@ -278,11 +279,11 @@
     function manejarSeleccionTodos() {
         const checkboxTodos = document.getElementById("students");
         const checkboxesEstudiantes = document.querySelectorAll(".student-checkbox");
-        
+
         checkboxesEstudiantes.forEach(checkbox => {
             checkbox.checked = checkboxTodos.checked;
         });
-        
+
         actualizarContadorEstudiantes();
     }
 
@@ -291,14 +292,14 @@
         const checkboxesEstudiantes = document.querySelectorAll(".student-checkbox");
         const checkboxTodos = document.getElementById("students");
         const seleccionados = Array.from(checkboxesEstudiantes).filter(cb => cb.checked);
-        
+
         // Actualizar el checkbox "Todos"
         if (seleccionados.length === checkboxesEstudiantes.length && checkboxesEstudiantes.length > 0) {
             checkboxTodos.checked = true;
         } else {
             checkboxTodos.checked = false;
         }
-        
+
         // Actualizar texto del título
         const titulo = document.querySelector(".task__students-title h3");
         if (titulo) {
@@ -332,7 +333,7 @@
         formData.append('descripcion', document.getElementById("description").value.trim());
         formData.append('url', document.getElementById("web").value.trim());
         formData.append('estudiantes', JSON.stringify(estudiantesSeleccionados));
-        
+
         const archivoAdjunto = document.getElementById("attached").files[0];
         if (archivoAdjunto) {
             formData.append('archivo', archivoAdjunto);
@@ -379,7 +380,7 @@
         // Limpiar selects
         document.getElementById("grados-select").value = "";
         document.getElementById("asignatura-select").value = "";
-        
+
         // Limpiar inputs
         document.getElementById("dateStar").value = "";
         document.getElementById("dateEnd").value = "";
@@ -387,19 +388,19 @@
         document.getElementById("description").value = "";
         document.getElementById("web").value = "";
         document.getElementById("attached").value = "";
-        
+
         // Limpiar checkboxes
         document.getElementById("students").checked = false;
         document.querySelectorAll(".student-checkbox").forEach(cb => cb.checked = false);
-        
+
         // Limpiar lista de estudiantes
         document.querySelector(".task__students-list").innerHTML = '<p style="text-align: center; color: #666;">Selecciona un grupo para ver los estudiantes</p>';
-        
+
         // Remover clases de error
         document.querySelectorAll('.input-error').forEach(el => {
             el.classList.remove('input-error');
         });
-        
+
         // Resetear título
         document.querySelector(".task__students-title h3").textContent = "Seleccionar Estudiantes";
     }
@@ -429,7 +430,7 @@
         }
 
         // === Cerrar modal con ESC ===
-        document.addEventListener("keydown", function(event) {
+        document.addEventListener("keydown", function (event) {
             if (event.key === "Escape") {
                 const modal = document.getElementById("confirmModal");
                 if (modal && modal.style.display === "flex") {
@@ -440,7 +441,7 @@
 
         // === Event listener para cambio de grupo ===
         if (grupoSelect) {
-            grupoSelect.addEventListener("change", function() {
+            grupoSelect.addEventListener("change", function () {
                 this.classList.remove('input-error');
                 cargarEstudiantes();
             });
@@ -452,7 +453,7 @@
         }
 
         // === Event listener para checkboxes individuales ===
-        document.addEventListener("change", function(event) {
+        document.addEventListener("change", function (event) {
             if (event.target.classList.contains("student-checkbox")) {
                 actualizarContadorEstudiantes();
             }
@@ -460,9 +461,24 @@
 
         // === Event listener para botón Enviar ===
         if (btnEnviar) {
-            btnEnviar.addEventListener("click", function(event) {
+            btnEnviar.addEventListener("click", function (event) {
                 event.preventDefault();
                 enviarTarea();
+            });
+        }
+
+        const btnBorrar = document.querySelector(".task__buttons .btn:last-child");
+
+        if (btnBorrar) {
+            btnBorrar.addEventListener("click", function (event) {
+                event.preventDefault();
+
+                showModal(
+                    "Confirmar Borrado",
+                    "¿Está seguro de que desea limpiar todos los campos del formulario?",
+                    () => limpiarFormulario(),
+                    true
+                );
             });
         }
 
@@ -471,7 +487,7 @@
             input.addEventListener('input', function () {
                 this.classList.remove('input-error');
             });
-            
+
             input.addEventListener('change', function () {
                 this.classList.remove('input-error');
             });

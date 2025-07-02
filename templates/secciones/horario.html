@@ -278,448 +278,509 @@
 {% block extra_js %}
 <script>
     // === 1. Función confirmLogout() - Salir
-    function confirmLogout() {
-        window.location.href = "{{ url_for('auth.logout') }}";
+function confirmLogout() {
+    window.location.href = "{{ url_for('auth.logout') }}";
+}
+
+// === 2. Función showModal() - Modal personalizado
+function showModal(title, message, action) {
+    const modal = document.getElementById("confirmModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMessage = document.getElementById("modalMessage");
+
+    if (!modal || !modalTitle || !modalMessage) {
+        console.error("No se encontró uno o más elementos del modal");
+        alert(`Error: ${message}`);
+        return;
     }
 
-    // === 2. Función showModal() - Modal personalizado
-    function showModal(title, message, action) {
-        const modal = document.getElementById("confirmModal");
-        const modalTitle = document.getElementById("modalTitle");
-        const modalMessage = document.getElementById("modalMessage");
+    modalTitle.innerText = title;
+    modalMessage.innerHTML = message;
+    window.modalAction = action;
 
-        if (!modal || !modalTitle || !modalMessage) {
-            console.error("No se encontró uno o más elementos del modal");
-            alert(`Error: ${message}`);
-            return;
-        }
+    modal.style.display = "flex";
+}
 
-        modalTitle.innerText = title;
-        modalMessage.innerText = message;
-        window.modalAction = action;
+// === 2.1 Función showModalSingle() - Modal solo con botón confirmar
+function showModalSingle(title, message) {
+    const modal = document.getElementById("confirmModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMessage = document.getElementById("modalMessage");
+    const modalCancel = document.getElementById("modalCancel");
 
-        modal.style.display = "flex";
+    if (!modal || !modalTitle || !modalMessage) {
+        console.error("No se encontró uno o más elementos del modal");
+        alert(`Error: ${message}`);
+        return;
     }
 
-    // === 3. Eventos del modal (Aceptar / Cancelar)
-    document.addEventListener("DOMContentLoaded", function () {
-        const modalConfirm = document.getElementById("modalConfirm");
-        const modalCancel = document.getElementById("modalCancel");
+    modalTitle.innerText = title;
+    modalMessage.innerHTML = message;
+    window.modalAction = null;
+    
+    // Ocultar botón cancelar
+    if (modalCancel) {
+        modalCancel.style.display = "none";
+    }
 
-        if (modalConfirm) {
-            modalConfirm.addEventListener("click", function () {
-                if (typeof modalAction === 'function') {
-                    modalAction();
-                }
-                document.getElementById("confirmModal").style.display = "none";
-            });
-        }
+    modal.style.display = "flex";
+}
 
-        if (modalCancel) {
-            modalCancel.addEventListener("click", function () {
-                document.getElementById("confirmModal").style.display = "none";
-            });
-        }
+// === 3. Eventos del modal (Aceptar / Cancelar)
+document.addEventListener("DOMContentLoaded", function () {
+    const modalConfirm = document.getElementById("modalConfirm");
+    const modalCancel = document.getElementById("modalCancel");
 
-        // === 4. Validación de campos vacíos desde Flask ===
-        const urlParams = new URLSearchParams(window.location.search);
-        const camposVacios = urlParams.get('campos_vacios');
+    if (modalConfirm) {
+        modalConfirm.addEventListener("click", function () {
+            if (typeof modalAction === 'function') {
+                modalAction();
+            }
+            document.getElementById("confirmModal").style.display = "none";
+        });
+    }
 
-        if (camposVacios) {
-            const listaCampos = camposVacios.split(',');
-            listaCampos.forEach(id => {
-                const input = document.getElementById(id);
-                if (input) {
-                    input.classList.add('input-error');
-                }
-            });
-        }
+    if (modalCancel) {
+        modalCancel.addEventListener("click", function () {
+            document.getElementById("confirmModal").style.display = "none";
+        });
+    }
 
-        // === 5. Limpiar error al escribir ===
-        document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
-            input.addEventListener('input', function () {
-                this.classList.remove('input-error');
-            });
+    // === 4. Validación de campos vacíos desde Flask ===
+    const urlParams = new URLSearchParams(window.location.search);
+    const camposVacios = urlParams.get('campos_vacios');
+
+    if (camposVacios) {
+        const listaCampos = camposVacios.split(',');
+        listaCampos.forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.classList.add('input-error');
+            }
+        });
+    }
+
+    // === 5. Limpiar error al escribir ===
+    document.querySelectorAll('.registration__form input, .registration__form select').forEach(input => {
+        input.addEventListener('input', function () {
+            this.classList.remove('input-error');
         });
     });
-</script>
-<script>
-    const materias = [
-        { nombre: "Matemáticas", color: "#667eea" },
-        { nombre: "Geometría", color: "#764ba2" },
-        { nombre: "Estadística", color: "#f093fb" },
-        { nombre: "Tecnología", color: "#4ecdc4" },
-        { nombre: "Castellano", color: "#45b7d1" },
-        { nombre: "C. Lectora", color: "#96ceb4" },
-        { nombre: "Inglés", color: "#ffeaa7" },
-        { nombre: "Biología", color: "#55a3ff" },
-        { nombre: "Física", color: "#fd79a8" },
-        { nombre: "Química", color: "#fdcb6e" },
-        { nombre: "Artística", color: "#e17055" },
-        { nombre: "Ética", color: "#a29bfe" },
-        { nombre: "Religión", color: "#fd7f6e" },
-        { nombre: "Cátedra de Paz", color: "#74b9ff" },
-        { nombre: "E. Física", color: "#00b894" },
-        { nombre: "C. Sociales", color: "#fdaf6e" },
-        { nombre: "Historia y Geografía", color: "#e84393" },
-        { nombre: "Descanso", color: "#b2bec3" },
-        { nombre: "Almuerzo", color: "#ddd6d6" }
-    ];
+});
 
+// === CÓDIGO PRINCIPAL DEL HORARIO ===
 
-    const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+const materias = [
+    { nombre: "Matemáticas", color: "#667eea" },
+    { nombre: "Geometría", color: "#764ba2" },
+    { nombre: "Estadística", color: "#f093fb" },
+    { nombre: "Tecnología", color: "#4ecdc4" },
+    { nombre: "Castellano", color: "#45b7d1" },
+    { nombre: "C. Lectora", color: "#96ceb4" },
+    { nombre: "Inglés", color: "#ffeaa7" },
+    { nombre: "Biología", color: "#55a3ff" },
+    { nombre: "Física", color: "#fd79a8" },
+    { nombre: "Química", color: "#fdcb6e" },
+    { nombre: "Artística", color: "#e17055" },
+    { nombre: "Ética", color: "#a29bfe" },
+    { nombre: "Religión", color: "#fd7f6e" },
+    { nombre: "Cátedra de Paz", color: "#74b9ff" },
+    { nombre: "E. Física", color: "#00b894" },
+    { nombre: "C. Sociales", color: "#fdaf6e" },
+    { nombre: "Historia y Geografía", color: "#e84393" },
+    { nombre: "Descanso", color: "#b2bec3" },
+    { nombre: "Almuerzo", color: "#ddd6d6" }
+];
 
-    const seleccionContador = {};
-    let totalHorasAsignadas = 0;
-    const TOTAL_HORAS_DISPONIBLES = 45;
+const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
+const seleccionContador = {};
+let totalHorasAsignadas = 0;
+const TOTAL_HORAS_DISPONIBLES = 45;
 
-    const subjectRows = document.querySelectorAll('#tablaMaterias tbody tr');
-    subjectRows.forEach(row => {
-        const materia = row.cells[0].textContent.trim();
-        const maxAsignaciones = parseInt(row.cells[1].querySelector('.hours-badge').textContent.split('/')[1]);
-        seleccionContador[materia] = { count: 0, max: maxAsignaciones };
+const subjectRows = document.querySelectorAll('#tablaMaterias tbody tr');
+subjectRows.forEach(row => {
+    const materia = row.cells[0].textContent.trim();
+    const maxAsignaciones = parseInt(row.cells[1].querySelector('.hours-badge').textContent.split('/')[1]);
+    seleccionContador[materia] = { count: 0, max: maxAsignaciones };
+});
+
+// Función para mostrar mensajes
+function mostrarMensaje(mensaje, tipo = 'error') {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = tipo === 'error' ? 'error-message' : 'success-message';
+    messageDiv.textContent = mensaje;
+
+    const controls = document.querySelector('.controls');
+    controls.insertAdjacentElement('afterend', messageDiv);
+
+    setTimeout(() => messageDiv.remove(), 2000);
+}
+
+// Función para parsear hora a objeto Date
+function parseTime(timeStr) {
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+}
+
+// Función para generar una fila de horario
+function generarFila(horaInicio = "07:00", horaFin = "08:00") {
+    const fila = document.createElement('tr');
+    const celdaHora = document.createElement('td');
+    celdaHora.className = 'time-container';
+    celdaHora.innerHTML = `
+            <div class="time" data-time="${horaInicio}">${horaInicio}</div>
+            <div class="time" data-time="${horaFin}">${horaFin}</div>
+        `;
+    fila.appendChild(celdaHora);
+
+    // Celdas de días
+    dias.forEach(dia => {
+        const celdaDia = document.createElement('td');
+        const select = document.createElement('select');
+        select.className = 'subject-select';
+        select.setAttribute('aria-label', `${dia} - ${horaInicio} a ${horaFin}`);
+
+        // Opción por defecto
+        const opcionDefault = document.createElement('option');
+        opcionDefault.value = "";
+        opcionDefault.textContent = "Seleccionar";
+        select.appendChild(opcionDefault);
+
+        // Opciones dinámicas
+        materias.forEach(materia => {
+            const opcion = document.createElement('option');
+            opcion.value = materia.nombre;
+            opcion.textContent = materia.nombre;
+            opcion.style.backgroundColor = materia.color;
+            opcion.style.color = 'white';
+            select.appendChild(opcion);
+        });
+
+        celdaDia.appendChild(select);
+        fila.appendChild(celdaDia);
     });
 
-    // Función para mostrar mensajes
-    function mostrarMensaje(mensaje, tipo = 'error') {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = tipo === 'error' ? 'error-message' : 'success-message';
-        messageDiv.textContent = mensaje;
+    return fila;
+}
 
-        const controls = document.querySelector('.controls');
-        controls.insertAdjacentElement('afterend', messageDiv);
+// Hacer las horas editables
+function hacerHorasEditables() {
+    document.querySelectorAll('.time').forEach(time => {
+        time.addEventListener('click', () => {
+            const currentTime = time.dataset.time;
+            const input = document.createElement('input');
+            input.type = 'time';
+            input.value = currentTime;
+            input.className = 'time-input';
 
-        setTimeout(() => messageDiv.remove(), 2000);
-    }
+            time.textContent = '';
+            time.appendChild(input);
+            input.focus();
 
-    // Función para parsear hora a objeto Date
-    function parseTime(timeStr) {
-        const [hours, minutes] = timeStr.split(":").map(Number);
-        const date = new Date();
-        date.setHours(hours, minutes, 0, 0);
-        return date;
-    }
-
-    // Función para generar una fila de horario
-    function generarFila(horaInicio = "07:00", horaFin = "08:00") {
-        const fila = document.createElement('tr');
-        const celdaHora = document.createElement('td');
-        celdaHora.className = 'time-container';
-        celdaHora.innerHTML = `
-                <div class="time" data-time="${horaInicio}">${horaInicio}</div>
-                <div class="time" data-time="${horaFin}">${horaFin}</div>
-            `;
-        fila.appendChild(celdaHora);
-
-        // Celdas de días
-        dias.forEach(dia => {
-            const celdaDia = document.createElement('td');
-            const select = document.createElement('select');
-            select.className = 'subject-select';
-            select.setAttribute('aria-label', `${dia} - ${horaInicio} a ${horaFin}`);
-
-            // Opción por defecto
-            const opcionDefault = document.createElement('option');
-            opcionDefault.value = "";
-            opcionDefault.textContent = "Seleccionar";
-            select.appendChild(opcionDefault);
-
-            // Opciones dinámicas
-            materias.forEach(materia => {
-                const opcion = document.createElement('option');
-                opcion.value = materia.nombre;
-                opcion.textContent = materia.nombre;
-                opcion.style.backgroundColor = materia.color;
-                opcion.style.color = 'white';
-                select.appendChild(opcion);
-            });
-
-            celdaDia.appendChild(select);
-            fila.appendChild(celdaDia);
-        });
-
-        return fila;
-    }
-
-    // Hacer las horas editables
-    function hacerHorasEditables() {
-        document.querySelectorAll('.time').forEach(time => {
-            time.addEventListener('click', () => {
-                const currentTime = time.dataset.time;
-                const input = document.createElement('input');
-                input.type = 'time';
-                input.value = currentTime;
-                input.className = 'time-input';
-
-                time.textContent = '';
-                time.appendChild(input);
-                input.focus();
-
-                input.addEventListener('blur', () => {
-                    const newTime = input.value || currentTime;
-                    if (validarHora(newTime, time)) {
-                        time.dataset.time = newTime;
-                        time.textContent = newTime;
-                        mostrarMensaje('Hora actualizada correctamente', 'success');
-                    } else {
-                        time.textContent = currentTime;
-                    }
-                });
-
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') input.blur();
-                    if (e.key === 'Escape') {
-                        time.textContent = currentTime;
-                    }
-                });
-            });
-        });
-    }
-
-    // Validar que la nueva hora sea válida
-    function validarHora(hora, timeElement) {
-        const fila = timeElement.closest('tr');
-        const horas = fila.querySelectorAll('.time');
-
-        if (horas.length === 2) {
-            const horaInicio = parseTime(horas[0].dataset.time);
-            const horaFin = parseTime(horas[1].dataset.time);
-
-            if (horaInicio >= horaFin) {
-                mostrarMensaje('La hora de inicio debe ser menor que la hora de fin');
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    // Actualizar progreso visual de materias
-    function actualizarProgreso(materia) {
-        const contador = seleccionContador[materia];
-        const row = Array.from(document.querySelectorAll('#tablaMaterias tbody tr')).find(
-            tr => tr.cells[0].textContent.trim() === materia
-        );
-
-        if (row) {
-            const badge = row.querySelector('.hours-badge');
-            const progressFill = row.querySelector('.progress-fill');
-            const porcentaje = (contador.count / contador.max) * 100;
-
-            badge.textContent = `${contador.count}/${contador.max}`;
-            progressFill.style.width = `${porcentaje}%`;
-
-            // Cambiar color según el progreso
-            if (porcentaje === 100) {
-                progressFill.style.background = 'linear-gradient(90deg, #48bb78, #38a169)';
-            } else if (porcentaje > 50) {
-                progressFill.style.background = 'linear-gradient(90deg, #ed8936, #dd6b20)';
-            } else {
-                progressFill.style.background = 'linear-gradient(90deg, #667eea, #764ba2)';
-            }
-        }
-    }
-
-    // Actualizar estadísticas generales
-    function actualizarEstadisticas() {
-        const totalElement = document.getElementById("total-horas");
-        const restantesElement = document.getElementById("horas-restantes");
-        const porcentajeElement = document.getElementById("porcentaje-completado");
-
-        const horasRestantes = TOTAL_HORAS_DISPONIBLES - totalHorasAsignadas;
-        const porcentaje = Math.round((totalHorasAsignadas / TOTAL_HORAS_DISPONIBLES) * 100);
-
-        totalElement.textContent = totalHorasAsignadas;
-        restantesElement.textContent = horasRestantes;
-        porcentajeElement.textContent = `${porcentaje}%`;
-
-        // Cambiar colores según el progreso
-        if (porcentaje === 100) {
-            totalElement.style.color = 'var(--color-success)';
-            porcentajeElement.style.color = 'var(--color-success)';
-        } else if (porcentaje > 80) {
-            totalElement.style.color = 'var(--color-warning)';
-            porcentajeElement.style.color = 'var(--color-warning)';
-        } else {
-            totalElement.style.color = 'var(--color-primary)';
-            porcentajeElement.style.color = 'var(--color-primary)';
-        }
-    }
-
-    // Actualizar estados de los selects
-    function actualizarSelect(select, materiaSeleccionada) {
-        const materiaInfo = materias.find(m => m.nombre === materiaSeleccionada);
-        if (materiaInfo) {
-            select.style.backgroundColor = materiaInfo.color;
-            select.style.color = 'white';
-            select.style.fontWeight = '600';
-        }
-
-        // Actualizar opciones disponibles en todos los selects
-        const selects = document.querySelectorAll('.subject-select');
-        selects.forEach(s => {
-            const options = s.options;
-            for (let i = 0; i < options.length; i++) {
-                const option = options[i];
-                if (option.value) {
-                    const contador = seleccionContador[option.value];
-                    const isDisabled = contador.count >= contador.max;
-
-                    option.disabled = isDisabled;
-                    option.style.opacity = isDisabled ? '0.5' : '1';
-
-                    if (isDisabled) {
-                        option.textContent = `${option.value}`;
-                    } else {
-                        option.textContent = option.value;
-                    }
-                }
-            }
-        });
-    }
-
-    // Manejador de cambio de selección de materias
-    document.getElementById('tabla-horario').addEventListener('change', (e) => {
-        if (e.target.classList.contains('subject-select')) {
-            const select = e.target;
-            const materiaSeleccionada = select.value;
-            const materiaAnterior = select.dataset.materiaAnterior;
-
-            // Restablecer si había una materia anterior
-            if (materiaAnterior) {
-                seleccionContador[materiaAnterior].count--;
-                actualizarProgreso(materiaAnterior);
-                select.dataset.materiaAnterior = "";
-                select.style.backgroundColor = "";
-                select.style.color = "";
-                select.style.fontWeight = "";
-                totalHorasAsignadas--;
-            }
-
-            // Agregar nueva materia
-            if (materiaSeleccionada) {
-                const contador = seleccionContador[materiaSeleccionada];
-
-                if (contador.count >= contador.max) {
-                    mostrarMensaje(`Has alcanzado el límite de horas para ${materiaSeleccionada}`);
-                    select.value = "";
+            input.addEventListener('blur', () => {
+                const newTime = input.value || currentTime;
+                if (validarHora(newTime, time)) {
+                    time.dataset.time = newTime;
+                    time.textContent = newTime;
                 } else {
-                    contador.count++;
-                    actualizarProgreso(materiaSeleccionada);
-                    actualizarSelect(select, materiaSeleccionada);
-                    select.dataset.materiaAnterior = materiaSeleccionada;
-                    totalHorasAsignadas++;
-
-                    if (contador.count === contador.max) {
-                        mostrarMensaje(`¡${materiaSeleccionada} completada!`, 'success');
-                    }
+                    time.textContent = currentTime;
                 }
-            }
-
-            actualizarEstadisticas();
-        }
-    });
-
-    // Añadir primera fila al cargar
-    const tablaHorario = document.getElementById('tabla-horario');
-    tablaHorario.appendChild(generarFila());
-    hacerHorasEditables();
-
-    // Botón para agregar filas
-    document.getElementById('agregar-hora').addEventListener('click', () => {
-        const ultimaFila = tablaHorario.lastElementChild;
-        const ultimaHoraFin = ultimaFila.querySelector('.time:last-child').dataset.time;
-
-        if (parseTime(ultimaHoraFin) >= parseTime("23:59")) {
-            mostrarMensaje("No se pueden agregar más horas después de las 23:59");
-            return;
-        }
-
-        // Calcular siguiente hora automáticamente
-        const finTime = parseTime(ultimaHoraFin);
-        finTime.setHours(finTime.getHours() + 1);
-        const nuevaHoraFin = finTime.toTimeString().slice(0, 5);
-
-        const nuevaFila = generarFila(ultimaHoraFin, nuevaHoraFin);
-        tablaHorario.appendChild(nuevaFila);
-        hacerHorasEditables();
-
-        
-    });
-
-    // Botón para limpiar horario
-    document.querySelector('.btn__delete').addEventListener('click', () => {
-        if (confirm('¿Estás seguro de que deseas limpiar todo el horario?')) {
-            // Reiniciar contadores
-            Object.keys(seleccionContador).forEach(materia => {
-                seleccionContador[materia].count = 0;
-                actualizarProgreso(materia);
             });
 
-            totalHorasAsignadas = 0;
-            actualizarEstadisticas();
-
-            // Limpiar selects
-            document.querySelectorAll('.subject-select').forEach(select => {
-                select.value = "";
-                select.style.backgroundColor = "";
-                select.style.color = "";
-                select.style.fontWeight = "";
-                delete select.dataset.materiaAnterior;
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') input.blur();
+                if (e.key === 'Escape') {
+                    time.textContent = currentTime;
+                }
             });
-
-            // Actualizar opciones
-            document.querySelectorAll('.subject-select').forEach(select => {
-                actualizarSelect(select, "");
-            });
-
-            mostrarMensaje('Horario limpiado correctamente', 'success');
-        }
-    });
-
-    // Funcionalidad de impresión
-    document.querySelector('.btn-primary:last-child').addEventListener('click', () => {
-        window.print();
-    });
-
-    // Validación de formulario
-    document.querySelectorAll('.form-select').forEach(select => {
-        select.addEventListener('change', (e) => {
-            if (e.target.value) {
-                e.target.style.borderColor = 'var(--color-success)';
-                e.target.style.backgroundColor = 'rgba(72, 187, 120, 0.05)';
-            } else {
-                e.target.style.borderColor = 'var(--color-gray-200)';
-                e.target.style.backgroundColor = 'white';
-            }
         });
     });
+}
 
-    // Inicializar estadísticas
+// Validar que la nueva hora sea válida
+function validarHora(hora, timeElement) {
+    const fila = timeElement.closest('tr');
+    const horas = fila.querySelectorAll('.time');
+
+    if (horas.length === 2) {
+        const horaInicio = parseTime(horas[0].dataset.time);
+        const horaFin = parseTime(horas[1].dataset.time);
+
+        if (horaInicio >= horaFin) {
+            mostrarMensaje('La hora de inicio debe ser menor que la hora de fin');
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Actualizar progreso visual de materias
+function actualizarProgreso(materia) {
+    const contador = seleccionContador[materia];
+    const row = Array.from(document.querySelectorAll('#tablaMaterias tbody tr')).find(
+        tr => tr.cells[0].textContent.trim() === materia
+    );
+
+    if (row) {
+        const badge = row.querySelector('.hours-badge');
+        const progressFill = row.querySelector('.progress-fill');
+        const porcentaje = (contador.count / contador.max) * 100;
+
+        badge.textContent = `${contador.count}/${contador.max}`;
+        progressFill.style.width = `${porcentaje}%`;
+
+        // Cambiar color según el progreso
+        if (porcentaje === 100) {
+            progressFill.style.background = 'linear-gradient(90deg, #48bb78, #38a169)';
+        } else if (porcentaje > 50) {
+            progressFill.style.background = 'linear-gradient(90deg, #ed8936, #dd6b20)';
+        } else {
+            progressFill.style.background = 'linear-gradient(90deg, #667eea, #764ba2)';
+        }
+    }
+}
+
+// Actualizar estadísticas generales
+function actualizarEstadisticas() {
+    const totalElement = document.getElementById("total-horas");
+    const restantesElement = document.getElementById("horas-restantes");
+    const porcentajeElement = document.getElementById("porcentaje-completado");
+
+    const horasRestantes = TOTAL_HORAS_DISPONIBLES - totalHorasAsignadas;
+    const porcentaje = Math.round((totalHorasAsignadas / TOTAL_HORAS_DISPONIBLES) * 100);
+
+    totalElement.textContent = totalHorasAsignadas;
+    restantesElement.textContent = horasRestantes;
+    porcentajeElement.textContent = `${porcentaje}%`;
+
+    // Cambiar colores según el progreso
+    if (porcentaje === 100) {
+        totalElement.style.color = 'var(--color-success)';
+        porcentajeElement.style.color = 'var(--color-success)';
+    } else if (porcentaje > 80) {
+        totalElement.style.color = 'var(--color-warning)';
+        porcentajeElement.style.color = 'var(--color-warning)';
+    } else {
+        totalElement.style.color = 'var(--color-primary)';
+        porcentajeElement.style.color = 'var(--color-primary)';
+    }
+}
+
+// Actualizar estados de los selects
+function actualizarSelect(select, materiaSeleccionada) {
+    const materiaInfo = materias.find(m => m.nombre === materiaSeleccionada);
+    if (materiaInfo) {
+        select.style.backgroundColor = materiaInfo.color;
+        select.style.color = 'white';
+        select.style.fontWeight = '600';
+    }
+
+    // Actualizar opciones disponibles en todos los selects
+    const selects = document.querySelectorAll('.subject-select');
+    selects.forEach(s => {
+        const options = s.options;
+        for (let i = 0; i < options.length; i++) {
+            const option = options[i];
+            if (option.value) {
+                const contador = seleccionContador[option.value];
+                const isDisabled = contador.count >= contador.max;
+
+                option.disabled = isDisabled;
+                option.style.opacity = isDisabled ? '0.5' : '1';
+
+                if (isDisabled) {
+                    option.textContent = `${option.value}`;
+                } else {
+                    option.textContent = option.value;
+                }
+            }
+        }
+    });
+}
+
+// Función para validar campos requeridos
+function validarCamposRequeridos() {
+    const grado = document.getElementById('grados-select');
+    const docente = document.getElementById('docente-select');
+    let esValido = true;
+
+    // Validar grado
+    if (!grado.value) {
+        grado.style.borderColor = 'var(--color-error, #e53e3e)';
+        grado.style.backgroundColor = 'rgba(229, 62, 62, 0.05)';
+        esValido = false;
+    } else {
+        grado.style.borderColor = 'var(--color-success, #48bb78)';
+        grado.style.backgroundColor = 'rgba(72, 187, 120, 0.05)';
+    }
+
+    // Validar docente
+    if (!docente.value) {
+        docente.style.borderColor = 'var(--color-error, #e53e3e)';
+        docente.style.backgroundColor = 'rgba(229, 62, 62, 0.05)';
+        esValido = false;
+    } else {
+        docente.style.borderColor = 'var(--color-success, #48bb78)';
+        docente.style.backgroundColor = 'rgba(72, 187, 120, 0.05)';
+    }
+
+    return esValido;
+}
+
+// Función para borrar horario
+function borrarHorario() {
+    // Reiniciar contadores
+    Object.keys(seleccionContador).forEach(materia => {
+        seleccionContador[materia].count = 0;
+        actualizarProgreso(materia);
+    });
+
+    totalHorasAsignadas = 0;
     actualizarEstadisticas();
 
-    // Funcionalidad de guardado
-    document.querySelector('.btn__save').addEventListener('click', () => {
-        const grado = document.getElementById('grados-select').value;
-        const docente = document.getElementById('docente-select').value;
-
-        if (!grado || !docente) {
-            mostrarMensaje('Por favor selecciona el grado y el director de grupo antes de guardar');
-            return;
-        }
-
-        if (totalHorasAsignadas === 0) {
-            mostrarMensaje('No hay horas asignadas para guardar');
-            return;
-        }
-
-        // Aquí iría la lógica de guardado real
-        mostrarMensaje(`Horario guardado exitosamente para ${grado} con ${docente}`, 'success');
+    // Limpiar selects
+    document.querySelectorAll('.subject-select').forEach(select => {
+        select.value = "";
+        select.style.backgroundColor = "";
+        select.style.color = "";
+        select.style.fontWeight = "";
+        delete select.dataset.materiaAnterior;
     });
 
+    // Actualizar opciones
+    document.querySelectorAll('.subject-select').forEach(select => {
+        actualizarSelect(select, "");
+    });
+}
 
+// Función para guardar horario
+function guardarHorario() {
+    const grado = document.getElementById('grados-select').value;
+    const docente = document.getElementById('docente-select').value;
 
+    // Validar campos requeridos
+    if (!validarCamposRequeridos()) {
+        const mensajeError = `Por favor complete los siguientes campos obligatorios:<br>
+            <div style="margin-top: 10px; text-align: left; padding-left: 20px;">
+                • Grado<br>
+                • Director
+            </div>`;
+        showModalSingle('Error', mensajeError);
+        return;
+    }
+
+    if (totalHorasAsignadas === 0) {
+        mostrarMensaje('No hay horas asignadas para guardar');
+        return;
+    }
+
+    // Aquí iría la lógica de guardado real con el servidor
+    // Por ahora simulamos el guardado exitoso
+    
+    // Mostrar mensaje de éxito a través del modal
+    showModal('Éxito', 'Horario guardado exitosamente', function() {
+        // Aquí podrías añadir lógica adicional después del guardado
+        console.log('Horario guardado para:', { grado, docente, horas: totalHorasAsignadas });
+    });
+}
+
+// Manejador de cambio de selección de materias
+document.getElementById('tabla-horario').addEventListener('change', (e) => {
+    if (e.target.classList.contains('subject-select')) {
+        const select = e.target;
+        const materiaSeleccionada = select.value;
+        const materiaAnterior = select.dataset.materiaAnterior;
+
+        // Restablecer si había una materia anterior
+        if (materiaAnterior) {
+            seleccionContador[materiaAnterior].count--;
+            actualizarProgreso(materiaAnterior);
+            select.dataset.materiaAnterior = "";
+            select.style.backgroundColor = "";
+            select.style.color = "";
+            select.style.fontWeight = "";
+            totalHorasAsignadas--;
+        }
+
+        // Agregar nueva materia
+        if (materiaSeleccionada) {
+            const contador = seleccionContador[materiaSeleccionada];
+
+            if (contador.count >= contador.max) {
+                mostrarMensaje(`Has alcanzado el límite de horas para ${materiaSeleccionada}`);
+                select.value = "";
+            } else {
+                contador.count++;
+                actualizarProgreso(materiaSeleccionada);
+                actualizarSelect(select, materiaSeleccionada);
+                select.dataset.materiaAnterior = materiaSeleccionada;
+                totalHorasAsignadas++;
+            }
+        }
+
+        actualizarEstadisticas();
+    }
+});
+
+// Añadir primera fila al cargar
+const tablaHorario = document.getElementById('tabla-horario');
+tablaHorario.appendChild(generarFila());
+hacerHorasEditables();
+
+// Botón para agregar filas
+document.getElementById('agregar-hora').addEventListener('click', () => {
+    const ultimaFila = tablaHorario.lastElementChild;
+    const ultimaHoraFin = ultimaFila.querySelector('.time:last-child').dataset.time;
+
+    if (parseTime(ultimaHoraFin) >= parseTime("23:59")) {
+        mostrarMensaje("No se pueden agregar más horas después de las 23:59");
+        return;
+    }
+
+    // Calcular siguiente hora automáticamente
+    const finTime = parseTime(ultimaHoraFin);
+    finTime.setHours(finTime.getHours() + 1);
+    const nuevaHoraFin = finTime.toTimeString().slice(0, 5);
+
+    const nuevaFila = generarFila(ultimaHoraFin, nuevaHoraFin);
+    tablaHorario.appendChild(nuevaFila);
+    hacerHorasEditables();
+});
+
+// Botón para limpiar horario - SIN ALERT
+document.querySelector('.btn__delete').addEventListener('click', () => {
+    showModal('Confirmar', '¿Estás seguro de que deseas borrar todo el horario?', borrarHorario);
+});
+
+// Funcionalidad de impresión
+document.querySelector('.btn-primary:last-child').addEventListener('click', () => {
+    window.print();
+});
+
+// Validación de formulario con campos requeridos
+document.querySelectorAll('.form-select').forEach(select => {
+    select.addEventListener('change', (e) => {
+        if (e.target.value) {
+            e.target.style.borderColor = 'var(--color-success, #48bb78)';
+            e.target.style.backgroundColor = 'rgba(72, 187, 120, 0.05)';
+        } else {
+            e.target.style.borderColor = 'var(--color-gray-200, #e2e8f0)';
+            e.target.style.backgroundColor = 'white';
+        }
+    });
+});
+
+// Inicializar estadísticas
+actualizarEstadisticas();
+
+// Funcionalidad de guardado con modal
+document.querySelector('.btn__save').addEventListener('click', () => {
+    guardarHorario();
+});
 </script>
 {% endblock %}
 

@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (missingFields.length > 0) {
             return {
                 isValid: false,
-                message: "Debe completar los siguientes campos obligatorios:\n\n" + missingFields.join("\n"),
+                message: "Debe completar los siguientes campos obligatorios:\n\n" + missingFields.join("\n •"),
                 focusElement: document.querySelector(".input-error")
             };
         }
@@ -292,6 +292,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         modalTitle.innerText = title;
         modalMessage.innerText = message;
+        modalMessage.style.textAlign = 'left';
         window.modalAction = action;
         modal.style.display = "flex";
     }
