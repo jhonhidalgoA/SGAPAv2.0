@@ -4,11 +4,8 @@ from dashboards import dashboards
 from secciones import secciones
 import os
 
-
-
 app = Flask(__name__)
 app.config.from_object('config.Config')
-
 
 # Blueprints (módulos de rutas)
 app.register_blueprint(auth)

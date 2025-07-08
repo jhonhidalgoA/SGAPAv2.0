@@ -47,8 +47,6 @@ line-height: 1.6;
     padding: 2rem;
 }
 
-
-
 .grid-layout {
     display: grid;
     grid-template-columns: 1fr 350px;
@@ -243,11 +241,11 @@ line-height: 1.6;
 
 
 .subjects-table {
-width: 100%;
-border-collapse: collapse;
-border-radius: var(--border-radius);
-overflow: hidden;
-box-shadow: var(--shadow-md);
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
 }
 
 .subjects-table th {
@@ -268,7 +266,7 @@ box-shadow: var(--shadow-md);
 }
 
 .subjects-table tr:hover td {
-background: var(--color-gray-50);
+    background: var(--color-gray-50);
 }
 
 .subject-name {
@@ -278,26 +276,26 @@ background: var(--color-gray-50);
 }
 
 .subject-hours {
-display: flex;
-align-items: center;
-gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .hours-badge {
-background: var(--color-primary);
-color: white;
-padding: 0.25rem 0.5rem;
-border-radius: 12px;
-font-size: 0.8rem;
-font-weight: 600;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 .progress-bar {
-flex: 1;
-height: 6px;
-background: var(--color-gray-200);
-border-radius: 3px;
-overflow: hidden;
+    flex: 1;
+    height: 6px;
+    background: var(--color-gray-200);
+    border-radius: 3px;
+    overflow: hidden;
 }
 
 .progress-fill {
@@ -308,21 +306,21 @@ overflow: hidden;
 }
 
 .error-message {
-background: var(--color-error);
-color: white;
-padding: 1rem;
-border-radius: 8px;
-margin-bottom: 1rem;
-animation: slideIn 0.3s ease-out;
+    background: var(--color-error);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    animation: slideIn 0.3s ease-out;
 }
 
 .success-message {
-background: var(--color-success);
-color: white;
-padding: 1rem;
-border-radius: 8px;
-margin-bottom: 1rem;
-animation: slideIn 0.3s ease-out;
+    background: var(--color-success);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    animation: slideIn 0.3s ease-out;
 }
 
 @keyframes slideIn {
@@ -354,12 +352,12 @@ to {
 }
 
 .break-row {
-background: var(--color-gray-100) !important;
+    background: var(--color-gray-100) !important;
 }
 
 .break-row .subject-name {
-font-style: italic;
-color: var(--color-gray-600);
+    font-style: italic;
+    color: var(--color-gray-600);
 }
 
 @media (max-width: 1200px) {
@@ -392,11 +390,11 @@ color: var(--color-gray-600);
 
 /* Animaciones para elementos interactivos */
 .subject-select option:hover {
-background: var(--color-gray-100);
+    background: var(--color-gray-100);
 }
 
 .schedule-table tr:hover td:not(.time-container) {
-background: var(--color-gray-50);
+    background: var(--color-gray-50);
 }
 
 /* Efectos de pulso para botones activos */
@@ -417,7 +415,27 @@ animation: pulse 0.2s ease-in-out;
 }
 
 
+/* Alineación simple para icono y texto */
+.modal-cancel {
+    position
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    font-size: 20px;    
+}
 
+.modal-cancel i {
+    margin-top: 8px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+    font-size: 32px;
+}
 
-
+.modal-cancel span {
+    position: relative;
+    top: 5px;
+    margin-bottom: -15px; 
+    margin-left: 5px; 
+}
 

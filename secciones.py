@@ -1631,9 +1631,45 @@ def guardar_asistencia():
 def tareas():
     return render_template('secciones/tareas.html')
 
+# ─────────────────────────────────────────────────────
+#  HORARIO
+# ─────────────────────────────────────────────────────
 @secciones.route('/horario', methods=['GET', 'POST'])
 def horario():
+    if request.method == 'POST':
+        data = request.get_json()
+        db = get_db()
+        cursor = db.cursor()
+
+        try:
+            for entry in data:
+                cursor.execute("""
+                    INSERT INTO horarios 
+                    (schedule_day, start_time, end_time, subject_id, grade_id, period_id)
+                    VALUES (%s, %s, %s, (SELECT subject_id FROM asignaturas WHERE name = %s), %s, %s)
+                """, (
+                    entry['dia'],
+                    entry['hora_inicio'],
+                    entry['hora_fin'],
+                    entry['materia'],
+                    entry['grado_id'],
+                    1
+                ))
+
+            db.commit()
+            return jsonify({"status": "success", "message": "Horario guardado"}), 200
+        except Exception as e:
+            db.rollback()
+            return jsonify({"status": "error", "message": str(e)}), 500
+
     return render_template('secciones/horario.html')
+
+
+
+
+
+
+
 
 
 @secciones.route('/usuarios', methods=['GET', 'POST'])
