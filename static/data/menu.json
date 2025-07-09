@@ -6,7 +6,7 @@
                 "img": "arroz.png"
             },
             {
-                "nombre": "Pollo Asado",
+                "nombre": "Pollo Asado a la brasa",
                 "img": "pollo.png"
             },
             {
@@ -134,14 +134,14 @@
                 "img": "salchicha.png"
             },
             {
-                "img": "lechuga.png",
-                "nombre": "Ensalada de Lechuga"
+                "nombre": "Ensalada de Lechuga",
+                "img": "ensalada.png"
             }
         ],
         "Complementos": [
             {
-                "img": "frutas.png",
-                "nombre": "Barra de Frutas"
+                "nombre": "Barra de Frutas",
+                "img": "pan.png"
             },
             {
                 "img": "agua.png",
@@ -160,8 +160,8 @@
                 "img": "pollo_teriyaki.png"
             },
             {
-                "img": "ensalada.png",
-                "nombre": "Ensalada"
+                "nombre": "Ensalada",
+                "img": "lechuga.png"
             }
         ],
         "Menú vegetariano": [

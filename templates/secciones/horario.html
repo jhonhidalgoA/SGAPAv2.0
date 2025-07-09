@@ -32,12 +32,15 @@
                         <select id="docente-select" name="docente" class="form-select"
                             aria-label="Selecciona un director de grupo">
                             <option value="">Seleccionar</option>
-                            <option value="Jhon F. Hidalgo">Jhon F. Hidalgo Arango</option>
-                            <option value="Alejandra Marin">Alejandra Hidalgo Arango</option>
-                            <option value="Sofia Giraldo">Sofia Giraldo Hidalgo</option>
-                            <option value="Amparo Pineda">Amparo Pineda Ramirez</option>
-                            <option value="Jorge Armando G.">Jorge Armando Giraldo</option>
+                            {% if docentes %}
+                            {% for d in docentes %}
+                            <option value="{{ d[0] }}">{{ d[1] }}</option>
+                            {% endfor %}
+                            {% else %}
+                            <option value="" disabled>No hay docentes disponibles</option>
+                            {% endif %}
                         </select>
+
                     </div>
                 </div>
                 <div class="stats-container">

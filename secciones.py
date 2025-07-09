@@ -200,7 +200,7 @@ def guardar_matricula():
             INSERT INTO users (
                 full_name, role_id, username, password_hash, document_number, email
             ) VALUES (%s, %s, %s, %s, %s, %s)
-        """, (full_name, 3, numero_documento, password_hash, numero_documento, email))
+        """, (full_name, 4, numero_documento, password_hash, numero_documento, email))
         db.commit()
         user_id = cursor.lastrowid
 
@@ -288,13 +288,14 @@ def limpiar_datos():
         cursor.execute("DELETE FROM contactos_familiares;")
         cursor.execute("DELETE FROM users;")
         cursor.execute("DELETE FROM estudiantes;")
+        cursor.execute("DELETE FROM asistencias;")
 
         # Reiniciar contadores AUTO_INCREMENT
         cursor.execute("ALTER TABLE estudiantes AUTO_INCREMENT = 1;")
         cursor.execute("ALTER TABLE contactos_familiares AUTO_INCREMENT = 1;")
         cursor.execute("ALTER TABLE users AUTO_INCREMENT = 1;")
         cursor.execute("ALTER TABLE matricula_estudiantes AUTO_INCREMENT = 1;")
-
+        cursor.execute("ALTER TABLE asistencias AUTO_INCREMENT = 1;")
         # Reactivar restricciones
         cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
         db.commit()
@@ -1646,7 +1647,9 @@ def horario():
                 cursor.execute("""
                     INSERT INTO horarios 
                     (schedule_day, start_time, end_time, subject_id, grade_id, period_id)
-                    VALUES (%s, %s, %s, (SELECT subject_id FROM asignaturas WHERE name = %s), %s, %s)
+                    VALUES (%s, %s, %s, 
+                            (SELECT subject_id FROM asignaturas WHERE name = %s), 
+                            %s, %s)
                 """, (
                     entry['dia'],
                     entry['hora_inicio'],
@@ -1662,12 +1665,20 @@ def horario():
             db.rollback()
             return jsonify({"status": "error", "message": str(e)}), 500
 
-    return render_template('secciones/horario.html')
+    # Solo GET
+    db = get_db()
+    cursor = db.cursor()
 
+    try:
+        cursor.execute("SELECT user_id, full_name FROM users WHERE role_id = 2")
+        docentes = cursor.fetchall()
+    except:
+        docentes = []
 
+ 
+    docentes_lista = [(d['user_id'], d['full_name']) for d in docentes]
 
-
-
+    return render_template('secciones/horario.html', docentes=docentes_lista)
 
 
 

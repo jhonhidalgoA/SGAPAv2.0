@@ -1,11 +1,5 @@
-// =============================================
-// CONFIGURACIÓN INICIAL Y VARIABLES GLOBALES
-// =============================================
-
-// Verificar si el namespace ya existe para evitar duplicaciones
 if (typeof window.horarioApp === 'undefined') {
-    window.horarioApp = {
-        // Lista de materias con sus colores asociados
+    window.horarioApp = {        
         materias: [
             { nombre: "Matemáticas", color: "#667eea" },
             { nombre: "Geometría", color: "#764ba2" },
@@ -28,7 +22,6 @@ if (typeof window.horarioApp === 'undefined') {
             { nombre: "Almuerzo", color: "#ddd6d6" }
         ],
 
-        // Días de la semana laborales
         dias: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
 
         // Control de horas asignadas
@@ -42,10 +35,6 @@ if (typeof window.horarioApp === 'undefined') {
         modalAction: null
     };
 }
-
-// =============================================
-// FUNCIONES PRINCIPALES
-// =============================================
 
 /**
  * Muestra un modal de confirmación con dos botones (Aceptar/Cancelar)
@@ -69,16 +58,12 @@ function showModal(title, message, action) {
     modalMessage.innerHTML = message;
     window.horarioApp.modalAction = action;
 
-    // Asegurar que el botón cancelar esté visible
-    if (modalCancel){
+    if (modalCancel) {
         modalCancel.style.display = "block";
         modalCancel.innerHTML = '<i class="fas fa-times"></i><span> Cancelar </span>';
         modalCancel.classList.add('modal-cancel');
-
     }
-    
 
-    // Mostrar el modal
     modal.style.display = "flex";
 }
 
@@ -102,11 +87,9 @@ function showModalSingle(title, message) {
     modalTitle.textContent = title;
     modalMessage.innerHTML = message;
     window.horarioApp.modalAction = null;
-
-    // Ocultar botón cancelar
+   
     if (modalCancel) modalCancel.style.display = "none";
-
-    // Mostrar el modal
+  
     modal.style.display = "flex";
 }
 
@@ -192,9 +175,7 @@ function hacerHorasEditables() {
     });
 }
 
-// =============================================
-// FUNCIONES DE VALIDACIÓN
-// =============================================
+
 
 /**
  * Valida que una hora sea correcta
@@ -239,7 +220,7 @@ function parseTime(timeStr) {
 
 /**
  * Valida los campos requeridos del formulario
- * @returns {boolean} - True si todos los campos requeridos están completos
+ * @returns {boolean} 
  */
 function validarCamposRequeridos() {
     let esValido = true;
@@ -269,9 +250,6 @@ function validarCamposRequeridos() {
     return esValido;
 }
 
-// =============================================
-// FUNCIONES DE ACTUALIZACIÓN DE INTERFAZ
-// =============================================
 
 /**
  * Muestra un mensaje temporal en la interfaz
@@ -389,9 +367,6 @@ function actualizarSelect(select, materiaSeleccionada) {
     });
 }
 
-// =============================================
-// FUNCIONES DE GESTIÓN DEL HORARIO
-// =============================================
 
 /**
  * Agrega una nueva fila al horario
@@ -464,7 +439,7 @@ function guardarHorario() {
 
     // Validar que haya horas asignadas
     if (window.horarioApp.totalHorasAsignadas === 0) {
-        showModalSingle('','No hay horas asignadas para guardar');
+        showModalSingle('', 'No hay horas asignadas para guardar');
         return;
     }
 
@@ -511,17 +486,14 @@ function guardarHorario() {
         })
         .then(data => {
             console.log('Horario guardado:', data);
-            mostrarMensaje('Horario guardado exitosamente', 'success');
+            showModalSingle('', 'Horario guardado exitosamente');
         })
         .catch(error => {
             console.error('Error al guardar el horario:', error);
-            mostrarMensaje('Error al guardar el horario. Por favor intente nuevamente.', 'error');
+            showModalSingle('', 'Error al guardar el horario. Por favor intente nuevamente.');
         });
 }
 
-// =============================================
-// INICIALIZACIÓN Y EVENT LISTENERS
-// =============================================
 
 document.addEventListener("DOMContentLoaded", function () {
     // Inicializar contadores de materias
