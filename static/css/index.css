@@ -611,6 +611,13 @@ header.navbar.down {
     color: #e1a93b;
 }
 
+.footer__column p {
+    font-size:1.0rem;
+    color: var(--background-dark);
+    text-align: center;
+    margin-top: 10px;
+}
+
 .team {
     display: flex;
     justify-content: center;
@@ -635,7 +642,7 @@ header.navbar.down {
 
 .team__member p {
     margin-top: 5px;
-    font-size: 14px;
+    font-size: 18px;
     color: var(--background-dark);
 }
 

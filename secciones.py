@@ -1690,3 +1690,7 @@ def usuarios():
 @secciones.route('/eventos')
 def eventos():
     return render_template('secciones/eventos.html')  
+
+@secciones.route('/admisiones')
+def admisiones():
+    return render_template('secciones/admisiones.html')

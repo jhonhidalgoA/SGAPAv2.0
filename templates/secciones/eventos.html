@@ -1,4 +1,6 @@
 {% extends "main.html" %}
+{% include "components/modal.html" %}
+{% from "macros/header-navbar.j2" import header_navbar %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/eventos.css') }}">
@@ -6,24 +8,9 @@
 
 
 {% block content %}
-<!-- Ventana modal -->
-{% include "components/modal.html" %}
-<div class="events__title">
-    <div class="title">
-        <div class="navbar__logo">
-            <span onclick="showModal('', '¿Estás seguro de que deseas cerrar sesión?', confirmLogout)"
-                class="icon material-symbols-outlined toggleBtn">
-                logout
-            </span>
-            <h2>Eventos 2025</h2>
-        </div>
-    </div>
-    <div class="icon__return">
-        <a href="{{ url_for('index') }}" class="icon__link">
-            <i class="material-symbols-outlined" aria-label="Table">arrow_back</i>
-        </a>
-    </div>
-</div>
+
+{{ header_navbar() }}
+
 <section class="events__container">
     <div class="filters">
         <div class="filters__mes">
@@ -64,32 +51,6 @@
 
 
 {% block extra_js %}
-<script>
-    /*Funcion Modal */
-    function confirmLogout() {
-        window.location.href = "{{ url_for('auth.logout') }}";
-    }
-
-    function showModal(title, message, action) {
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalMessage").innerText = message;
-        window.modalAction = action;
-
-        const modal = document.getElementById("confirmModal");
-        modal.style.display = "flex";
-    }
-    document.getElementById("modalConfirm").addEventListener("click", function () {
-        if (typeof modalAction === 'function') {
-            modalAction();
-        }
-        document.getElementById("confirmModal").style.display = "none";
-    });
-
-    document.getElementById("modalCancel").addEventListener("click", function () {
-        document.getElementById("confirmModal").style.display = "none";
-    });
-</script>
-
 <script>
     /*Eventos*/
     let eventos = [];
@@ -205,6 +166,16 @@
     });
 
     window.onload = cargarEventos;
+</script>
+<script>
+    window.addEventListener('scroll', function () {
+        const navbar = document.querySelector('header.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('down');
+        } else {
+            navbar.classList.remove('down');
+        }
+    });
 </script>
 {% endblock %}
 
