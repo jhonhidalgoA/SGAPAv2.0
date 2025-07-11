@@ -1,5 +1,5 @@
 if (typeof window.horarioApp === 'undefined') {
-    window.horarioApp = {        
+    window.horarioApp = {
         materias: [
             { nombre: "Matemáticas", color: "#667eea" },
             { nombre: "Geometría", color: "#764ba2" },
@@ -87,9 +87,9 @@ function showModalSingle(title, message) {
     modalTitle.textContent = title;
     modalMessage.innerHTML = message;
     window.horarioApp.modalAction = null;
-   
+
     if (modalCancel) modalCancel.style.display = "none";
-  
+
     modal.style.display = "flex";
 }
 
@@ -367,35 +367,34 @@ function actualizarSelect(select, materiaSeleccionada) {
     });
 }
 
-
-/**
- * Agrega una nueva fila al horario
- */
 function agregarFilaHorario() {
     const tablaHorario = document.getElementById('tabla-horario');
-    const ultimaFila = tablaHorario.lastElementChild;
-    const ultimaHoraFin = ultimaFila.querySelector('.time:last-child').dataset.time;
+    const filas = tablaHorario.querySelectorAll('tr');
 
-    // Validar que no se pase del límite de horas
-    if (parseTime(ultimaHoraFin) >= parseTime("23:59")) {
-        mostrarMensaje("No se pueden agregar más horas después de las 23:59");
-        return;
+    let horaInicio = "07:00";
+    let horaFin = "08:00";
+
+    if (filas.length > 0) {
+        const ultimaFila = tablaHorario.lastElementChild;
+        const ultimaHoraFin = ultimaFila.querySelector('.time:last-child').dataset.time;
+
+        // Validar límite de hora
+        if (parseTime(ultimaHoraFin) >= parseTime("23:59")) {
+            mostrarMensaje("No se pueden agregar más horas después de las 23:59");
+            return;
+        }
+
+        const finTime = parseTime(ultimaHoraFin);
+        finTime.setMinutes(finTime.getMinutes() + 60);
+        horaInicio = ultimaHoraFin;
+        horaFin = finTime.toTimeString().slice(0, 5);
     }
 
-    // Calcular la siguiente hora automáticamente
-    const finTime = parseTime(ultimaHoraFin);
-    finTime.setHours(finTime.getHours() + 1);
-    const nuevaHoraFin = finTime.toTimeString().slice(0, 5);
-
-    // Agregar la nueva fila
-    const nuevaFila = generarFila(ultimaHoraFin, nuevaHoraFin);
+    const nuevaFila = generarFila(horaInicio, horaFin);
     tablaHorario.appendChild(nuevaFila);
     hacerHorasEditables();
 }
 
-/**
- * Borra todo el horario y reinicia los contadores
- */
 function borrarHorario() {
     // Reiniciar contadores
     Object.keys(window.horarioApp.seleccionContador).forEach(materia => {
@@ -422,9 +421,6 @@ function borrarHorario() {
     });
 }
 
-/**
- * Guarda el horario en el servidor
- */
 function guardarHorario() {
     // Validar campos requeridos
     if (!validarCamposRequeridos()) {
@@ -443,32 +439,112 @@ function guardarHorario() {
         return;
     }
 
+    // OBTENER Y VALIDAR IDs ANTES DE PROCESAR
+    const gradoElement = document.getElementById('grados-select');
+    const docenteElement = document.getElementById('docente-select');
+    
+    if (!gradoElement || !docenteElement) {
+        showModalSingle('', 'Error: No se encontraron los elementos de grado o docente');
+        return;
+    }
+    
+    const gradoId = parseInt(gradoElement.value);
+    const docenteId = parseInt(docenteElement.value);
+    
+    // Validar que los IDs sean números válidos
+    if (isNaN(gradoId) || isNaN(docenteId)) {
+        showModalSingle('', 'Error: Debe seleccionar un grado y un docente válidos');
+        return;
+    }
+    
+    console.log('IDs obtenidos:', { gradoId, docenteId });
+
     // Recolectar datos del horario
     const horarioData = [];
     const tablaHorario = document.getElementById('tabla-horario');
-    const filas = Array.from(tablaHorario.querySelectorAll('tr')).slice(1);
+    
+    // IMPORTANTE: Usar tbody si existe, sino usar la tabla completa
+    const tbody = tablaHorario.querySelector('tbody');
+    const filas = tbody ? 
+        Array.from(tbody.querySelectorAll('tr')) : 
+        Array.from(tablaHorario.querySelectorAll('tr')).slice(1); // Saltar header si no hay tbody
 
-    filas.forEach(fila => {
+    console.log(`Total de filas encontradas: ${filas.length}`);
+
+    filas.forEach((fila, index) => {
+        console.log(`Procesando fila ${index + 1}:`);
+        
         const celdas = fila.querySelectorAll('td');
-        const horaInicio = celdas[0].querySelector('.time[data-time]').dataset.time;
-        const horaFin = celdas[0].querySelectorAll('.time[data-time]')[1].dataset.time;
-
-        window.horarioApp.dias.forEach((dia, index) => {
-            const materiaSelect = celdas[index + 1].querySelector('.subject-select');
+        console.log(`Celdas encontradas: ${celdas.length}`);
+        
+        // Verificar que hay suficientes celdas
+        if (celdas.length < 6) {
+            console.error(`Fila ${index + 1} no tiene suficientes celdas`);
+            return;
+        }
+        
+        const tiempos = celdas[0].querySelectorAll('.time[data-time]');
+        console.log(`Elementos de tiempo encontrados: ${tiempos.length}`);
+        
+        // Verificar que existen ambos elementos de tiempo
+        if (tiempos.length < 2) {
+            console.error(`Fila ${index + 1} sin horas completas:`, fila);
+            return;
+        }
+        
+        const horaInicio = tiempos[0].dataset.time;
+        const horaFin = tiempos[1].dataset.time;
+        
+        console.log(`Fila ${index + 1}: ${horaInicio} - ${horaFin}`);
+        
+        // Verificar que las horas no estén vacías
+        if (!horaInicio || !horaFin) {
+            console.error(`Fila ${index + 1} - Horas vacías:`, {horaInicio, horaFin});
+            return;
+        }
+        
+        window.horarioApp.dias.forEach((dia, diaIndex) => {
+            const materiaSelect = celdas[diaIndex + 1]?.querySelector('.subject-select');
             const materia = materiaSelect ? materiaSelect.value : '';
-
+            
+            console.log(`  ${dia}: ${materia || 'Sin materia'}`);
+            
             if (materia) {
-                horarioData.push({
+                const horarioItem = {
                     dia,
                     hora_inicio: horaInicio,
                     hora_fin: horaFin,
                     materia,
-                    grado_id: parseInt(document.getElementById('grados-select').value),
-                    docente_id: parseInt(document.getElementById('docente-select').value)
-                });
+                    grado_id: gradoId,
+                    docente_id: docenteId
+                };
+                
+                // Log para debugging
+                console.log('Agregando item:', horarioItem);
+                horarioData.push(horarioItem);
             }
         });
     });
+
+    console.log('Datos finales a enviar:', horarioData);
+    console.log('Primer elemento del array:', horarioData[0]);
+
+    // Verificar que hay datos para enviar
+    if (horarioData.length === 0) {
+        showModalSingle('', 'No hay materias asignadas para guardar');
+        return;
+    }
+
+    // Verificar que todos los elementos tienen los campos requeridos
+    const elementosIncompletos = horarioData.filter(item => 
+        !item.grado_id || !item.docente_id || isNaN(item.grado_id) || isNaN(item.docente_id)
+    );
+    
+    if (elementosIncompletos.length > 0) {
+        console.error('Elementos con datos incompletos:', elementosIncompletos);
+        showModalSingle('', 'Error: Hay elementos con datos incompletos');
+        return;
+    }
 
     // Enviar datos al servidor
     fetch('/secciones/horario', {
@@ -478,20 +554,20 @@ function guardarHorario() {
         },
         body: JSON.stringify(horarioData)
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Horario guardado:', data);
-            showModalSingle('', 'Horario guardado exitosamente');
-        })
-        .catch(error => {
-            console.error('Error al guardar el horario:', error);
-            showModalSingle('', 'Error al guardar el horario. Por favor intente nuevamente.');
-        });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Horario guardado:', data);
+        showModalSingle('', 'Horario guardado exitosamente');
+    })
+    .catch(error => {
+        console.error('Error al guardar el horario:', error);
+        showModalSingle('', 'Error al guardar el horario. Por favor intente nuevamente.');
+    });
 }
 
 
@@ -593,23 +669,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Botón para guardar horario
     document.querySelector('.btn__save').addEventListener('click', guardarHorario);
 
-    // Botón para imprimir
-    document.querySelector('.btn-primary:last-child').addEventListener('click', function () {
-        window.print();
-    });
 
-    // Inicializar tabla con una fila por defecto
-    // Limpiar completamente y recrear
     const tablaHorario = document.getElementById('tabla-horario');
     if (tablaHorario) {
-        // Obtener solo el tbody
         const tbody = tablaHorario.querySelector('tbody') || tablaHorario;
 
-        // Limpiar todo el contenido del tbody
-        tbody.innerHTML = '';
 
-        // Agregar solo una fila
-        tbody.appendChild(generarFila());
+
         hacerHorasEditables();
     }
 
@@ -617,7 +683,26 @@ document.addEventListener("DOMContentLoaded", function () {
     actualizarEstadisticas();
 });
 
-// Función para cerrar sesión
-function confirmLogout() {
-    window.location.href = "{{ url_for('auth.logout') }}";
-}
+document.getElementById('btn-ver-horario').addEventListener('click', function () {
+    const gradoSelect = document.getElementById('grados-select');
+    const gradoId = gradoSelect.value;
+
+    if (!gradoId) {
+        showModalSingle('', 'Por favor seleccione un grado antes de ver el horario.');
+        return;
+    }
+
+    window.location.href = `/secciones/horario/ver/${gradoId}`;
+});
+
+document.getElementById('btn-ver-horario').addEventListener('click', function () {
+    const gradoSelect = document.getElementById('grados-select');
+    const gradoId = gradoSelect.value;
+
+    if (!gradoId) {
+        showModalSingle('', 'Por favor seleccione un grado antes de ver el horario.');
+        return;
+    }
+
+    window.location.href = `/secciones/horario/ver/${gradoId}`;
+});

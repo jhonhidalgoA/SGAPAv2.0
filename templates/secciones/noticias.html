@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% from "macros/header-navbar.j2" import header_navbar %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/noticias.css') }}">
+{% endblock %}
+
+{% block content %}
+
+{{ header_navbar() }}
+
+<h1>Noticas</h1>
+
+{% block extra_js %}
+{% endblock %}
+
+{% endblock %}

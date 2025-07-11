@@ -81,12 +81,13 @@
                     {{ btn(icono="add", texto="Agregar", color="load", id="agregar-hora") }}
                     {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }}
                     {{ btn(icono="delete", texto="Borrar", color="delete", tipo="reset" ) }}
-                    <button class="btn btn-primary">
-                        <span>🖨️</span>
-                        Imprimir
-                    </button>
+                    {{ btn(icono="eye_tracking", texto="Ver", color="view", id="btn-ver-horario") }}
+                    
                 </div>
             </div>
+            <pre>
+{{ horario }}
+</pre>
         </main>
         <aside class="sidebar">
             <div class="sidebar__title">
@@ -279,6 +280,11 @@
 </div>
 
 {% block extra_js %}
+<script>
+    function confirmLogout() {
+        window.location.href = "{{ url_for('auth.logout') }}";
+    }
+</script>
 <script src="{{ url_for('static', filename='js/horario.js') }}"></script>
 {% endblock %}
 

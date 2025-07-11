@@ -14,8 +14,8 @@ def validar_sesion():
     roles_protegidos = [1, 2]  # 1=admin, 2=docente
 
     # Detectamos si la ruta actual está en las protegidas
-    if any(request.endpoint.startswith(prefix) for prefix in rutas_protegidas):
-        # Si el usuario tiene rol de admin o docente → debe iniciar sesión
+    if request.endpoint is not None and any(request.endpoint.startswith(prefix) for prefix in rutas_protegidas):
+        
         if session.get('role_id') in roles_protegidos:
             from db import get_connection
             conn = get_connection()

@@ -49,13 +49,6 @@
     background: var(--color-button-save-hover);
 }
 
-.btn__print{
-    background: var(--color-button-print);
-}
-
-.btn__print:hover{
-    background: var(--color-button-print-hover);
-}
 
 .btn__delete{
     background-color:var(--color-button-delete);

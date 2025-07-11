@@ -1,0 +1,83 @@
+{% extends "main.html" %}
+{% block title %} Ver Horario {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ver_horario.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<h2>Horario del Grado {{ grado_id }}</h2>
+
+<!-- Tabla donde se mostrará el horario -->
+<table id="tabla-horario" class="schedule-table"
+       data-horario='{{ horario | tojson if horario else "[]" | safe }}'>
+    <thead>
+        <tr>
+            <th>Hora</th>
+            <th>Lunes</th>
+            <th>Martes</th>
+            <th>Miércoles</th>
+            <th>Jueves</th>
+            <th>Viernes</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Las filas se generarán dinámicamente -->
+    </tbody>
+</table>
+
+<script>
+    // Obtener los datos del atributo data-horario
+    const tabla = document.getElementById('tabla-horario');
+    const rawData = tabla.getAttribute('data-horario');
+
+    let horarioData = [];
+
+    try {
+        horarioData = JSON.parse(rawData);
+    } catch (e) {
+        console.error("Error al parsear JSON:", e);
+        horarioData = [];
+    }
+
+    console.log("Datos cargados:", horarioData);
+
+    // Agrupar por bloques horarios
+    const bloques = {};
+
+    horarioData.forEach(row => {
+        const key = `${row.hora_inicio}-${row.hora_fin}`;
+        if (!bloques[key]) {
+            bloques[key] = { inicio: row.hora_inicio, fin: row.hora_fin, dias: {} };
+        }
+        bloques[key].dias[row.dia] = row.materia;
+    });
+
+    const tbody = document.querySelector("#tabla-horario tbody");
+
+    // Ordenar los bloques por hora de inicio (formato HH:mm)
+    const bloquesOrdenados = Object.keys(bloques).sort((a, b) => {
+        const [horaA] = a.split('-')[0].split(':').map(Number);
+        const [horaB] = b.split('-')[0].split(':').map(Number);
+        return horaA - horaB;
+    });
+
+    bloquesOrdenados.forEach(bloque => {
+        const data = bloques[bloque];
+        const tr = document.createElement("tr");
+
+        const tdHora = document.createElement("td");
+        tdHora.textContent = `${data.inicio} - ${data.fin}`;
+        tr.appendChild(tdHora);
+
+        ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].forEach(dia => {
+            const td = document.createElement("td");
+            td.textContent = data.dias[dia] || "";
+            tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+    });
+</script>
+{% endblock %}

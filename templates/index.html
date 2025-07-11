@@ -79,11 +79,11 @@
             </div>
         </div>
     </div>
-    <div class="event__button">
-        <button class="event__btn">
+    <div class="event__button">        
+        <a href="{{ url_for('secciones.noticias') }}" class="event__btn">
             <span class="material-symbols-outlined">double_arrow</span>
             <span class="event__sub">Ver todas las noticias</span>
-        </button>
+        </a>
     </div>
 </section>
 
@@ -239,8 +239,9 @@
         </div>
         <div class="footer__column">
             <h3>NOSOTROS</h3>
-            <p>Soy estudiante del SENA en la Tecnología Análisis y Desarrollo de Software (Ficha 2879646), y estoy desarrollando SGAPA.</p>
-            <div class="team">                
+            <p>Soy estudiante del SENA en la Tecnología Análisis y Desarrollo de Software (Ficha 2879646), y estoy
+                desarrollando SGAPA.</p>
+            <div class="team">
                 <div class="team__member">
                     <img src="../../static/img/perfil.png" alt="Nombre 3">
                     <p>Jhon F. Hidalgo Arango</p>
@@ -269,9 +270,9 @@
 {% block extra_js %}
 <script>
     window.addEventListener("scroll", function () {
-        var header = document.querySelector("header");        
+        var header = document.querySelector("header");
         header.classList.toggle("down", window.scrollY > 0);
-        
+
     });
 </script>
 <script>

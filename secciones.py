@@ -1639,50 +1639,106 @@ def tareas():
 def horario():
     if request.method == 'POST':
         data = request.get_json()
+        print("Datos recibidos:", data)  # Debug
+        
         db = get_db()
         cursor = db.cursor()
-
+        
         try:
             for entry in data:
+                print(f"Procesando: {entry}")  # Debug
+                
+                # Verificar que la materia existe
+                cursor.execute("SELECT subject_id FROM asignaturas WHERE name = %s", (entry['materia'],))
+                subject_result = cursor.fetchone()
+                
+                if not subject_result:
+                    print(f"Materia no encontrada: {entry['materia']}")
+                    continue
+                    
                 cursor.execute("""
                     INSERT INTO horarios 
-                    (schedule_day, start_time, end_time, subject_id, grade_id, period_id)
-                    VALUES (%s, %s, %s, 
-                            (SELECT subject_id FROM asignaturas WHERE name = %s), 
-                            %s, %s)
+                    (schedule_day, start_time, end_time, subject_id, grade_id, period_id, teacher_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (
                     entry['dia'],
                     entry['hora_inicio'],
                     entry['hora_fin'],
-                    entry['materia'],
+                    subject_result['subject_id'],
                     entry['grado_id'],
-                    1
+                    1,
+                    entry['docente_id']
                 ))
-
+                
             db.commit()
             return jsonify({"status": "success", "message": "Horario guardado"}), 200
+            
         except Exception as e:
+            print(f"Error: {e}")  # Debug
             db.rollback()
             return jsonify({"status": "error", "message": str(e)}), 500
+    
+    # IMPORTANTE: Esta parte debe estar al mismo nivel que el if anterior
+    # Solo GET - obtener docentes y renderizar template
+    db = get_db()
+    cursor = db.cursor()
+    
+    try:
+        cursor.execute("SELECT user_id, full_name FROM users WHERE role_id = 2")
+        docentes = cursor.fetchall()
+    except Exception as e:
+        print(f"Error al obtener docentes: {e}")
+        docentes = []
+    
+    docentes_lista = [(d['user_id'], d['full_name']) for d in docentes] if docentes else []
+    
+    return render_template('secciones/horario.html', docentes=docentes_lista)
 
-    # Solo GET
+####
+
+
+def format_timedelta(td):
+    total_seconds = int(td.total_seconds())
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, _ = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}"
+
+@secciones.route('/horario/ver/<int:grado_id>')
+def ver_horario(grado_id):
     db = get_db()
     cursor = db.cursor()
 
     try:
-        cursor.execute("SELECT user_id, full_name FROM users WHERE role_id = 2")
-        docentes = cursor.fetchall()
-    except:
-        docentes = []
+        cursor.execute("""
+            SELECT h.schedule_day AS dia, h.start_time AS hora_inicio, 
+                   h.end_time AS hora_fin, a.name AS materia
+            FROM horarios h
+            JOIN asignaturas a ON h.subject_id = a.subject_id
+            WHERE h.grade_id = %s
+            ORDER BY FIELD(h.schedule_day, 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'),
+                     h.start_time
+        """, (grado_id,))
+        
+        horario = cursor.fetchall()
 
- 
-    docentes_lista = [(d['user_id'], d['full_name']) for d in docentes]
+        # Convertir tiempos a formato HH:MM
+        horario_formateado = []
+        for row in horario:
+            horario_formateado.append({
+                "dia": row['dia'],
+                "hora_inicio": format_timedelta(row['hora_inicio']),
+                "hora_fin": format_timedelta(row['hora_fin']),
+                "materia": row['materia']
+            })
 
-    return render_template('secciones/horario.html', docentes=docentes_lista)
+    except Exception as e:
+        print("Error al cargar horario:", e)
+        horario_formateado = []
+
+    return render_template('secciones/ver_horario.html', grado_id=grado_id, horario=horario_formateado)
 
 
-
-
+######
 @secciones.route('/usuarios', methods=['GET', 'POST'])
 def usuarios():
     return render_template('secciones/usuarios.html')
@@ -1694,3 +1750,7 @@ def eventos():
 @secciones.route('/admisiones')
 def admisiones():
     return render_template('secciones/admisiones.html')
+
+@secciones.route('/noticias')
+def noticias():
+    return render_template('secciones/noticias.html')
