@@ -165,7 +165,7 @@ header.navbar.down {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 1px;
     flex-wrap: wrap;
 }
 
@@ -176,7 +176,7 @@ header.navbar.down {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    margin: 20px;
+    margin: 5px;
 }
 
 .card img {
@@ -192,6 +192,14 @@ header.navbar.down {
     font-size: 16px;
     text-align: center;
     margin-bottom: 8px;
+    letter-spacing: 2px;
+}
+
+.card__content h4 .danger {
+    font-size:16px;  
+    color: var(--color-danger);
+    font-weight: bold;
+    letter-spacing: 2px;
 }
 
 .card__content .custom-hr {
@@ -311,7 +319,7 @@ header.navbar.down {
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin: 10px;
+    margin: 5px;
 }
 
 .event__btn {

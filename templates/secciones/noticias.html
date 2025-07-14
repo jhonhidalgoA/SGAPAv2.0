@@ -9,9 +9,311 @@
 
 {{ header_navbar() }}
 
-<h1>Noticas</h1>
+<div class="container">
+    <div class="header">
+        <h1>NOTICIAS</h1>
+        <h2 class="subtitle">Noticias y actividades de nuestra Comunidad Educativa</h2>
+    </div>
+    <div class="news__grid">
+        <div class="news-card">
+            <img src="../../static/img/diaM.jpg" alt="Dia de la Mujer">
+            <div class="card-content">
+                <div class="card-category">Colegio SGAPA</div>
+                <h3 class="card-title">Celebración día de la Mujer 2025</h3>
+                <p class="card-date">07-Marzo-2025</p>
+                <button class="card-button" onclick="openModal('dia-mujer')">Saber más</button>
+            </div>
+        </div>
+        <div class="news-card">
+            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&h=200&fit=crop"
+                alt="Día del Maestro">
+            <div class="card-content">
+                <div class="card-category">Colegio SGAPA</div>
+                <h3 class="card-title">Celebración día del Maestro 2025</h3>
+                <p class="card-date">15-Mayo-2025</p>
+                <button class="card-button" onclick="openModal('dia-maestro')">Saber más</button>
+            </div>
+        </div>
+
+        <div class="news-card">
+            <img src = "../../static/img/estudiante-04.png"
+                alt="Día del estudiante">
+            <div class="card-content">
+                <div class="card-category">Colegio SGAPA</div>
+                <h3 class="card-title">Celebración día del estudiante 2025</h3>
+                <p class="card-date">30-Mayo-2025</p>
+                <button class="card-button" onclick="openModal('dia-estudiante')">Saber más</button>
+            </div>
+        </div>  
+         <div class="news-card">
+            <img src="../../static/img/talento-1.jpg"
+                alt="Festival de Talentos">
+            <div class="card-content">
+                <div class="card-category">Colegio SGAPA</div>
+                <h3 class="card-title">Festival de Talentos 2025</h3>
+                <p class="card-date">06-Junio-2025</p>
+                <button class="card-button" onclick="openModal('festival-talentos')">Saber más</button>
+            </div>
+        </div>      
+        <div class="news-card">
+            <img src="../../static/img/bachilleres-01.jpg"
+                alt="Graduación Bachilleres">
+            <div class="card-content">
+                <div class="card-category">Colegio SGAPA</div>
+                <h3 class="card-title">Graduación Bachilleres 2024</h3>
+                <p class="card-date">6-Dic-2024</p>
+                <button class="card-button" onclick="openModal('graduacion-bachilleres')">Saber más</button>
+            </div>
+        </div>
+        <div class="news-card">
+            <img src="../../static/img/primaria-01.png"
+                alt="Grados Primaria">
+            <div class="card-content">
+                <div class="card-category">Colegio SGAPA</div>
+                <h3 class="card-title">Grados Primaria 2024</h3>
+                <p class="card-date">2-Dic-2024</p>
+                <button class="card-button" onclick="openModal('grados-primaria')">Saber más</button>
+            </div>
+        </div>
+        <div class="news-card">
+            <img src="../../static/img/familia-01.jpg"
+                alt="Día de la Familia">
+            <div class="card-content">
+                <div class="card-category">Colegio SGAPA</div>
+                <h3 class="card-title">Día de la Familia 2024</h3>
+                <p class="card-date">8-Feb-2024</p>
+                <button class="card-button" onclick="openModal('dia-familia')">Saber más</button>
+            </div>
+        </div>       
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="newsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="slider-container">
+            <div class="slider" id="slider">
+                <!-- Las imágenes se cargarán dinámicamente -->
+            </div>
+            <button class="slider-nav prev" onclick="changeSlide(-1)">&#10094;</button>
+            <button class="slider-nav next" onclick="changeSlide(1)">&#10095;</button>
+        </div>
+        <div class="slider-dots" id="sliderDots">
+            <!-- Los dots se generarán dinámicamente -->
+        </div>
+        <div class="modal-text">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-category" id="modalCategory"></p>
+            <p class="modal-description" id="modalDescription"></p>
+        </div>
+    </div>
+</div>
 
 {% block extra_js %}
+<script>
+    let currentSlide = 0;
+    let currentImages = [];
+
+    // Datos de las noticias
+    const newsData = {
+        'graduacion-bachilleres': {
+            title: 'Graduación Bachilleres 2024',
+            category: 'Ceremonia de Graduación',
+            description: 'Con gran orgullo y emoción, celebramos la graduación de nuestros estudiantes de bachillerato. Este evento marca el final de una etapa importante en sus vidas académicas y el inicio de nuevos desafíos. La ceremonia se realizó en el auditorio principal del colegio, con la presencia de familiares, profesores y directivos. Los graduados demostraron su excelencia académica y su compromiso con los valores institucionales.',
+            images: [
+                src="../../static/img/bachilleres-01.jpg",
+                src="../../static/img/bachilleres-02.jpeg",
+                src="../../static/img/bachilleres-03.jpg"
+                
+            ]
+        },
+        'grados-primaria': {
+            title: 'Grados Primaria 2024',
+            category: 'Ceremonia de Promoción',
+            description: 'Los estudiantes de quinto grado culminaron exitosamente su etapa de primaria. Esta ceremonia representa un momento especial donde celebramos los logros académicos y personales de nuestros pequeños. Durante el evento, los estudiantes mostraron sus talentos y recibieron reconocimientos por su dedicación y esfuerzo durante estos años formativos.',
+            images: [
+                src="../../static/img/primaria-01.png",
+                src="../../static/img/primaria-02.png",
+                src="../../static/img/primaria-03.png",
+            ]
+        },
+        'dia-familia': {
+            title: 'Día de la Familia 2024',
+            category: 'Evento Social',
+            description: 'Una jornada llena de alegría y unión familiar donde padres, estudiantes y profesores compartieron momentos especiales. El evento incluyó actividades recreativas, presentaciones artísticas y espacios para el diálogo y la convivencia. Esta celebración refuerza los lazos entre la comunidad educativa y destaca la importancia de la familia en el proceso formativo de nuestros estudiantes.',
+            images: [
+                '../../static/img/familia-01.jpg',
+                '../../static/img/family-7257182_1920.jpg',
+                '../../static/img/familia-02.jpg'
+                
+            ]
+        },
+        'festival-talentos': {
+            title: 'Festival de Talentos 2025',
+            category: 'Evento Artístico',
+            description: 'Nuestros estudiantes demostraron sus habilidades artísticas en diversas disciplinas como música, danza, teatro y artes visuales. Este festival es una oportunidad para que los jóvenes expresen su creatividad y desarrollen su confianza en el escenario. Las presentaciones fueron evaluadas por un jurado calificado y se otorgaron reconocimientos a los participantes más destacados.',
+            images: [
+                src="../../static/img/talento-04.jpg",
+                src="../../static/img/talento-02.jpg",
+                src="../../static/img/talento-03.jpg"       
+                        
+            ]
+        },
+        'dia-mujer': {
+            title: 'Día de la Mujer 2025',
+            category: 'Evento Cultural',
+            description: 'La Comunidad Educativa se unió para rendir un merecido homenaje a las mujeres que forman parte de nuestro colegio. La jornada estuvo marcada por diversas actividades. Desde temprano, nuestras alumnas recibieron un saludo especial por parte de los alumnos, quienes les entregaron un hermoso detalle como muestra de reconocimiento y aprecio.',
+            images: [
+                src = "../../static/img/m-01.jpg",
+                src = "../../static/img/m-02.jpg",
+                src = "../../static/img/m-03.jpg",
+                src="../../static/img/diaM.jpg"
+            ]
+        },
+        'dia-estudiante': {
+            title: 'Día del Estudiante 2025',
+            category: 'Evento Cultural',
+            description: 'El Día del Estudiante fue una jornada especial dedicada a realizar diversas actividades deportivas, recreativas y culturales. Durante  todo el día, los estudiantes participaron en juegos, competencias, presentaciones artísticas y espacios de integración que promovieron la sana convivencia, el trabajo en equipo y la expresión creativa. Esta actividad fortaleció el sentido de pertenencia y el disfrute dentro de la comunidad educativa.',
+            images: [
+                src = "../../static/img/estudiante-01.jpg",
+                src = "../../static/img/estudiante-02.jpg",
+                src = "../../static/img/estudiante-03.jpg",
+                src = "../../static/img/estudiante-04.png"
+            ]
+        },
+        'dia-maestro': {
+            title: 'Celebración Día del Maestro 2025',
+            category: 'Evento Institucional',
+            description: 'En el día del maestro, nuestra comunidad educativa se unió para reconocer y agradecer la importante labor de nuestros docentes. Los estudiantes prepararon presentaciones especiales, cartas de agradecimiento y actividades sorpresa para honrar a sus profesores. Esta celebración destaca el valor y la dedicación de quienes forman a las futuras generaciones.',
+            images: [
+                src = "../../static/img/maestro-01.jpg",
+                src = "../../static/img/maestro-3.webp",
+                src = "../../static/img/maestro-4.jpg",
+                src = "../../static/img/maestro-5.png"
+
+            ]
+        },
+        'semana-cultural': {
+            title: 'Semana Cultural 2024',
+            category: 'Evento Cultural',
+            description: 'La semana cultural fue una celebración de la diversidad y riqueza cultural de nuestra comunidad. Durante cinco días, se realizaron actividades como obras de teatro, exposiciones artísticas, concursos literarios y presentaciones folklóricas. Esta semana permite a los estudiantes conocer y valorar diferentes expresiones culturales, fortaleciendo su identidad y respeto por la diversidad.',
+            images: [
+                'https://images.unsplash.com/photo-1588072432836-e10032774350?w=800&h=400&fit=crop',
+                'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=400&fit=crop',
+                'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=400&fit=crop'
+            ]
+        }
+    };
+
+    function openModal(newsId) {
+        const modal = document.getElementById('newsModal');
+        const data = newsData[newsId];
+
+        if (data) {
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalCategory').textContent = data.category;
+            document.getElementById('modalDescription').textContent = data.description;
+
+            currentImages = data.images;
+            currentSlide = 0;
+
+            loadSlider();
+            createDots();
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('newsModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function loadSlider() {
+        const slider = document.getElementById('slider');
+        slider.innerHTML = '';
+
+        currentImages.forEach((image, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.innerHTML = `<img src="${image}" alt="Imagen ${index + 1}">`;
+            slider.appendChild(slide);
+        });
+
+        updateSliderPosition();
+    }
+
+    function createDots() {
+        const dotsContainer = document.getElementById('sliderDots');
+        dotsContainer.innerHTML = '';
+
+        currentImages.forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            if (index === 0) dot.classList.add('active');
+            dot.onclick = () => goToSlide(index);
+            dotsContainer.appendChild(dot);
+        });
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+
+        if (currentSlide >= currentImages.length) {
+            currentSlide = 0;
+        } else if (currentSlide < 0) {
+            currentSlide = currentImages.length - 1;
+        }
+
+        updateSliderPosition();
+        updateDots();
+    }
+
+    function goToSlide(index) {
+        currentSlide = index;
+        updateSliderPosition();
+        updateDots();
+    }
+
+    function updateSliderPosition() {
+        const slider = document.getElementById('slider');
+        const translateX = -currentSlide * 100;
+        slider.style.transform = `translateX(${translateX}%)`;
+    }
+
+    function updateDots() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentSlide);
+        });
+    }
+
+    // Cerrar modal al hacer clic fuera de él
+    window.onclick = function (event) {
+        const modal = document.getElementById('newsModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+    // Navegación con teclado
+    document.addEventListener('keydown', function (event) {
+        const modal = document.getElementById('newsModal');
+        if (modal.style.display === 'block') {
+            if (event.key === 'Escape') {
+                closeModal();
+            } else if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        }
+    });
+</script>
+
 {% endblock %}
 
 {% endblock %}

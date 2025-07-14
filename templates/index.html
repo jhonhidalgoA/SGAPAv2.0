@@ -43,43 +43,43 @@
     <p>Lo más <span class="resaltar">Reciente...</span> </p>
     <div class="card__container">
         <div class="card">
-            <img src="../static/img/pexels-karolina-grabowska-8106679.jpg" alt="graduacion">
+            <img src="../static/img/talento-1.jpg" alt="talento">
             <div class="card__content">
-                <h4>Colegio la presentación</h4>
+                <h4>Colegio SG<span class="danger">A</span>PA </h4>
                 <hr class="custom-hr">
-                <h2>Graduación Bachilleres 2024</h2>
+                <h2>Realización Festival de Talentos 2025</h2>
                 <div class="class__button">
-                    <span>6-Dic-2024 </span>
+                    <span>06-Jun-2025 </span>
                     <a href="#" class="btn__card">Saber más</a>
                 </div>
             </div>
         </div>
         <div class="card">
-            <img src="../static/img/kindergarten-graduation-7257180_1920.jpg" alt="primaria">
+            <img src="../static/img/estudiante-03.jpg" alt="estudiante">
             <div class="card__content">
-                <h4>Colegio la presentación</h4>
+                <h4>Colegio SG<span class="danger">A</span>PA</h4>
                 <hr class="custom-hr">
-                <h2>Grados Primaria 2024</h2>
+                <h2>Celebración día del estudiante 2025</h2>
                 <div class="class__button">
-                    <span>2-Dic-2024 </span>
+                    <span>30-May-2025 </span>
                     <a href="#" class="btn__card">Saber más</a>
                 </div>
             </div>
         </div>
         <div class="card">
-            <img src="../static/img/family-7257182_1920.jpg" alt="familia">
+            <img src="../static/img/maestro-01.jpg" alt="familia">
             <div class="card__content">
-                <h4>Colegio la presentación</h4>
+                <h4>Colegio SG<span class="danger">A</span>PA </h4>
                 <hr class="custom-hr">
-                <h2>Día de la Familia 2024</h2>
+                <h2>Celebración día del Maestro 2025</h2>
                 <div class="class__button">
-                    <span>8-Feb-2024 </span>
+                    <span>15-May-2025 </span>
                     <a href="#" class="btn__card">Saber más</a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="event__button">        
+    <div class="event__button">
         <a href="{{ url_for('secciones.noticias') }}" class="event__btn">
             <span class="material-symbols-outlined">double_arrow</span>
             <span class="event__sub">Ver todas las noticias</span>
@@ -92,27 +92,27 @@
     <h1 class="event__title">Eventos</h1>
     <div class="event__card">
         <div class="event__date">
-            <p class="event__day">20</p>
-            <span class="event__month">ENERO</span>
+            <p class="event__day">21</p>
+            <span class="event__month">JULIO</span>
             <p class="event__year">2025</p>
         </div>
         <div class="event__details">
-            <span class="event__time">8:00 AM - 12:00 PM </span>
-            <h3 class="event__name">Inicio de clases 2025</h3>
-            <p class="event__location">Lugar: Sede Principal I.E La Presentación </p>
+            <span class="event__time">9:00 AM - 10:00 AM </span>
+            <h3 class="event__name">Conmemoración del 20 de Julio</h3>
+            <p class="event__location">Lugar: Sede Principal SGAPA </p>
         </div>
     </div>
 
     <div class="event__card">
         <div class="event__date">
-            <p class="event__day">07</p>
-            <span class="event__month">MARZO</span>
+            <p class="event__day">10</p>
+            <span class="event__month">AGOSTO</span>
             <p class="event__year">2025</p>
         </div>
         <div class="event__details">
-            <span class="event__time">8:00 AM - 10:00 AM </span>
-            <h3 class="event__name">Día internacional de la mujer</h3>
-            <p class="event__location">Lugar: Coliseo Municipal </p>
+            <span class="event__time">7:00 AM - 6:00 PM </span>
+            <h3 class="event__name">Aplicación pruebas Saber 11</h3>
+            <p class="event__location">Lugar: Escuela Normal Superior </p>
         </div>
     </div>
 
@@ -266,63 +266,67 @@
     <span class="spinner"></span>
 </div>
 
-
 {% block extra_js %}
 <script>
     window.addEventListener("scroll", function () {
         var header = document.querySelector("header");
         header.classList.toggle("down", window.scrollY > 0);
-
     });
 </script>
+
 <script>
-    /*Spinner*/
-    let cards = document.querySelectorAll('.schedule__card');
-    const modal = document.getElementById('pdfModal');
-    const pdfViewer = document.getElementById('pdfViewer');
-    const downloadLink = document.getElementById('downloadLink');
-    const closeModal = document.querySelector('.modal .close');
+    document.addEventListener("DOMContentLoaded", function () {
+        const loading = document.getElementById('loading');
 
-    cards.forEach(card => {
-        card.addEventListener('click', (event) => {
-            const pdfUrl = card.getAttribute('data-pdf');
-            const pageUrl = card.getAttribute('data-url');
-            const loading = document.getElementById('loading');
+        // Manejar tarjetas con data-pdf o data-url
+        document.querySelectorAll('.schedule__card').forEach(card => {
+            card.addEventListener('click', function (event) {
+                const pdfUrl = this.getAttribute('data-pdf');
+                const pageUrl = this.getAttribute('data-url');
 
-            if (pdfUrl) {
-                // Mostrar spinner antes de abrir el modal
-                loading.style.display = 'flex';
+                if (pdfUrl) {
+                    // Mostrar spinner y abrir modal
+                    loading.style.display = 'flex';
+                    setTimeout(() => {
+                        loading.style.display = 'none';
+                        document.getElementById('pdfViewer').src = pdfUrl;
+                        document.getElementById('downloadLink').href = pdfUrl;
+                        document.getElementById('pdfModal').style.display = 'block';
+                    }, 300);
+                } else if (pageUrl) {
+                    // Navegar con retraso visual (spinner)
+                    event.preventDefault();
+                    loading.style.display = 'flex';
+                    setTimeout(() => {
+                        window.location.href = pageUrl;
+                    }, 300);
+                }
+            });
+        });
 
-                setTimeout(() => {
-                    loading.style.display = 'none'; // Ocultar spinner
-                    pdfViewer.src = pdfUrl;
-                    downloadLink.href = pdfUrl;
-                    modal.style.display = 'block';
-                }, 300); // Tiempo del spinner
+        // Cerrar modal
+        const closeModal = document.querySelector('.modal .close');
+        const modal = document.getElementById('pdfModal');
+        const pdfViewer = document.getElementById('pdfViewer');
 
-            } else if (pageUrl) {
-                // Redirigir después del spinner
-                event.stopPropagation();
-                loading.style.display = 'flex';
+        closeModal?.addEventListener('click', () => {
+            modal.style.display = 'none';
+            pdfViewer.src = '';
+        });
 
-                setTimeout(() => {
-                    window.location.href = pageUrl;
-                }, 300);
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                pdfViewer.src = '';
             }
         });
     });
 
-    closeModal.addEventListener('click', () => {
-        modal.style.display = 'none';
-        pdfViewer.src = '';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-            pdfViewer.src = '';
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
         }
-    });
+    };
 </script>
 {% endblock %}
 

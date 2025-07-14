@@ -1,0 +1,247 @@
+{% extends "main.html" %}
+{% block title %} Ver Horario {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ver_actividades.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<header class="header">
+    <div class="logo__section">
+        <div class="logo">📚</div>
+        <div class="title__section">
+            <h1>Actividades</h1>           
+        </div>
+    </div>
+    <div class="user__section">
+        <div class="notification">🔔</div>
+        <div class="user-info">
+            <div class="avatar">SB</div>
+            <span>Sofia Betancur</span>
+        </div>
+    </div>
+</header>
+<main class="main-content">
+    <div class="stats-grid">
+        <div class="stat-card total">
+            <div class="stat-header">
+                <span class="stat-title">Total Actividades</span>
+                <div class="stat-icon">📊</div>
+            </div>
+            <div class="stat-number">5</div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-header">
+                <span class="stat-title">Pendientes</span>
+                <div class="stat-icon">⏰</div>
+            </div>
+            <div class="stat-number">2</div>
+        </div>
+        <div class="stat-card delayed">
+            <div class="stat-header">
+                <span class="stat-title">Atrasadas</span>
+                <div class="stat-icon">⚠️</div>
+            </div>
+            <div class="stat-number">1</div>
+        </div>
+        <div class="stat-card completed">
+            <div class="stat-header">
+                <span class="stat-title">Completadas</span>
+                <div class="stat-icon">✅</div>
+            </div>
+            <div class="stat-number">1</div>
+        </div>
+    </div>
+    <div class="activities-section">
+        <div class="section-header">
+            <h2 class="section-title">Mis Actividades</h2>
+        </div>
+        <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all">Todas</div>
+            <div class="filter-tab" data-filter="pending">Pendientes</div>
+            <div class="filter-tab" data-filter="delayed">Atrasadas</div>
+            <div class="filter-tab" data-filter="completed">Completadas</div>
+        </div>
+        <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" placeholder="Buscar actividades, materias o profesores..." id="searchInput">
+        </div>
+        <div class="activity-list" id="activityList">
+            <div class="activity-item" data-status="pending">
+                <div class="activity-header">
+                    <div>
+                        <h3 class="activity-title">Ensayo sobre Literatura Contemporánea</h3>
+                        <div class="activity-info">
+                            <span class="info-item">📚 Lengua Castellana</span>
+                            <span class="info-item">👨‍🏫 Prof. María González</span>
+                            <span class="info-item">📅 Vence: 14 de jul de 2025</span>
+                        </div>
+                        <div class="days-remaining">3 días restantes</div>
+                    </div>
+                    <div class="status">
+                        <span class="status-badge status-pending">Pendiente</span>
+                        <button class="action-button">Abrir</button>
+                    </div>
+                </div>
+                <p class="activity-description">Análisis crítico de obras contemporáneas latinoamericanas</p>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text">30%</div>
+            </div>
+            <div class="activity-item" data-status="delayed">
+                <div class="activity-header">
+                    <div>
+                        <h3 class="activity-title">Proyecto de Ciencias - Ecosistemas</h3>
+                        <div class="activity-info">
+                            <span class="info-item">🧪 Ciencias Naturales</span>
+                            <span class="info-item">👨‍🏫 Prof. Carlos Ramírez</span>
+                            <span class="info-item">📅 Vence: 13 de jul de 2025</span>
+                        </div>
+                        <div class="days-remaining">2 días restantes</div>
+                    </div>
+                    <div class="status">
+                        <span class="status-badge status-delayed">Atrasada</span>
+                        <button class="action-button">Abrir</button>
+                    </div>
+                </div>
+                <p class="activity-description">Investigación sobre ecosistemas locales y su conservación</p>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text">60%</div>
+            </div>
+            <div class="activity-item" data-status="expired">
+                <div class="activity-header">
+                    <div>
+                        <h3 class="activity-title">Examen de Cálculo Diferencial</h3>
+                        <div class="activity-info">
+                            <span class="info-item">📐 Matemáticas</span>
+                            <span class="info-item">👩‍🏫 Prof. Ana López</span>
+                            <span class="info-item">📅 Vence: 12 de jul de 2025</span>
+                        </div>
+                    </div>
+                    <div class="status">
+                        <span class="status-badge status-expired">Vencida</span>
+                        <button class="action-button">Abrir</button>
+                    </div>
+                </div>
+                <p class="activity-description">Evaluación de límites, derivadas y aplicaciones</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+{% block extra_js %}
+<script>
+    // Funcionalidad de búsqueda
+    const searchInput = document.getElementById('searchInput');
+    const activityItems = document.querySelectorAll('.activity-item');
+    const filterTabs = document.querySelectorAll('.filter-tab');
+
+    searchInput.addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase();
+
+        activityItems.forEach(item => {
+            const title = item.querySelector('.activity-title').textContent.toLowerCase();
+            const description = item.querySelector('.activity-description').textContent.toLowerCase();
+            const subject = item.querySelector('.info-item').textContent.toLowerCase();
+
+            if (title.includes(searchTerm) || description.includes(searchTerm) || subject.includes(searchTerm)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+
+    // Funcionalidad de filtros
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            // Remover clase active de todos los tabs
+            filterTabs.forEach(t => t.classList.remove('active'));
+            // Agregar clase active al tab clickeado
+            this.classList.add('active');
+
+            const filter = this.dataset.filter;
+
+            activityItems.forEach(item => {
+                if (filter === 'all') {
+                    item.style.display = 'block';
+                } else {
+                    if (item.dataset.status === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+        });
+    });
+
+    // Efectos de hover para las tarjetas de estadísticas
+    const statCards = document.querySelectorAll('.stat-card');
+
+    statCards.forEach(card => {
+        card.addEventListener('mouseenter', function () {
+            this.style.transform = 'translateY(-4px)';
+        });
+
+        card.addEventListener('mouseleave', function () {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Animación de números al cargar la página
+    function animateNumbers() {
+        const numbers = document.querySelectorAll('.stat-number');
+
+        numbers.forEach(number => {
+            const target = parseInt(number.textContent);
+            let current = 0;
+            const increment = target / 20;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                number.textContent = Math.floor(current);
+            }, 50);
+        });
+    }
+
+    // Ejecutar animación al cargar la página
+    window.addEventListener('load', animateNumbers);
+
+    // Funcionalidad de los botones de acción
+    const actionButtons = document.querySelectorAll('.action-button');
+
+    actionButtons.forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const activityTitle = this.closest('.activity-item').querySelector('.activity-title').textContent;
+            alert(`Abriendo: ${activityTitle}`);
+        });
+    });
+
+    // Efecto de click en las actividades
+    activityItems.forEach(item => {
+        item.addEventListener('click', function () {
+            const title = this.querySelector('.activity-title').textContent;
+            console.log(`Actividad seleccionada: ${title}`);
+
+            // Agregar efecto visual temporal
+            this.style.background = '#f0f8ff';
+            setTimeout(() => {
+                this.style.background = '';
+            }, 200);
+        });
+    });
+</script>
+{% endblock %}
+
+{% endblock %}

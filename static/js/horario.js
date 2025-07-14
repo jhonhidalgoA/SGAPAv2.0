@@ -183,24 +183,49 @@ function hacerHorasEditables() {
  * @param {HTMLElement} timeElement - Elemento que contiene la hora
  * @returns {boolean} - True si la hora es válida
  */
+/**
+ * Valida que una hora sea correcta y que la hora de inicio sea anterior a la de fin.
+ * @param {string} horaStr - Hora en formato HH:MM
+ * @param {HTMLElement} timeElement - Elemento que contiene la hora (el que se está editando)
+ * @returns {boolean} - True si la hora es válida y el par horaInicio/horaFin es coherente
+ */
+
 function validarHora(horaStr, timeElement) {
     const hora = parseTime(horaStr);
     if (!hora || isNaN(hora.getTime())) {
-        mostrarMensaje('Formato de hora inválido');
+        mostrarMensaje('Formato de hora inválido. Use HH:MM.');
         return false;
     }
 
     const fila = timeElement.closest('tr');
-    const horas = fila.querySelectorAll('.time');
+    // Aseguramos que seleccionamos los dos elementos de tiempo de la fila actual
+    const horasEnFila = fila.querySelectorAll('.time');
 
-    if (horas.length === 1) {
-        const horaInicio = parseTime(horas[0].dataset.time);
-        const horaFin = parseTime(horas[1].dataset.time);
+    // Deben existir exactamente dos elementos de tiempo en cada fila
+    if (horasEnFila.length !== 2) {
+        console.error("Error: Se esperaban dos elementos de tiempo en la fila, pero se encontraron " + horasEnFila.length);
+        mostrarMensaje('Error interno: Problema con la estructura de las horas en la fila.', 'error');
+        return false; // Indicamos que algo está mal con la estructura
+    }
 
-        if (horaInicio >= horaFin) {
-            mostrarMensaje('La hora de inicio debe ser menor que la hora de fin');
-            return false;
-        }
+    const horaInicioElement = horasEnFila[0];
+    const horaFinElement = horasEnFila[1];
+
+    let horaInicioActual = parseTime(horaInicioElement.dataset.time);
+    let horaFinActual = parseTime(horaFinElement.dataset.time);
+
+    // Si el elemento que se está editando es la hora de inicio
+    if (timeElement === horaInicioElement) {
+        horaInicioActual = hora; // La nueva hora validada
+    } else if (timeElement === horaFinElement) {
+        // Si el elemento que se está editando es la hora de fin
+        horaFinActual = hora; // La nueva hora validada
+    }
+
+    // Validación principal: la hora de inicio debe ser estrictamente menor que la hora de fin
+    if (horaInicioActual >= horaFinActual) {
+        mostrarMensaje('La hora de inicio debe ser anterior a la hora de fin.', 'error');
+        return false;
     }
 
     return true;
@@ -212,7 +237,12 @@ function validarHora(horaStr, timeElement) {
  * @returns {Date} - Objeto Date con la hora
  */
 function parseTime(timeStr) {
+    if (!timeStr) return null; // Manejo de caso para string vacío/nulo
     const [hours, minutes] = timeStr.split(":").map(Number);
+    // Validar que hours y minutes sean números válidos después de la conversión
+    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        return null;
+    }
     const date = new Date();
     date.setHours(hours, minutes, 0, 0);
     return date;
@@ -422,7 +452,7 @@ function borrarHorario() {
 }
 
 function guardarHorario() {
-    // Validar campos requeridos
+   
     if (!validarCamposRequeridos()) {
         const mensajeError = `Por favor complete los siguientes campos obligatorios:<br>
             <div style="margin-top: 10px; text-align: left; padding-left: 20px;">
@@ -458,16 +488,12 @@ function guardarHorario() {
     }
     
     console.log('IDs obtenidos:', { gradoId, docenteId });
-
-    // Recolectar datos del horario
+    
     const horarioData = [];
     const tablaHorario = document.getElementById('tabla-horario');
+        
     
-    // IMPORTANTE: Usar tbody si existe, sino usar la tabla completa
-    const tbody = tablaHorario.querySelector('tbody');
-    const filas = tbody ? 
-        Array.from(tbody.querySelectorAll('tr')) : 
-        Array.from(tablaHorario.querySelectorAll('tr')).slice(1); // Saltar header si no hay tbody
+    const filas = Array.from(tablaHorario.querySelectorAll('tr'));
 
     console.log(`Total de filas encontradas: ${filas.length}`);
 

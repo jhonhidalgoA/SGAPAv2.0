@@ -832,7 +832,7 @@ def restaurante():
     with open(ruta_json, "r", encoding="utf-8") as archivo:
         menus = json.load(archivo)
     menus_ordenados = reordenar_menu(menus)
-    semana = "09 al 13 de junio"  
+    semana = "14 al 18 de julio"  
     return render_template("secciones/restaurante.html", menus=menus_ordenados, semana=semana)
 
 def cargar_menu():
@@ -1754,3 +1754,7 @@ def admisiones():
 @secciones.route('/noticias')
 def noticias():
     return render_template('secciones/noticias.html')
+
+@secciones.route('/ver-actividades')
+def ver_actividades():
+    return render_template('secciones/ver_actividades.html')

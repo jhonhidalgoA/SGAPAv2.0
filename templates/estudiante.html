@@ -15,27 +15,29 @@
 |
 <div class="home__student">
     <div class="home__title">
-        <h2 class="title">Bienvenido(a) Estudiante</h2>        
+        <h2 class="title">Bienvenido(a) Estudiante</h2>
         <span class="date">{{ fecha_actual }}</span>
     </div>
     <div class="student__row">
-        <div class="stat"> 
-            <img src="{{ url_for('static', filename='img/calendarioE.png') }}" alt="horario">        
+        <div class="stat">
+            <img src="{{ url_for('static', filename='img/calendarioE.png') }}" alt="horario">
             <h3>Horario</h3>
         </div>
+        <a href="{{ url_for('secciones.ver_actividades') }}">
+            <div class="stat">
+                <img src="{{ url_for('static', filename='img/actividadesE.png') }}" alt="actividades">
+                <h3>Actividades</h3>
+            </div>
+        </a>
         <div class="stat">
-            <img src="{{ url_for('static', filename='img/actividadesE.png') }}" alt="actividades">            
-            <h3>Actividades</h3>
-        </div>
-        <div class="stat">
-            <img src="{{ url_for('static', filename='img/evaluaciones.png') }}" alt="evaluaciones">            
+            <img src="{{ url_for('static', filename='img/evaluaciones.png') }}" alt="evaluaciones">
             <h3>Evaluaciones</h3>
         </div>
-        <div class="stat"> 
-            <img src="{{ url_for('static', filename='img/reportesE.png') }}" alt="reportes">            
+        <div class="stat">
+            <img src="{{ url_for('static', filename='img/reportesE.png') }}" alt="reportes">
             <h3>Reportes</h3>
         </div>
-    </div>    
+    </div>
 </div>
 
 {% block extra_js %}

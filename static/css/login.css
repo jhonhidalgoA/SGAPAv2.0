@@ -1,10 +1,7 @@
-@import url(../css/variables.css);
+@import url("variables.css");
+@import url("macros.css");
 @import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-
-* {    
-    font-family: "Poppins", serif;   
-}
 
 body{
     display: flex;
@@ -194,12 +191,13 @@ button[type="submit"]:hover {
 
 .alert {
     padding: 12px;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1.25rem;
     margin-top: 10px;
     text-align: center;
     color: #fff; 
     visibility: hidden;
+    width: 100%;
 }
 
 .alert.show {
@@ -208,14 +206,17 @@ button[type="submit"]:hover {
 
 .alert-danger {
     background-color: #dc3545; 
+    width: 550px;
 }
 
 .alert-success {
     background-color: #28a745;
+    width: 550px;
 }
 
 .alert-warning {
     background-color: #ffc107; 
+    width: 550px;
 }
 
 

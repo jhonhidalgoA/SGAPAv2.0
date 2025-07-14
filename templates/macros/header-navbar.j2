@@ -5,13 +5,12 @@
     </div>
 
     <ul class="navbar__list">
-        <li class="navbar__item"><a href="#">Inicio</a></li>
-        <li class="navbar__item"><a href="#noticias">Noticias</a></li>
-        <li class="navbar__item"><a href="#eventos">Eventos</a></li>
-        <li class="navbar__item"><a href="#nosotros">Nosotros</a></li>
-        <li class="navbar__item"><a href="#contacto">Contacto</a></li>
+        <li class="navbar__item"><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li class="navbar__item"><a href="{{ url_for('index') }}#noticias">Noticias</a></li>
+        <li class="navbar__item"><a href="{{ url_for('index') }}#eventos">Eventos</a></li>
+        <li class="navbar__item"><a href="{{ url_for('index') }}#nosotros">Nosotros</a></li>
+        <li class="navbar__item"><a href="{{ url_for('index') }}#contacto">Contacto</a></li>
     </ul>
-
     <ul class="navbar__btn">
         <li><a href="{{ url_for('auth.login') }}">Ingresar</a></li>
     </ul>

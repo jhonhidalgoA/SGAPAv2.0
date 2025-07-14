@@ -8,11 +8,18 @@
 {% block content %}
 
 {{ header_navbar() }}
+<div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
+
+<div class="hero">
+    <h1 class="hero-title">Proceso de Admisiones 2026</h1>
+    <p class="hero-subtitle">Información detallada sobre el proceso de admisión para el año lectivo 2026.</p>
+</div>
 <div class="admissions">
-    <div class="admissions__title">
-        <h1>Proceso de Admisiones 2026</h1>
-        <h2>Información detallada sobre el proceso de admisión para el año lectivo 2026.</h2>
-    </div>
     <div class="container">
         <div class="header" onclick="toggleContent(1)">
             <h2>1. SOLICITUD INICIAL</h2>
@@ -20,7 +27,7 @@
         </div>
         <div class="content" id="content1">
             <p>Para el 2026 tenemos cupos en todos los grados: Prejardín, Jardín, Transición, toda la primaria y todo el
-                bachillerato hasta grado once.</p>      
+                bachillerato hasta grado once.</p>
             <ul>
                 <li><strong>Prejardín:</strong> 3 años cumplidos a abril de 2026</li>
                 <li><strong>Jardín:</strong> 4 años cumplidos a abril de 2026</li>
@@ -28,6 +35,7 @@
             </ul>
         </div>
     </div>
+
     <div class="container">
         <div class="header" onclick="toggleContent(2)">
             <h2>2. DOCUMENTOS REQUERIDOS</h2>
@@ -35,10 +43,8 @@
         </div>
         <div class="content" id="content2">
             <p>Los documentos necesarios para completar el proceso de admisión son los siguientes:</p>
-
             <p>Debe presentar todos los documentos en <span class="phone-number">original y copia</span> para el proceso
-                de
-                verificación.</p>
+                de verificación.</p>
             <ul>
                 <li><strong>Registro civil:</strong> Del estudiante actualizado</li>
                 <li><strong>Fotocopia cédula:</strong> De ambos padres o acudientes</li>
@@ -48,6 +54,7 @@
             </ul>
         </div>
     </div>
+
     <div class="container">
         <div class="header" onclick="toggleContent(3)">
             <h2>3. PROCESO DE EVALUACIÓN</h2>
@@ -56,10 +63,8 @@
         <div class="content" id="content3">
             <p>El proceso de evaluación se realizará de acuerdo al grado solicitado y consta de las siguientes etapas:
             </p>
-
             <p>Las evaluaciones se programarán según disponibilidad y serán comunicadas con <span
-                    class="phone-number">48
-                    horas de anticipación</span>.</p>
+                    class="phone-number">48 horas de anticipación</span>.</p>
             <ul>
                 <li><strong>Entrevista familiar:</strong> Reunión con padres y estudiante</li>
                 <li><strong>Evaluación académica:</strong> Pruebas según el grado</li>
@@ -68,13 +73,14 @@
             </ul>
         </div>
     </div>
+
     <div class="container">
         <div class="header" onclick="toggleContent(4)">
             <h2>4. COSTOS Y PAGOS</h2>
             <div class="toggle-icon" id="toggleIcon4">+</div>
         </div>
         <div class="content" id="content4">
-            <p>Los costos para el año lectivo 2026 incluye los siguientes conceptos:</p>          
+            <p>Los costos para el año lectivo 2026 incluye los siguientes conceptos:</p>
             <ul>
                 <li><strong>Matrícula:</strong> Pago único al momento de la admisión</li>
                 <li><strong>Pensión mensual:</strong> 10 pagos durante el año lectivo</li>
@@ -85,6 +91,9 @@
     </div>
 </div>
 
+<!-- Botón CTA flotante -->
+<a href="#contacto" class="cta-button">¡Inscríbete Ahora!</a>
+
 {% block extra_js %}
 <script>
     function toggleContent(sectionId) {
@@ -92,13 +101,11 @@
         const icon = document.getElementById('toggleIcon' + sectionId);
 
         if (content.classList.contains('expanded')) {
-            // Contraer
             content.classList.remove('expanded');
             content.classList.add('collapsed');
             icon.textContent = '+';
             icon.classList.remove('rotated');
         } else {
-            // Expandir
             content.classList.remove('collapsed');
             content.classList.add('expanded');
             icon.textContent = '+';
@@ -112,6 +119,16 @@
             const content = document.getElementById('content' + i);
             content.classList.add('collapsed');
         }
+    });
+
+    // Animación de scroll suave
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
     });
 </script>
 {% endblock %}
