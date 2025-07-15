@@ -275,6 +275,27 @@
         </aside>
     </div>
 </div>
+<!-- Modal para editar o eliminar grados -->
+<!-- Modal -->
+<div id="gradeModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeGradeModal()">&times;</span>
+        <h2>Lista de Grados</h2>
+        <table id="gradesTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Grado</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Botón "Editar" -->
+<button class="btn__edit" onclick="openGradeModal()">Editar</button>
 
 {% block extra_js %}
 <script>

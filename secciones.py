@@ -1628,10 +1628,6 @@ def guardar_asistencia():
         return jsonify({'success': False, 'message': f'Error al guardar: {str(e)}'}), 500
 
 
-@secciones.route('/tareas', methods=['GET', 'POST'])
-def tareas():
-    return render_template('secciones/tareas.html')
-
 # ─────────────────────────────────────────────────────
 #  HORARIO
 # ─────────────────────────────────────────────────────
@@ -1676,10 +1672,8 @@ def horario():
         except Exception as e:
             print(f"Error: {e}")  # Debug
             db.rollback()
-            return jsonify({"status": "error", "message": str(e)}), 500
+            return jsonify({"status": "error", "message": str(e)}), 500    
     
-    # IMPORTANTE: Esta parte debe estar al mismo nivel que el if anterior
-    # Solo GET - obtener docentes y renderizar template
     db = get_db()
     cursor = db.cursor()
     
@@ -1694,14 +1688,12 @@ def horario():
     
     return render_template('secciones/horario.html', docentes=docentes_lista)
 
-####
-
-
 def format_timedelta(td):
     total_seconds = int(td.total_seconds())
     hours, remainder = divmod(total_seconds, 3600)
     minutes, _ = divmod(remainder, 60)
     return f"{hours:02d}:{minutes:02d}"
+
 
 @secciones.route('/horario/ver/<int:grado_id>')
 def ver_horario(grado_id):
@@ -1738,7 +1730,74 @@ def ver_horario(grado_id):
     return render_template('secciones/ver_horario.html', grado_id=grado_id, horario=horario_formateado)
 
 
-######
+from datetime import timedelta
+@secciones.route('/api/horario/<int:grade_id>', methods=['GET'])
+def get_horario(grade_id):
+    try:
+        db = get_db()
+        cursor = db.cursor(pymysql.cursors.DictCursor)
+
+        # Alias claros para los campos de tiempo
+        query = """
+            SELECT 
+                h.schedule_day AS dia,
+                h.start_time AS hora_inicio,
+                h.end_time AS hora_fin,
+                a.name AS materia,
+                h.teacher_id,
+                h.grade_id
+            FROM horarios h
+            LEFT JOIN asignaturas a ON h.subject_id = a.subject_id
+            WHERE h.grade_id = %s
+            ORDER BY FIELD(h.schedule_day, 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'),
+                     h.start_time
+        """
+
+        cursor.execute(query, (grade_id,))
+        horario = cursor.fetchall()
+
+        if not horario:
+            return jsonify({"error": "No se encontró horario para este grado"}), 404
+
+        # Formatear tiempos de start y end
+        for fila in horario:
+            for key in ['hora_inicio', 'hora_fin']:
+                value = fila[key]
+                if isinstance(value, timedelta):
+                    total_seconds = int(value.total_seconds())
+                    hours = total_seconds // 3600
+                    minutes = (total_seconds % 3600) // 60
+                    fila[key] = f"{hours:02d}:{minutes:02d}"
+                elif isinstance(value, str):
+                    fila[key] = value.split('.')[0]  # quitar microsegundos
+
+        return jsonify(horario)
+
+    except Exception as e:
+        print(f"Error al obtener horario: {e}")
+        return jsonify({
+            "error": "Error interno del servidor",
+            "detalle": str(e)
+        }), 500
+
+
+# Ruta para obtener materia por ID
+@secciones.route('/secciones/api/materia/<int:subject_id>', methods=['GET'])
+def get_materia(subject_id):
+    db = get_db()
+    cursor = db.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM asignaturas WHERE subject_id = %s", (subject_id,))
+    materia = cursor.fetchone()
+    return jsonify(materia)
+
+
+
+
+@secciones.route('/tareas', methods=['GET', 'POST'])
+def tareas():
+    return render_template('secciones/tareas.html')
+
+
 @secciones.route('/usuarios', methods=['GET', 'POST'])
 def usuarios():
     return render_template('secciones/usuarios.html')
@@ -1758,3 +1817,8 @@ def noticias():
 @secciones.route('/ver-actividades')
 def ver_actividades():
     return render_template('secciones/ver_actividades.html')
+
+
+
+
+
