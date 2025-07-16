@@ -82,9 +82,9 @@
                     {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }}
                     {{ btn(icono="edit", texto="Editar", color="edit", tipo="button") }}
                     {{ btn(icono="delete", texto="Borrar", color="delete", tipo="reset" ) }}
-                    {{ btn(icono="eye_tracking", texto="Ver", color="view", id="btn-ver-horario") }}                    
+                    {{ btn(icono="eye_tracking", texto="Ver", color="view", id="btn-ver-horario") }}
                 </div>
-            </div>           
+            </div>
         </main>
         <aside class="sidebar">
             <div class="sidebar__title">
@@ -276,26 +276,27 @@
     </div>
 </div>
 <!-- Modal para editar o eliminar grados -->
-<!-- Modal -->
 <div id="gradeModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeGradeModal()">&times;</span>
-        <h2>Lista de Grados</h2>
-        <table id="gradesTable">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Grado</th>
-                    <th>Opciones</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="modal-header">
+            <span class="close" onclick="closeGradeModal()">&times;</span>
+            <h2>Lista de Grados</h2>
+            <p>Sistema de Gestión Administrativa y Procesos Academémicos (SGAPA)</p>
+        </div>
+        <div class="modal-body">
+            <table id="gradesTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Grado</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
-
-<!-- Botón "Editar" -->
-<button class="btn__edit" onclick="openGradeModal()">Editar</button>
 
 {% block extra_js %}
 <script>

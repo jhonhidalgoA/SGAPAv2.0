@@ -19,24 +19,30 @@
         <span class="date">{{ fecha_actual }}</span>
     </div>
     <div class="student__row">
-        <div class="stat">
-            <img src="{{ url_for('static', filename='img/calendarioE.png') }}" alt="horario">
-            <h3>Horario</h3>
-        </div>
+        <a href="{{ url_for('dashboards.mi_horario') }}">
+            <div class="stat">
+                <img src="{{ url_for('static', filename='img/calendarioE.png') }}" alt="horario">
+                <h3>Horario</h3>
+            </div>
+        </a>
         <a href="{{ url_for('secciones.ver_actividades') }}">
             <div class="stat">
                 <img src="{{ url_for('static', filename='img/actividadesE.png') }}" alt="actividades">
                 <h3>Actividades</h3>
             </div>
         </a>
-        <div class="stat">
-            <img src="{{ url_for('static', filename='img/evaluaciones.png') }}" alt="evaluaciones">
-            <h3>Evaluaciones</h3>
-        </div>
-        <div class="stat">
-            <img src="{{ url_for('static', filename='img/reportesE.png') }}" alt="reportes">
-            <h3>Reportes</h3>
-        </div>
+        <a href="#">
+            <div class="stat">
+                <img src="{{ url_for('static', filename='img/evaluaciones.png') }}" alt="evaluaciones">
+                <h3>Evaluaciones</h3>
+            </div>
+        </a>
+        <a href="#">
+            <div class="stat">
+                <img src="{{ url_for('static', filename='img/reportesE.png') }}" alt="reportes">
+                <h3>Reportes</h3>
+            </div>
+        </a>
     </div>
 </div>
 

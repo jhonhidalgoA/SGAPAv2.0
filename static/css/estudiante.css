@@ -35,23 +35,35 @@ body{
     margin-bottom: 30px;
 }
 
-.student__row .stat {
-    flex: 1;
-    padding: 25px;
+.student__row a{
+    flex: 1;    
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    color: white;
-    min-height: 200px;
-    height: 400px;
+    color: white;    
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center; /* Centra horizontalmente los elementos hijos */
-    padding: 20px; /* Reduce el padding para hacer la card más compacta */
-    min-height: 150px; /* Reduce la altura mínima */
-    height: 300px; /* Reduce la altura máxima */
-    transition: all var(--transition-duration) var(--transition-ease);    
+    align-items: center; 
+    padding: 5px; 
+    min-height: 150px; 
+    height: 350px; 
+    transition: all var(--transition-duration) var(--transition-ease); 
+
+}
+
+.student__row .stat {
+    flex: 1;    
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    width: 250px;
+    padding: 10px;    
+    
 }
 
 
@@ -80,22 +92,22 @@ body{
     width: 100%; 
 }
 
-.student__row .stat:nth-child(1) {
+.student__row  a:nth-child(1) .stat {
   background:#3498db;   
  
 }
 
-.student__row .stat:nth-child(2) {
+.student__row a:nth-child(2) .stat {
     background:  #2ecc71;
     
 }
 
-.student__row .stat:nth-child(3) {
+.student__row a:nth-child(3) .stat {
     background:  #e67e22;
     
 }
 
-.student__row .stat:nth-child(4) {
+.student__row a:nth-child(4) .stat {
     background: #9b59b6;
     
 }

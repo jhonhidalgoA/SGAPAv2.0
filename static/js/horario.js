@@ -721,17 +721,7 @@ document.getElementById('btn-ver-horario').addEventListener('click', function ()
     window.location.href = `/secciones/horario/ver/${gradoId}`;
 });
 
-document.getElementById('btn-ver-horario').addEventListener('click', function () {
-    const gradoSelect = document.getElementById('grados-select');
-    const gradoId = gradoSelect.value;
 
-    if (!gradoId) {
-        showModalSingle('', 'Por favor seleccione un grado antes de ver el horario.');
-        return;
-    }
-
-    window.location.href = `/secciones/horario/ver/${gradoId}`;
-});
 
 // Inicialización segura dentro de DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function () {

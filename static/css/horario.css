@@ -5,39 +5,39 @@
 
 
 body {
-font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-min-height: 100vh;
-color: var(--color-gray-800);
-line-height: 1.6;
+    font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: var(--color-gray-800);
+    line-height: 1.6;
 }
 
 
 :root {
---color-primary: #667eea;
---color-primary-dark: #5a67d8;
---color-secondary: #764ba2;
---color-accent: #f093fb;
---color-success: #48bb78;
---color-warning: #ed8936;
---color-error: #f56565;
---color-pink: #ec4899;
---color-gray-50: #f9fafb;
---color-gray-100: #f3f4f6;
---color-gray-200: #e5e7eb;
---color-gray-300: #d1d5db;
---color-gray-400: #9ca3af;
---color-gray-500: #6b7280;
---color-gray-600: #4b5563;
---color-gray-700: #374151;
---color-gray-800: #1f2937;
---color-gray-900: #111827;
---shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
---shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
---shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
---shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
---border-radius: 12px;
---transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --color-primary: #667eea;
+    --color-primary-dark: #5a67d8;
+    --color-secondary: #764ba2;
+    --color-accent: #f093fb;
+    --color-success: #48bb78;
+    --color-warning: #ed8936;
+    --color-error: #f56565;
+    --color-pink: #ec4899;
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --border-radius: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 
@@ -371,25 +371,8 @@ to {
 }
 }
 
-@media (max-width: 768px) {
-.container {
-    padding: 1rem;
-}
 
-.controls-grid {
-    grid-template-columns: 1fr;
-}
 
-.actions-grid {
-    grid-template-columns: 1fr 1fr;
-}
-
-.header h1 {
-    font-size: 2rem;
-}
-}
-
-/* Animaciones para elementos interactivos */
 .subject-select option:hover {
     background: var(--color-gray-100);
 }
@@ -417,8 +400,7 @@ animation: pulse 0.2s ease-in-out;
 
 
 /* Alineación simple para icono y texto */
-.modal-cancel {
-    position
+.modal-cancel {    
     display: inline-flex;
     align-items: center;
     vertical-align: middle;
@@ -441,7 +423,7 @@ animation: pulse 0.2s ease-in-out;
 }
 
 
-/* Estilos para el modal */
+/* Estilos para el modal editar */
 .modal {
     display: none;
     position: fixed;
@@ -452,49 +434,123 @@ animation: pulse 0.2s ease-in-out;
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.3s ease-out;
 }
 
 .modal-content {
     background-color: #fff;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 70%;
-    border-radius: 8px;
+    margin: 8% auto;
+    padding: 0;
+    border: none;
+    border-radius: 20px;
+    width: 900px;
+    max-width: 1200px;
+    max-height: 80vh;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: slideIn 0.3s ease-out;
 }
 
 .modal-content .close {
     float: right;
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    z-index: 3;
 }
+
+.modal-content .close:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+
+}
+.modal-header {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    padding: 2rem;    
+    overflow: hidden;
+    text-align: center;
+}
+
+.modal-header p{
+    font-size: 1.2rem;
+}
+
+
+.modal-body {
+    padding: 2rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+
 
 #gradesTable {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
-}
-
-#gradesTable th,
-#gradesTable td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: left;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
 }
 
 #gradesTable th {
-    background-color: var(--color-primary);
+    background: linear-gradient(135deg, var(--color-pink), #be185d);
     color: white;
+    padding: 1.25rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem;
+    border: none;
+    position: relative;
 }
 
-#gradesTable tr:nth-child(even) {
-    background-color: #f9f9f9;
+#gradesTable th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
 }
 
-#gradesTable tr:hover {
-    background-color: #f1f1f1;
+#gradesTable td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-gray-200);
+    background: white;
+    transition: var(--transition);
+    border-left: none;
+    border-right: none;
 }
+
+
+
+#gradesTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#gradesTable th:nth-child(3),
+#gradesTable td:nth-child(3) {
+    width: 250px;
+    text-align: center;
+}
+
 
 #gradesTable button {
     margin-right: 5px;
@@ -505,11 +561,28 @@ animation: pulse 0.2s ease-in-out;
 }
 
 .btn-edit {
-    background-color: var(--color-success);
+    background-color: var(--color-button-edit);
     color: white;
+    width:80px;
+    height:40px;
+    font-size: 1.0em;
+}
+
+.btn-edit:hover {
+    background-color: var(--color-button-edit-hover);
+    transform:scale(1.1);
 }
 
 .btn-delete {
-    background-color: var(--color-danger);
+    background-color: var(--color-button-delete);
     color: white;
+    color: white;
+    width:80px;
+    height:40px;
+    font-size: 1.0em;
 }
+
+.btn-delete:hover {
+    background-color: var(--color-button-delete-hover);
+    transform:scale(1.1);
+} 

@@ -1,88 +1,92 @@
-{% extends "main.html" %} 
-{% block title %} Ver Horario {% endblock %}  
+{% extends "main.html" %}
+{% include "components/modal.html" %}
 
-{% block extra_css %} 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/ver_horario.css') }}"> 
-{% endblock %}   
+{% block title %} Ver Horario {% endblock %}
 
-{% block content %} 
-<div class="schedule-container">
-    <h2>Horario del Grado {{ grado_id }}</h2>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ver_horario.css') }}">
+{% endblock %}
 
-    <!-- Tabla donde se mostrará el horario --> 
-    <table id="tabla-horario" class="schedule-table"        
-           data-horario='{{ horario | tojson if horario else "[]" | safe }}'>     
-        <thead>         
-            <tr>             
-                <th>Hora</th>             
-                <th>Lunes</th>             
-                <th>Martes</th>             
-                <th>Miércoles</th>             
-                <th>Jueves</th>             
-                <th>Viernes</th>         
-            </tr>     
-        </thead>     
-        <tbody>         
-            <!-- Las filas se generarán dinámicamente -->     
-        </tbody> 
+{% block content %}
+<div class="schedule__container">
+    <div class="schedule__title">
+        <span class="close" onclick="closeGradeModal()">&times;</span>
+        <h1>Grado: {{ grado_id }}</h1>
+        <p>Sistema de Gestión Administrativa y Procesos Academémicos (SGAPA)</p>       
+    </div>
+    <table id="tabla-horario" class="schedule-table" data-horario='{{ horario | tojson if horario else "[]" | safe }}'>
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miércoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Las filas se generarán dinámicamente -->
+        </tbody>
     </table>
+
 </div>
 
-{% block extra_js %}  
-<script>        
-    const tabla = document.getElementById('tabla-horario');     
-    const rawData = tabla.getAttribute('data-horario');      
-    let horarioData = [];      
-    
-    try {         
-        horarioData = JSON.parse(rawData);     
-    } catch (e) {         
-        console.error("Error al parsear JSON:", e);         
-        horarioData = [];     
-    }      
-    
-    console.log("Datos cargados:", horarioData);          
-    const bloques = {};      
-    
-    horarioData.forEach(row => {         
-        const key = `${row.hora_inicio}-${row.hora_fin}`;         
-        if (!bloques[key]) {             
-            bloques[key] = { inicio: row.hora_inicio, fin: row.hora_fin, dias: {} };         
-        }         
-        bloques[key].dias[row.dia] = row.materia;     
-    });      
-    
-    const tbody = document.querySelector("#tabla-horario tbody");      
-    
+{% block extra_js %}
+<script>
+    const tabla = document.getElementById('tabla-horario');
+    const rawData = tabla.getAttribute('data-horario');
+    let horarioData = [];
+
+    try {
+        horarioData = JSON.parse(rawData);
+    } catch (e) {
+        console.error("Error al parsear JSON:", e);
+        horarioData = [];
+    }
+
+    console.log("Datos cargados:", horarioData);
+    const bloques = {};
+
+    horarioData.forEach(row => {
+        const key = `${row.hora_inicio}-${row.hora_fin}`;
+        if (!bloques[key]) {
+            bloques[key] = { inicio: row.hora_inicio, fin: row.hora_fin, dias: {} };
+        }
+        bloques[key].dias[row.dia] = row.materia;
+    });
+
+    const tbody = document.querySelector("#tabla-horario tbody");
+
     // Ordenar los bloques por hora de inicio (formato HH:mm)     
-    const bloquesOrdenados = Object.keys(bloques).sort((a, b) => {         
-        const [horaA] = a.split('-')[0].split(':').map(Number);         
-        const [horaB] = b.split('-')[0].split(':').map(Number);         
-        return horaA - horaB;     
-    });      
-    
-    bloquesOrdenados.forEach(bloque => {         
-        const data = bloques[bloque];         
-        const tr = document.createElement("tr");          
-        const tdHora = document.createElement("td");         
-        tdHora.textContent = `${data.inicio} - ${data.fin}`;         
-        tr.appendChild(tdHora);          
-        
-        ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].forEach(dia => {             
-            const td = document.createElement("td");             
+    const bloquesOrdenados = Object.keys(bloques).sort((a, b) => {
+        const [horaA] = a.split('-')[0].split(':').map(Number);
+        const [horaB] = b.split('-')[0].split(':').map(Number);
+        return horaA - horaB;
+    });
+
+    bloquesOrdenados.forEach(bloque => {
+        const data = bloques[bloque];
+        const tr = document.createElement("tr");
+        const tdHora = document.createElement("td");
+        tdHora.textContent = `${data.inicio} - ${data.fin}`;
+        tr.appendChild(tdHora);
+
+        ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"].forEach(dia => {
+            const td = document.createElement("td");
             const materia = data.dias[dia] || "";
             td.textContent = materia;
-            
+
             // Agregar data-attribute para el styling por materia
             if (materia) {
                 td.setAttribute('data-materia', materia);
             }
-            
-            tr.appendChild(td);         
-        });          
-        
-        tbody.appendChild(tr);     
+
+            tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
     }); 
-</script> 
-{% endblock %}  
+</script>
+{% endblock %}
 {% endblock %}

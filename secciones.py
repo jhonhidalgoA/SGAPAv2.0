@@ -1628,6 +1628,10 @@ def guardar_asistencia():
         return jsonify({'success': False, 'message': f'Error al guardar: {str(e)}'}), 500
 
 
+@secciones.route('/tareas', methods=['GET', 'POST'])
+def tareas():
+    return render_template('secciones/tareas.html')
+
 # ─────────────────────────────────────────────────────
 #  HORARIO
 # ─────────────────────────────────────────────────────
@@ -1689,10 +1693,15 @@ def horario():
     return render_template('secciones/horario.html', docentes=docentes_lista)
 
 def format_timedelta(td):
-    total_seconds = int(td.total_seconds())
-    hours, remainder = divmod(total_seconds, 3600)
-    minutes, _ = divmod(remainder, 60)
-    return f"{hours:02d}:{minutes:02d}"
+    if isinstance(td, str):
+        return td.split('.')[0]
+    elif isinstance(td, timedelta):
+        total_seconds = int(td.total_seconds())
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, _ = divmod(remainder, 60)
+        return f"{hours:02d}:{minutes:02d}"
+    else:
+        return "00:00"
 
 
 @secciones.route('/horario/ver/<int:grado_id>')
@@ -1793,9 +1802,10 @@ def get_materia(subject_id):
 
 
 
-@secciones.route('/tareas', methods=['GET', 'POST'])
-def tareas():
-    return render_template('secciones/tareas.html')
+
+
+
+
 
 
 @secciones.route('/usuarios', methods=['GET', 'POST'])

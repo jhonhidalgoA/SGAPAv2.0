@@ -2,182 +2,198 @@
 @import url("macros.css");
 @import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-/* Contenedor principal del horario */
-.schedule-container {
-    max-width: 1200px;
-    margin: 0 auto;
+
+body {
+    font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
     padding: 20px;
 }
 
-/* Tabla de horario */
+.schedule__container {
+    width: 90%;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 20px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    min-height: 80vh;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.schedule__title {
+    position: relative; 
+    text-align: center;
+    color: white;
+    font-size: 1.0rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.schedule__title p{
+    font-size: 1.2rem;
+}
+
+.schedule__title .close {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 10;
+}
+
 .schedule-table {
-    width: 90%; /* No ocupa todo el ancho */
-    margin: 20px auto; /* Centrada con margen automático */
+    width: 100%;
     border-collapse: collapse;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
     overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    margin-top: 20px;
 }
 
 /* Encabezado de la tabla */
 .schedule-table thead {
-    background: linear-gradient(135deg, #e91e63, #ad1457);
+    background: linear-gradient(135deg, #e11d48 0%, #f97316 100%);
     color: white;
 }
 
-.schedule-table th {
-    padding: 16px 12px;
+.schedule-table thead th {
+    padding: 18px 15px;
     text-align: center;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 1.1rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    width: 16.66%; /* Ancho igual para todas las columnas (100% / 6 columnas) */
-}
-
-/* Filas del cuerpo */
-.schedule-table tbody tr {
-    transition: all 0.2s ease;
-}
-
-.schedule-table tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
-
-.schedule-table tbody tr:hover {
-    background-color: #e3f2fd;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Celdas del cuerpo */
-.schedule-table td {
-    padding: 14px 12px;
-    text-align: center;
-    border-bottom: 1px solid #e0e0e0;
-    font-size: 13px;
-    width: 16.66%; /* Ancho igual para todas las columnas */
-    vertical-align: middle;
+    border: none;
     position: relative;
 }
 
-/* Columna de horas - estilo especial */
-.schedule-table td:first-child {
-    background-color: #f5f5f5;
+.schedule-table thead th:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.schedule-table thead th:last-child:after {
+    display: none;
+}
+
+/* Filas del cuerpo de la tabla */
+.schedule-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.schedule-table tbody tr:hover {
+    background: rgba(249, 115, 22, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Celdas del cuerpo */
+.schedule-table tbody td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #374151;
+    transition: all 0.3s ease;
+}
+
+/* Primera columna (hora) */
+.schedule-table tbody td:first-child {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: white;
     font-weight: 600;
-    color: #555;
-    border-right: 2px solid #e0e0e0;
+    font-size: 1rem;
+    border-right: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Celdas con materias */
-.schedule-table td:not(:first-child):not(:empty) {
-    background-color: #e8f5e8;
-    color: #2e7d32;
-    font-weight: 500;
-    border-left: 3px solid #4caf50;
+.schedule-table tbody td:not(:first-child) {
+    background: rgba(255, 255, 255, 0.8);
+    position: relative;
 }
 
-/* Celdas vacías */
-.schedule-table td:empty::after {
-    content: '-';
-    color: #bbb;
-    font-style: italic;
-}
-
-/* Título del horario */
-h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 30px;
+.schedule-table tbody td:not(:first-child):not(:empty) {
+    background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+    color: #9a3412;
     font-weight: 600;
-    font-size: 24px;
+    border-left: 4px solid #f97316;
 }
 
-/* Responsive para pantallas pequeñas */
+/* Hover en celdas de materias */
+.schedule-table tbody td:not(:first-child):hover {
+    background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
+    color: #7c2d12;
+    cursor: pointer;
+    transform: scale(1.02);
+}
+
+/* Separadores entre columnas */
+.schedule-table tbody td:not(:last-child) {
+    border-right: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+/* Estilo para el descanso/almuerzo */
+.schedule-table tbody td[data-materia*="Descanso"],
+.schedule-table tbody td[data-materia*="Almuerzo"] {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+    color: white !important;
+    font-weight: 600;
+    border-left: 4px solid #15803d !important;
+}
+
+/* Efectos de sombra para profundidad */
+.schedule-table tbody tr:nth-child(even) td:not(:first-child) {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.schedule-table tbody tr:nth-child(even) td:not(:first-child):not(:empty) {
+    background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
+    .schedule__container {
+        padding: 10px;
+    }
+    
     .schedule-table {
-        width: 95%;
-        font-size: 12px;
+        font-size: 0.85rem;
     }
     
-    .schedule-table th,
-    .schedule-table td {
-        padding: 10px 8px;
-        font-size: 11px;
+    .schedule-table thead th,
+    .schedule-table tbody td {
+        padding: 12px 8px;
     }
     
-    .schedule-table th {
-        font-size: 12px;
-    }
-    
-    h2 {
-        font-size: 20px;
-        margin-bottom: 20px;
+    .schedule__container h1 {
+        font-size: 1.5rem;
+        padding: 12px 15px;
     }
 }
 
 @media (max-width: 480px) {
     .schedule-table {
-        width: 98%;
-        font-size: 10px;
+        font-size: 0.75rem;
     }
     
-    .schedule-table th,
-    .schedule-table td {
-        padding: 8px 4px;
-        font-size: 10px;
+    .schedule-table thead th,
+    .schedule-table tbody td {
+        padding: 10px 5px;
     }
     
-    .schedule-table th {
-        font-size: 11px;
+    .schedule__container h1 {
+        font-size: 1.25rem;
+        padding: 10px 12px;
     }
-}
-
-/* Animación sutil para la carga */
-.schedule-table {
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Mejora visual para materias diferentes */
-.schedule-table td[data-materia="Matemáticas"] {
-    background-color: #e3f2fd;
-    color: #1565c0;
-    border-left-color: #2196f3;
-}
-
-.schedule-table td[data-materia="Inglés"] {
-    background-color: #fff3e0;
-    color: #e65100;
-    border-left-color: #ff9800;
-}
-
-.schedule-table td[data-materia="Castellano"] {
-    background-color: #f3e5f5;
-    color: #6a1b9a;
-    border-left-color: #9c27b0;
-}
-
-.schedule-table td[data-materia="Ciencias"] {
-    background-color: #e0f2f1;
-    color: #00695c;
-    border-left-color: #009688;
-}
-
-.schedule-table td[data-materia="Historia"] {
-    background-color: #fce4ec;
-    color: #ad1457;
-    border-left-color: #e91e63;
 }
