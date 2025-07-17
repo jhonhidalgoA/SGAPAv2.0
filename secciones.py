@@ -309,10 +309,11 @@ def limpiar_datos():
 
 
 # Registrar Docente
-
 @secciones.route('/registro_docente', methods=['GET', 'POST'])
 def registro_docente():
     return render_template('secciones/docente_registrar.html')
+
+
 
 @secciones.route('/guardar_docente', methods=['POST'])
 def guardar_docente():
@@ -1800,7 +1801,18 @@ def get_materia(subject_id):
     return jsonify(materia)
 
 
+@secciones.route('/borrar-horario/<int:grade_id>', methods=['POST'])
+def borrar_horario(grade_id):
+    db = get_db()
+    cursor = db.cursor()
 
+    try:
+        cursor.execute("DELETE FROM horarios WHERE grade_id = %s", (grade_id,))
+        db.commit()
+        return jsonify({"success": True, "message": "Horario eliminado correctamente"}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 
@@ -1827,8 +1839,5 @@ def noticias():
 @secciones.route('/ver-actividades')
 def ver_actividades():
     return render_template('secciones/ver_actividades.html')
-
-
-
 
 

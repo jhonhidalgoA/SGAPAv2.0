@@ -426,8 +426,7 @@ animation: pulse 0.2s ease-in-out;
 /* Estilos para el modal editar */
 .modal {
     display: none;
-    position: fixed;
-    z-index: 999;
+    position: fixed;   
     left: 0;
     top: 0;
     width: 100%;
@@ -469,7 +468,7 @@ animation: pulse 0.2s ease-in-out;
     color: white;
     font-size: 1.5rem;
     font-weight: bold;
-    z-index: 3;
+   
 }
 
 .modal-content .close:hover {
@@ -586,3 +585,14 @@ animation: pulse 0.2s ease-in-out;
     background-color: var(--color-button-delete-hover);
     transform:scale(1.1);
 } 
+
+
+#gradeModal {
+    /* ... existing styles for positioning and background ... */
+    z-index: 9990; /* A high z-index, but lower than confirmModal */
+}
+
+#gradeModal .modal-content {
+    /* ... existing content styles ... */
+    z-index: 9991; /* Content can be slightly higher within its own modal */
+}

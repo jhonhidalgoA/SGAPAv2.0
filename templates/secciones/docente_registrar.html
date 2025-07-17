@@ -171,7 +171,6 @@
             {{ btn(icono="edit", texto="Editar", color="edit", tipo="button", onclick="openSearchModal()") }}
             {{ btn(icono="delete", texto="Borrar", color="delete", tipo="button", id="btnLimpiar") }}
             {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }}
-
         </div>
     </form>
 </div>
@@ -356,7 +355,7 @@
         // Cerrar modal
         closeSearchModal();
     }
-    
+
     document.getElementById('btnLimpiar').addEventListener('click', function () {
         const formulario = document.getElementById('teacherRegistrationForm');
         formulario.reset();

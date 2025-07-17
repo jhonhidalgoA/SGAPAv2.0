@@ -452,7 +452,6 @@ function borrarHorario() {
 }
 
 function guardarHorario() {
-
     if (!validarCamposRequeridos()) {
         const mensajeError = `Por favor complete los siguientes campos obligatorios:<br>
             <div style="margin-top: 10px; text-align: left; padding-left: 20px;">
@@ -699,13 +698,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const tablaHorario = document.getElementById('tabla-horario');
     if (tablaHorario) {
         const tbody = tablaHorario.querySelector('tbody') || tablaHorario;
-
-
-
         hacerHorasEditables();
     }
-
-    // Inicializar estadísticas
+    
     actualizarEstadisticas();
 });
 
@@ -722,8 +717,6 @@ document.getElementById('btn-ver-horario').addEventListener('click', function ()
 });
 
 
-
-// Inicialización segura dentro de DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function () {
     // Variables globales
     const gradeModal = document.getElementById("gradeModal");
@@ -874,3 +867,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     actualizarEstadisticas();
 });
+
+window.handleDelete = function (gradeId) {
+    showModal(
+        'Eliminar horario',
+        '¿Estás seguro de que deseas eliminar todo el horario de este grado?',
+        function () {
+            fetch(`/secciones/borrar-horario/${gradeId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showModalSingle('', 'Horario eliminado correctamente');
+                    location.reload(); // Recargar página para actualizar vista
+                } else {
+                    showModalSingle('', 'Error al eliminar el horario: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showModalSingle('', 'Hubo un problema al eliminar el horario.');
+            });
+        }
+    );
+};
