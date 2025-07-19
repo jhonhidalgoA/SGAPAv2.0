@@ -24,6 +24,7 @@ from datetime import datetime
 from io import BytesIO
 from functools import reduce
 
+
 # ─────────────────────────────────────────────────────
 # FLASK Y EXTENSIONES
 # ─────────────────────────────────────────────────────
@@ -75,6 +76,8 @@ ORDEN_CATEGORIAS = [
     "Menú alternativo",    
     "Complementos"
 ]
+
+
 
 
 # ─────────────────────────────────────────────────────
@@ -309,11 +312,10 @@ def limpiar_datos():
 
 
 # Registrar Docente
+
 @secciones.route('/registro_docente', methods=['GET', 'POST'])
 def registro_docente():
     return render_template('secciones/docente_registrar.html')
-
-
 
 @secciones.route('/guardar_docente', methods=['POST'])
 def guardar_docente():
@@ -335,9 +337,9 @@ def guardar_docente():
         telefono = request.form.get('teacher_phone')
         correo = request.form.get('teacher_email')
         profesion = request.form.get('profession')
-        area = request.form.get('area')       # ← Debe venir de <select name="area">
+        area = request.form.get('area')       
         resolucion = request.form.get('resolucion')
-        escalafon = request.form.get('scale')  # ← Debe venir de <select name="scale">
+        escalafon = request.form.get('scale')  
         foto = request.files.get('student_photo')
 
         # Validación básica de campos obligatorios
@@ -1841,3 +1843,6 @@ def ver_actividades():
     return render_template('secciones/ver_actividades.html')
 
 
+@secciones.route('/docente-generar-pdf')
+def docente_generarPDF():
+    return render_template('secciones/docente_generarPDF.html')

@@ -170,7 +170,10 @@
             {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }}
             {{ btn(icono="edit", texto="Editar", color="edit", tipo="button", onclick="openSearchModal()") }}
             {{ btn(icono="delete", texto="Borrar", color="delete", tipo="button", id="btnLimpiar") }}
-            {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }}
+           <a href="{{url_for('secciones.docente_generarPDF') }}">
+             {{ btn(icono="picture_as_pdf", texto="Generar", color="generate", tipo="button") }}
+           </a>
+
         </div>
     </form>
 </div>

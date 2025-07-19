@@ -5,6 +5,8 @@ from secciones import secciones
 import os
 from flask_session import Session
 from middlewares import validar_sesion
+from datetime import datetime
+import locale
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
@@ -27,6 +29,31 @@ app.config['SESSION_PERMANENT'] = True
 app.config['SESSION_USE_SIGNER'] = True  
 app.config['PERMANENT_SESSION_LIFETIME'] = 1800 # 30 minutos
 Session(app)
+
+# Configuración de locale
+try:
+    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  # Linux
+except Exception:
+    locale.setlocale(locale.LC_TIME, 'Spanish_Spain')  # Windows
+
+# Filtro datetimeformat
+def datetimeformat(value, format="%d de %B de %Y"):
+    if value == "now":
+        value = datetime.now()
+    return value.strftime(format)
+
+# Filtro to_datetime
+def to_datetime(value, format="%Y-%m-%d %H:%M:%S"):
+    if value == "now":
+        return datetime.now()
+    try:
+        return datetime.strptime(value, format)
+    except:
+        return value
+
+# Registrar filtros en Jinja2
+app.jinja_env.filters['datetimeformat'] = datetimeformat
+app.jinja_env.filters['to_datetime'] = to_datetime
 
 
 

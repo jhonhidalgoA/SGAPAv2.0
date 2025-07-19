@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Función para mostrar modal (debe coincidir con la de tu HTML)
+    // Función para mostrar modal 
     function showModal(title, message, action) {
         const modal = document.getElementById("confirmModal");
         const modalTitle = document.getElementById("modalTitle");
@@ -297,4 +297,3 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.style.display = "flex";
     }
 });
-

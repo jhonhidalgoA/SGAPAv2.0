@@ -1,0 +1,52 @@
+2025-07-18 06:39:14,906 INFO: Acceso a perfil docente: 172 [in C:\xampp\htdocs\2025-19-dovenv\secciones.py:1883]
+2025-07-18 06:39:14,907 CRITICAL: Error inesperado: docentes/perfil.html [in C:\xampp\htdocs\2025-19-dovenv\secciones.py:1895]
+Traceback (most recent call last):
+  File "C:\xampp\htdocs\2025-19-dovenv\secciones.py", line 1884, in mostrar_docente
+    return render_template('docentes/perfil.html',
+                        docente=datos_docente,
+                        titulo=f"Perfil de {datos_docente['nombre_completo']}")
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: docentes/perfil.html
+2025-07-18 06:39:21,844 INFO: Acceso a perfil docente: 172 [in C:\xampp\htdocs\2025-19-dovenv\secciones.py:1883]
+2025-07-18 06:39:21,845 CRITICAL: Error inesperado: docentes/perfil.html [in C:\xampp\htdocs\2025-19-dovenv\secciones.py:1895]
+Traceback (most recent call last):
+  File "C:\xampp\htdocs\2025-19-dovenv\secciones.py", line 1884, in mostrar_docente
+    return render_template('docentes/perfil.html',
+                        docente=datos_docente,
+                        titulo=f"Perfil de {datos_docente['nombre_completo']}")
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\xampp\htdocs\2025-19-dovenv\env\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: docentes/perfil.html
