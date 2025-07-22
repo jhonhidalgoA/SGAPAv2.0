@@ -172,7 +172,7 @@
             {{ btn(icono="delete", texto="Borrar", color="delete", tipo="button", id="btnLimpiar") }}
             <a href="#" onclick="generarPDFFromForm()" target="_blank">
                 {{ btn(icono="picture_as_pdf", texto="Generar", color="generate", tipo="button") }}
-            </a>            
+            </a>
         </div>
     </form>
 </div>
@@ -348,6 +348,20 @@
             photoPreview.style.display = "none";
         }
 
+        let hiddenPhotoField = document.getElementById('current_photo_path');
+        if (!hiddenPhotoField) {
+            hiddenPhotoField = document.createElement('input');
+            hiddenPhotoField.type = 'hidden';
+            hiddenPhotoField.id = 'current_photo_path';
+            hiddenPhotoField.name = 'current_photo_path';
+            document.getElementById('teacherRegistrationForm').appendChild(hiddenPhotoField);
+        }
+        hiddenPhotoField.value = teacher.photo_path || '';
+
+        console.log('🔄 Campo hidden actualizado con foto:', teacher.photo_path);
+
+
+
         // Cambiar acción del formulario para editar
         const form = document.getElementById("teacherRegistrationForm");
         if (teacher.id) {
@@ -359,13 +373,50 @@
     }
 
     document.getElementById('btnLimpiar').addEventListener('click', function () {
-        const formulario = document.getElementById('teacherRegistrationForm');
-        formulario.reset();
-    });
+    const formulario = document.getElementById('teacherRegistrationForm');
+    formulario.reset();
+    
+    // 🧹 Limpiar también el campo hidden de la foto
+    const hiddenPhotoField = document.getElementById('current_photo_path');
+    if (hiddenPhotoField) {
+        hiddenPhotoField.value = '';
+    }
+    
+    // Limpiar preview de foto
+    const photoPreview = document.getElementById('photoPreview');
+    if (photoPreview) {
+        photoPreview.style.backgroundImage = '';
+        photoPreview.style.display = 'none';
+    }
+});
 </script>
 <script>
     function generarPDFFromForm() {
-        // Obtener todos los datos del formulario actual
+        // Obtener la ruta de la foto actual
+        let photoPath = '';
+
+        // 1. Si hay preview de foto (cuando sube nueva foto)
+        const photoPreview = document.getElementById('photoPreview');
+        if (photoPreview && photoPreview.style.backgroundImage) {
+            const bgImage = photoPreview.style.backgroundImage;
+            const matches = bgImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+            if (matches && matches[1]) {
+                // Limpiar la URL para obtener solo la ruta relativa
+                photoPath = matches[1].replace(/^.*\/static\//, '');
+            }
+        }
+
+        // 2. Si no hay preview, usar campo hidden (cuando edita docente existente)
+        if (!photoPath) {
+            const hiddenPhotoField = document.getElementById('current_photo_path');
+            if (hiddenPhotoField && hiddenPhotoField.value) {
+                photoPath = hiddenPhotoField.value;
+            }
+        }
+
+        console.log('🖼️ Photo path detectado:', photoPath); // DEBUG
+
+        // Obtener TODOS los datos del formulario actual
         const formData = {
             registration_date_teacher: document.getElementById('registration_date_teacher').value || '',
             first_name: document.getElementById('teacher_name')?.value || '',
@@ -382,17 +433,20 @@
             birth_date: document.getElementById('teacher_birth_date')?.value || '',
             code: document.getElementById('codigo_teacher')?.value || '',
             resolution_number: document.getElementById('resolucion')?.value || '',
-            scale: document.getElementById('scale')?.value || ''
+            scale: document.getElementById('scale')?.value || '',
+            photo_path: photoPath  // ✅ Ahora incluye la foto
         };
 
-        // Verificar que al menos el nombre esté lleno
+        console.log('📋 Datos del formulario:', formData); // DEBUG
+
+        // Verificar que tenga datos mínimos
         if (!formData.first_name.trim()) {
             alert('Por favor, complete al menos el nombre del docente antes de generar.');
             document.getElementById('teacher_name')?.focus();
             return;
         }
 
-        // Crear un formulario temporal y enviarlo por POST
+        // Crear formulario temporal y enviarlo
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '{{ url_for("secciones.docente_generarPDF_from_form") }}';

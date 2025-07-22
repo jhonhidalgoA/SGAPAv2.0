@@ -1862,7 +1862,8 @@ def docente_generarPDF_from_form():
         'birth_date': request.form.get('birth_date', ''),
         'code': request.form.get('code', ''),
         'resolution_number': request.form.get('resolution_number', ''),
-        'scale': request.form.get('scale', '')
+        'scale': request.form.get('scale', ''),
+        'photo_path': request.form.get('photo_path', '')
     }
     
     return render_template('secciones/docente_generarPDF.html', docente=docente)
@@ -1872,9 +1873,8 @@ def docente_generarPDF_from_form():
 def docente_generarPDF():
     try:
         conn = get_db()
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor = conn.cursor(pymysql.cursors.DictCursor)        
         
-        # Obtener el último docente registrado
         cursor.execute("""
             SELECT 
                 first_name,
@@ -1891,13 +1891,14 @@ def docente_generarPDF():
                 birth_date,
                 code,
                 resolution_number,
-                scale
+                scale,
+                photo_path       
             FROM docentes_datos 
             ORDER BY teacher_id DESC 
             LIMIT 1
         """)
         
-        docente = cursor.fetchone()
+        docente = cursor.fetchone()        
         
         return render_template('secciones/docente_generarPDF.html', docente=docente)
         

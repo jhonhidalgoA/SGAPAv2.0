@@ -16,8 +16,9 @@
     </div>
     <div class="profile-section">
         <div class="photo-container">
-            {% if docente[] %}
-            <img src="{{ url_for('static', filename=docente[]) }}" alt="Foto del Docente" class="teacher-photo">
+            {% if docente and docente.photo_path and docente.photo_path.strip() %}
+            <img src="{{ url_for('static', filename=docente.photo_path) }}" alt="Foto del Docente"
+                class="teacher-photo">
             {% else %}
             <div class="photo-placeholder">Foto del<br>Docente</div>
             {% endif %}
@@ -101,7 +102,6 @@
     </div>
 
     {% else %}
-    <div class="emoji">😕</div>
     <div class="greeting">No hay datos para mostrar</div>
     <div class="name">Complete el formulario primero</div>
     {% endif %}
@@ -132,59 +132,59 @@
     </div>
 </div>
 {% block extra_js %}
-<script> 
+<script>
 
-// Generar código único
-function generateUniqueCode() {
-    const year = new Date().getFullYear();
-    const sequence = Math.floor(Math.random() * 999999).toString().padStart(6, '0');
-    const checksum = generateChecksum(sequence);
-    return `SGAPA-${year}-${sequence}-${checksum}`;
-}
-
-function generateChecksum(sequence) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let hash = 0;
-    for (let i = 0; i < sequence.length; i++) {
-        hash = ((hash << 5) - hash + sequence.charCodeAt(i)) & 0xffffffff;
+    // Generar código único
+    function generateUniqueCode() {
+        const year = new Date().getFullYear();
+        const sequence = Math.floor(Math.random() * 999999).toString().padStart(6, '0');
+        const checksum = generateChecksum(sequence);
+        return `SGAPA-${year}-${sequence}-${checksum}`;
     }
-    let result = '';
-    for (let i = 0; i < 3; i++) {
-        result += chars[Math.abs(hash >> (i * 8)) % chars.length];
+
+    function generateChecksum(sequence) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let hash = 0;
+        for (let i = 0; i < sequence.length; i++) {
+            hash = ((hash << 5) - hash + sequence.charCodeAt(i)) & 0xffffffff;
+        }
+        let result = '';
+        for (let i = 0; i < 3; i++) {
+            result += chars[Math.abs(hash >> (i * 8)) % chars.length];
+        }
+        return result;
     }
-    return result;
-}
 
-// Formatear fechas
-function formatDate(date) {
-    const months = [
-        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ];
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    return `${day} de ${month}, ${year}`;
-}
+    // Formatear fechas
+    function formatDate(date) {
+        const months = [
+            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ];
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        return `${day} de ${month}, ${year}`;
+    }
 
-// Función para descargar PDF
-function generatePDF() {
-    alert('Funcionalidad de descarga PDF - En desarrollo.');
-}
+    // Función para descargar PDF
+    function generatePDF() {
+        alert('Funcionalidad de descarga PDF - En desarrollo.');
+    }
 
-// ============================================
-// OPCIÓN 1: QR REAL CON SERVICIO ONLINE
-// ============================================
+    // ============================================
+    // OPCIÓN 1: QR REAL CON SERVICIO ONLINE
+    // ============================================
 
-function createRealQR(element, data) {
-    // Asegurar que el elemento esté limpio
-    element.innerHTML = '';
-    
-    const encodedData = encodeURIComponent(data);
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodedData}&margin=10&format=png&ecc=H`;
-    
-    const img = document.createElement('img');
-    img.style.cssText = `
+    function createRealQR(element, data) {
+        // Asegurar que el elemento esté limpio
+        element.innerHTML = '';
+
+        const encodedData = encodeURIComponent(data);
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodedData}&margin=10&format=png&ecc=H`;
+
+        const img = document.createElement('img');
+        img.style.cssText = `
         width: 120px;
         height: 120px;
         border-radius: 8px;
@@ -194,24 +194,24 @@ function createRealQR(element, data) {
         display: block;
         margin: 0 auto;
     `;
-    
-    img.onload = () => console.log('✅ QR único generado');
-    img.onerror = () => createEnhancedVisualQR(element, data);
-    img.src = qrUrl;
-    element.appendChild(img);
-}
 
-// ============================================
-// OPCIÓN 2: QR VISUAL MEJORADO (RESPALDO)
-// ============================================
+        img.onload = () => console.log('✅ QR único generado');
+        img.onerror = () => createEnhancedVisualQR(element, data);
+        img.src = qrUrl;
+        element.appendChild(img);
+    }
 
-function createEnhancedVisualQR(element, data) {
-    console.log('🎨 Creando QR visual mejorado...');
-    
-    // Generar patrón QR visual realista
-    const qrPattern = generateQRPattern();
-    
-    element.innerHTML = `
+    // ============================================
+    // OPCIÓN 2: QR VISUAL MEJORADO (RESPALDO)
+    // ============================================
+
+    function createEnhancedVisualQR(element, data) {
+        console.log('🎨 Creando QR visual mejorado...');
+
+        // Generar patrón QR visual realista
+        const qrPattern = generateQRPattern();
+
+        element.innerHTML = `
         <div style="
             width: 120px;
             height: 120px;
@@ -274,15 +274,15 @@ function createEnhancedVisualQR(element, data) {
             .qr-corner-bl { bottom: 5px; left: 5px; border-right: none; border-top: none; }
         </style>
     `;
-    
-    console.log('✅ QR visual mejorado creado');
-}
 
-// Generar patrón que simula un QR real
-function generateQRPattern() {
-    const patterns = [
-        // Patrón de cuadros tipo QR
-        `url("data:image/svg+xml,${encodeURIComponent(`
+        console.log('✅ QR visual mejorado creado');
+    }
+
+    // Generar patrón que simula un QR real
+    function generateQRPattern() {
+        const patterns = [
+            // Patrón de cuadros tipo QR
+            `url("data:image/svg+xml,${encodeURIComponent(`
             <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'>
                 <rect x='0' y='0' width='3' height='3' fill='black'/>
                 <rect x='4' y='1' width='2' height='2' fill='black'/>
@@ -304,149 +304,149 @@ function generateQRPattern() {
                 <rect x='15' y='16' width='3' height='3' fill='black'/>
             </svg>
         `)}")`
-    ];
-    
-    return patterns[0];
-}
-
-// ============================================
-// OPCIÓN 3: QR CON LIBRERÍA EXTERNA (RESPALDO)
-// ============================================
-
-function loadQRCodeLibrary() {
-    return new Promise(async (resolve, reject) => {
-        if (typeof QRCode !== 'undefined') {
-            console.log('📚 QRCode ya está disponible');
-            resolve();
-            return;
-        }
-
-        const urls = [
-            'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
-            'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js'
         ];
 
-        for (const url of urls) {
-            try {
-                console.log(`📥 Intentando cargar desde: ${url}`);
-                await loadScript(url);
-                if (typeof QRCode !== 'undefined') {
-                    console.log('✅ Librería QRCode cargada');
-                    resolve();
-                    return;
-                }
-            } catch (error) {
-                console.log(`❌ Falló: ${url}`);
-            }
-        }
-        
-        resolve(); // Continuar sin librería
-    });
-}
-
-function loadScript(url) {
-    return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = url;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-    });
-}
-
-function createLibraryQR(element, data) {
-    console.log('📚 Creando QR con librería...');
-    
-    const canvas = document.createElement('canvas');
-    element.appendChild(canvas);
-    
-    QRCode.toCanvas(canvas, data, {
-        width: 120,
-        height: 120,
-        margin: 2,
-        color: {
-            dark: '#1f2937',
-            light: '#ffffff'
-        },
-        errorCorrectionLevel: 'H'
-    }, function (error) {
-        if (error) {
-            console.error('❌ Error con librería QR:', error);
-            element.removeChild(canvas);
-            createRealQR(element, data);
-        } else {
-            console.log('✅ QR de librería generado');
-        }
-    });
-}
-
-
-
-async function inicializarTodo() {
-    try {
-        console.log('🚀 Iniciando sistema QR mejorado...');
-        
-        // Cargar librería QRCode (opcional)
-        await loadQRCodeLibrary();
-        
-        // GENERAR CÓDIGO ÚNICO
-        const newCode = generateUniqueCode();
-        console.log('📝 Código generado:', newCode);
-        
-        // Actualizar elementos del código
-        const uniqueCodeElement = document.getElementById('uniqueCode');
-        const codeDisplayElement = document.getElementById('codeDisplay');
-        
-        if (uniqueCodeElement) {
-            uniqueCodeElement.textContent = newCode;
-            console.log('✅ uniqueCode actualizado');
-        }
-        
-        if (codeDisplayElement) {
-            codeDisplayElement.textContent = newCode;
-            console.log('✅ codeDisplay actualizado');
-        }
-        
-        // Actualizar fechas
-        const today = new Date();
-        const genDateElement = document.getElementById('genDate');
-        if (genDateElement) {
-            genDateElement.textContent = formatDate(today);
-        }
-        
-        // GENERAR QR CON SISTEMA DE RESPALDO
-        const qrElement = document.getElementById('qrcode');
-        if (qrElement) {
-            console.log('Iniciando generación de QR...');
-            qrElement.innerHTML = '<div style="text-align: center; padding: 20px;">Generando QR...</div>';
-            
-            const qrData = `https://www.sgapa.edu.co/verificar?code=${newCode}`;
-            
-            // Prioridad 1: Librería QRCode (si está disponible)
-            if (typeof QRCode !== 'undefined') {
-                createLibraryQR(qrElement, qrData);
-            } 
-            // Prioridad 2: Servicio online (siempre intentar)
-            else {
-                qrElement.innerHTML = '';
-                createRealQR(qrElement, qrData);
-            }
-        } else {
-            console.error('❌ Elemento QR no encontrado');
-        }
-
-    } catch (error) {
-        console.error('💥 Error en inicialización:', error);
+        return patterns[0];
     }
-}
 
-// Ejecutar cuando la página esté lista
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', inicializarTodo);
-} else {
-    inicializarTodo();
-}
+    // ============================================
+    // OPCIÓN 3: QR CON LIBRERÍA EXTERNA (RESPALDO)
+    // ============================================
+
+    function loadQRCodeLibrary() {
+        return new Promise(async (resolve, reject) => {
+            if (typeof QRCode !== 'undefined') {
+                console.log('📚 QRCode ya está disponible');
+                resolve();
+                return;
+            }
+
+            const urls = [
+                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+                'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js'
+            ];
+
+            for (const url of urls) {
+                try {
+                    console.log(`📥 Intentando cargar desde: ${url}`);
+                    await loadScript(url);
+                    if (typeof QRCode !== 'undefined') {
+                        console.log('✅ Librería QRCode cargada');
+                        resolve();
+                        return;
+                    }
+                } catch (error) {
+                    console.log(`❌ Falló: ${url}`);
+                }
+            }
+
+            resolve(); // Continuar sin librería
+        });
+    }
+
+    function loadScript(url) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    function createLibraryQR(element, data) {
+        console.log('📚 Creando QR con librería...');
+
+        const canvas = document.createElement('canvas');
+        element.appendChild(canvas);
+
+        QRCode.toCanvas(canvas, data, {
+            width: 120,
+            height: 120,
+            margin: 2,
+            color: {
+                dark: '#1f2937',
+                light: '#ffffff'
+            },
+            errorCorrectionLevel: 'H'
+        }, function (error) {
+            if (error) {
+                console.error('❌ Error con librería QR:', error);
+                element.removeChild(canvas);
+                createRealQR(element, data);
+            } else {
+                console.log('✅ QR de librería generado');
+            }
+        });
+    }
+
+
+
+    async function inicializarTodo() {
+        try {
+            console.log('🚀 Iniciando sistema QR mejorado...');
+
+            // Cargar librería QRCode (opcional)
+            await loadQRCodeLibrary();
+
+            // GENERAR CÓDIGO ÚNICO
+            const newCode = generateUniqueCode();
+            console.log('📝 Código generado:', newCode);
+
+            // Actualizar elementos del código
+            const uniqueCodeElement = document.getElementById('uniqueCode');
+            const codeDisplayElement = document.getElementById('codeDisplay');
+
+            if (uniqueCodeElement) {
+                uniqueCodeElement.textContent = newCode;
+                console.log('✅ uniqueCode actualizado');
+            }
+
+            if (codeDisplayElement) {
+                codeDisplayElement.textContent = newCode;
+                console.log('✅ codeDisplay actualizado');
+            }
+
+            // Actualizar fechas
+            const today = new Date();
+            const genDateElement = document.getElementById('genDate');
+            if (genDateElement) {
+                genDateElement.textContent = formatDate(today);
+            }
+
+            // GENERAR QR CON SISTEMA DE RESPALDO
+            const qrElement = document.getElementById('qrcode');
+            if (qrElement) {
+                console.log('Iniciando generación de QR...');
+                qrElement.innerHTML = '<div style="text-align: center; padding: 20px;">Generando QR...</div>';
+
+                const qrData = `https://www.sgapa.edu.co/verificar?code=${newCode}`;
+
+                // Prioridad 1: Librería QRCode (si está disponible)
+                if (typeof QRCode !== 'undefined') {
+                    createLibraryQR(qrElement, qrData);
+                }
+                // Prioridad 2: Servicio online (siempre intentar)
+                else {
+                    qrElement.innerHTML = '';
+                    createRealQR(qrElement, qrData);
+                }
+            } else {
+                console.error('❌ Elemento QR no encontrado');
+            }
+
+        } catch (error) {
+            console.error('💥 Error en inicialización:', error);
+        }
+    }
+
+    // Ejecutar cuando la página esté lista
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', inicializarTodo);
+    } else {
+        inicializarTodo();
+    }
 </script>
 {% endblock %}
 
