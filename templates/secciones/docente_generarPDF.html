@@ -6,137 +6,449 @@
 {% endblock %}
 
 {% block content %}
-<div class="cv-container">
-    <div class="watermark">DOCUMENTO GENERADO AUTOMÁTICAMENTE</div>
-    <div class="header">
-        <div class="header-content">
-            <div class="institution-info">
-                <div class="institution-logo">
-                    <img src="{{ url_for('static', filename='img/logoColegio.png') }}" alt="Logo del Colegio">
-                </div>
-                <div class="institution-name">INSTITUCIÓN EDUCATIVA SGAPA</div>
-                <div class="document-title">HOJA DE VIDA DOCENTE</div>
-
-                {% if teacher %}
-                    <div class="name" id="fullName">{{ teacher[1] }} {{ teacher[2] }}</div>
-                {% else %}
-                    <div class="name" id="fullName">Nombre del Docente</div>
-                {% endif %}
-            </div>
-
-            {% if teacher %}
-            <div class="profile-section">
-                <div class="photo-container">
-                    {% if teacher[17] %}
-                        <img src="{{ url_for('static', filename=teacher[17]) }}" alt="Foto del Docente" class="teacher-photo">
-                    {% else %}
-                        <div class="photo-placeholder">Foto del<br>Docente</div>
-                    {% endif %}
-                </div>
-
-                <div class="basic-info">
-                    <div class="info-item">
-                        <span class="material-symbols-outlined">mark_email_read</span>
-                        <p class="sub-title">{{ teacher[11] }}</p>
-                    </div>
-                    <div class="info-item">
-                        <span class="material-symbols-outlined">settings_phone</span>
-                        <p class="sub-title">{{ teacher[10] }}</p>
-                    </div>
-                    <div class="info-item">
-                        <span class="material-symbols-outlined">id_card</span>
-                        <p class="sub-title">{{ teacher[9] }} {{ teacher[8] }}</p>
-                    </div>
-                    <div class="info-item">
-                        <span class="material-symbols-outlined">calendar_month</span>
-                        <p class="sub-title">Fecha de Registro: {{ teacher[3] }}</p>
-                    </div>
-                </div>
-            </div>
+<div class="container">
+    <div class="header__container">
+        <div class="institution-logo">
+            <img src="{{ url_for('static', filename='img/logoColegio.png') }}" alt="Logo del Colegio">
+        </div>
+        <div class="institution-name">INSTITUCIÓN EDUCATIVA SGAPA</div>
+        <div class="document-title">HOJA DE VIDA DOCENTE</div>
+    </div>
+    <div class="profile-section">
+        <div class="photo-container">
+            {% if docente[] %}
+            <img src="{{ url_for('static', filename=docente[]) }}" alt="Foto del Docente" class="teacher-photo">
+            {% else %}
+            <div class="photo-placeholder">Foto del<br>Docente</div>
             {% endif %}
         </div>
+        {% if docente and docente.first_name %}
+        <div class="name">{{ docente.first_name }} {{ docente.last_name }}
+            <div class="unique-code" id="uniqueCode">Generando...</div>
+        </div>
     </div>
 
-    <div class="content">
-        {% if teacher %}
-        <div class="section">
-            <h2 class="section-title">Información Personal</h2>
-            <div class="info-grid">
-                <div class="info-card">
-                    <div class="card-title">Fecha de Nacimiento:</div>
-                    <div class="card-value" id="birthDate">{{ teacher[5] }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="card-title">Edad:</div>
-                    <div class="card-value" id="age">{{ teacher[6] }} años</div>
-                </div>
-                <div class="info-card">
-                    <div class="card-title">Género:</div>
-                    <div class="card-value" id="gender">{{ teacher[7] }}</div>
-                </div>
-                <div class="info-card">
-                    <div class="card-title">Lugar de Nacimiento</div>
-                    <div class="card-value" id="birthPlace">{{ teacher[8] }}</div>
-                </div>
-            </div>
-        </div>
 
-        <div class="section">
-            <h2 class="section-title">Información Profesional</h2>
-            <div class="professional-section">
-                <div class="info-grid">
-                    <div class="info-card">
-                        <div class="card-title">Profesión</div>
-                        <div class="card-value" id="profession">{{ teacher[12] }}</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="card-title">Área de Especialización</div>
-                        <div class="card-value" id="area">{{ teacher[13] }}</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="card-title">Escalafón</div>
-                        <div class="card-value" id="scale">{{ teacher[16] }}</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="card-title">Número de Resolución</div>
-                        <div class="card-value" id="resolution">{{ teacher[15] }}</div>
-                    </div>
-                </div>
-            </div>
+    <!-- Información Personal -->
+    <div class="info-card">
+        <div class="section-title">
+            Información Personal
         </div>
-
-        <div class="section">
-            <h2 class="section-title">Código de Empleado</h2>
-            <div class="code-display" id="employeeCode">
-                {{ teacher[4] }}
-            </div>
+        <div class="info-item">
+            <span class="info-label">Documento:</span>
+            <span class="info-value">{{ docente.document_type or 'N/A' }} {{ docente.document_number or 'No registrado'
+                }}</span>
         </div>
-        {% else %}
-        <div class="section">
-            <h2 class="section-title">Error</h2>
-            <p>No se encontraron datos del docente.</p>
+        <div class="info-item">
+            <span class="info-label">Edad:</span>
+            <span class="info-value">{{ docente.age or 'No registrada' }} {% if docente.age %}años{% endif %}</span>
         </div>
-        {% endif %}
+        <div class="info-item">
+            <span class="info-label">Género:</span>
+            <span class="info-value">{{ docente.gender.title() if docente.gender else 'No registrado' }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Fecha Nacimiento:</span>
+            <span class="info-value">{{ docente.birth_date or 'No registrada' }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Lugar Nacimiento:</span>
+            <span class="info-value">{{ docente.birth_place or 'No registrado' }}</span>
+        </div>
     </div>
+
+    <!-- Información Profesional -->
+    <div class="info-card">
+        <div class="section-title">Información Profesional</div>
+        <div class="info-item">
+            <span class="info-label">Profesión:</span>
+            <span class="info-value">{{ docente.profession or 'No registrada' }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Área:</span>
+            <span class="info-value">{{ docente.subject_area.title() if docente.subject_area else 'No registrada'
+                }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Código:</span>
+            <span class="info-value">{{ docente.code or 'No asignado' }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Escalafón:</span>
+            <span class="info-value">{{ docente.scale or 'No asignado' }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Resolución:</span>
+            <span class="info-value">{{ docente.resolution_number or 'No registrada' }}</span>
+        </div>
+    </div>
+
+    <!-- Información de Contacto -->
+    <div class="info-card">
+        <div class="section-title">Información de Contacto</div>
+        <div class="info-item">
+            <span class="info-label">Email:</span>
+            <span class="info-value">{{ docente.email or 'No registrado' }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Teléfono:</span>
+            <span class="info-value">{{ docente.phone or 'No registrado' }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Fecha de Registro:</span>
+            <span class="info-value">{{ docente.registration_date_teacher or 'No registrado' }}</span>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="emoji">😕</div>
+    <div class="greeting">No hay datos para mostrar</div>
+    <div class="name">Complete el formulario primero</div>
+    {% endif %}
 
     <div class="footer">
+        <div>
+            {% if docente.email and docente.phone %}
+            <span class="status-badge badge-active">✅ Información Completa</span>
+            {% else %}
+            <span class="status-badge badge-warning">⚠️ Información Incompleta</span>
+            {% endif %}
+        </div>
         <div class="footer-info">
-            Documento generado automáticamente el
+            Documento generado automáticamente el:
             <span id="genDate">
                 {{ "now" | to_datetime("%Y-%m-%d %H:%M:%S") | datetimeformat("%d de %B de %Y") }}
             </span>
             <br>
-            Sistema de Gestión Administrativa y Procesos Académicos - Versión 1.0
+            Sistema de Gestión Administrativa y Procesos Académicos (SGAPA) - Versión 1.0
         </div>
-        <div class="qr-placeholder">QR Code<br>Verificación</div>
+        <p><strong>Código Único:</strong> <span id="codeDisplay">Generando...</span></p>
+        <div class="qr-code" id="qrcode"></div>
         <br>
-        <button class="generate-btn" onclick="generatePDF()">📄 Descargar PDF</button>
+        <button class="generate-btn" onclick="generatePDF()">
+            <span class="material-symbols-outlined">picture_as_pdf</span>
+            <p> Descargar PDF</p>
+        </button>
     </div>
 </div>
-
 {% block extra_js %}
-<script>
+<script> 
+
+// Generar código único
+function generateUniqueCode() {
+    const year = new Date().getFullYear();
+    const sequence = Math.floor(Math.random() * 999999).toString().padStart(6, '0');
+    const checksum = generateChecksum(sequence);
+    return `SGAPA-${year}-${sequence}-${checksum}`;
+}
+
+function generateChecksum(sequence) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let hash = 0;
+    for (let i = 0; i < sequence.length; i++) {
+        hash = ((hash << 5) - hash + sequence.charCodeAt(i)) & 0xffffffff;
+    }
+    let result = '';
+    for (let i = 0; i < 3; i++) {
+        result += chars[Math.abs(hash >> (i * 8)) % chars.length];
+    }
+    return result;
+}
+
+// Formatear fechas
+function formatDate(date) {
+    const months = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} de ${month}, ${year}`;
+}
+
+// Función para descargar PDF
+function generatePDF() {
+    alert('Funcionalidad de descarga PDF - En desarrollo.');
+}
+
+// ============================================
+// OPCIÓN 1: QR REAL CON SERVICIO ONLINE
+// ============================================
+
+function createRealQR(element, data) {
+    // Asegurar que el elemento esté limpio
+    element.innerHTML = '';
     
+    const encodedData = encodeURIComponent(data);
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodedData}&margin=10&format=png&ecc=H`;
+    
+    const img = document.createElement('img');
+    img.style.cssText = `
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        background: white;
+        padding: 5px;
+        display: block;
+        margin: 0 auto;
+    `;
+    
+    img.onload = () => console.log('✅ QR único generado');
+    img.onerror = () => createEnhancedVisualQR(element, data);
+    img.src = qrUrl;
+    element.appendChild(img);
+}
+
+// ============================================
+// OPCIÓN 2: QR VISUAL MEJORADO (RESPALDO)
+// ============================================
+
+function createEnhancedVisualQR(element, data) {
+    console.log('🎨 Creando QR visual mejorado...');
+    
+    // Generar patrón QR visual realista
+    const qrPattern = generateQRPattern();
+    
+    element.innerHTML = `
+        <div style="
+            width: 120px;
+            height: 120px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        ">
+            <!-- Patrón QR visual -->
+            <div style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: ${qrPattern};
+                background-size: 100% 100%;
+                opacity: 0.8;
+            "></div>
+            
+            <!-- Contenido sobre el patrón -->
+            <div style="
+                position: relative;
+                z-index: 2;
+                background: rgba(255,255,255,0.9);
+                padding: 8px;
+                border-radius: 6px;
+                text-align: center;
+                border: 1px solid rgba(0,0,0,0.1);
+            ">
+                <div style="font-size: 20px; margin-bottom: 2px;">📱</div>
+                <div style="font-size: 10px; font-weight: bold; color: #333;">QR Code</div>
+                <div style="font-size: 8px; color: #666; margin-top: 2px;">Verificación</div>
+            </div>
+            
+            <!-- Esquinas de posicionamiento -->
+            <div class="qr-corner qr-corner-tl"></div>
+            <div class="qr-corner qr-corner-tr"></div>
+            <div class="qr-corner qr-corner-bl"></div>
+        </div>
+        
+        <style>
+            .qr-corner {
+                position: absolute;
+                width: 15px;
+                height: 15px;
+                border: 2px solid #000;
+            }
+            .qr-corner-tl { top: 5px; left: 5px; border-right: none; border-bottom: none; }
+            .qr-corner-tr { top: 5px; right: 5px; border-left: none; border-bottom: none; }
+            .qr-corner-bl { bottom: 5px; left: 5px; border-right: none; border-top: none; }
+        </style>
+    `;
+    
+    console.log('✅ QR visual mejorado creado');
+}
+
+// Generar patrón que simula un QR real
+function generateQRPattern() {
+    const patterns = [
+        // Patrón de cuadros tipo QR
+        `url("data:image/svg+xml,${encodeURIComponent(`
+            <svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'>
+                <rect x='0' y='0' width='3' height='3' fill='black'/>
+                <rect x='4' y='1' width='2' height='2' fill='black'/>
+                <rect x='7' y='0' width='3' height='3' fill='black'/>
+                <rect x='12' y='2' width='2' height='2' fill='black'/>
+                <rect x='16' y='0' width='3' height='3' fill='black'/>
+                <rect x='1' y='5' width='2' height='2' fill='black'/>
+                <rect x='5' y='4' width='3' height='3' fill='black'/>
+                <rect x='10' y='6' width='2' height='2' fill='black'/>
+                <rect x='14' y='4' width='3' height='3' fill='black'/>
+                <rect x='0' y='9' width='3' height='3' fill='black'/>
+                <rect x='6' y='8' width='2' height='2' fill='black'/>
+                <rect x='11' y='10' width='3' height='3' fill='black'/>
+                <rect x='16' y='9' width='2' height='2' fill='black'/>
+                <rect x='2' y='14' width='2' height='2' fill='black'/>
+                <rect x='7' y='13' width='3' height='3' fill='black'/>
+                <rect x='12' y='15' width='2' height='2' fill='black'/>
+                <rect x='0' y='17' width='3' height='3' fill='black'/>
+                <rect x='15' y='16' width='3' height='3' fill='black'/>
+            </svg>
+        `)}")`
+    ];
+    
+    return patterns[0];
+}
+
+// ============================================
+// OPCIÓN 3: QR CON LIBRERÍA EXTERNA (RESPALDO)
+// ============================================
+
+function loadQRCodeLibrary() {
+    return new Promise(async (resolve, reject) => {
+        if (typeof QRCode !== 'undefined') {
+            console.log('📚 QRCode ya está disponible');
+            resolve();
+            return;
+        }
+
+        const urls = [
+            'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+            'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js'
+        ];
+
+        for (const url of urls) {
+            try {
+                console.log(`📥 Intentando cargar desde: ${url}`);
+                await loadScript(url);
+                if (typeof QRCode !== 'undefined') {
+                    console.log('✅ Librería QRCode cargada');
+                    resolve();
+                    return;
+                }
+            } catch (error) {
+                console.log(`❌ Falló: ${url}`);
+            }
+        }
+        
+        resolve(); // Continuar sin librería
+    });
+}
+
+function loadScript(url) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = url;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+function createLibraryQR(element, data) {
+    console.log('📚 Creando QR con librería...');
+    
+    const canvas = document.createElement('canvas');
+    element.appendChild(canvas);
+    
+    QRCode.toCanvas(canvas, data, {
+        width: 120,
+        height: 120,
+        margin: 2,
+        color: {
+            dark: '#1f2937',
+            light: '#ffffff'
+        },
+        errorCorrectionLevel: 'H'
+    }, function (error) {
+        if (error) {
+            console.error('❌ Error con librería QR:', error);
+            element.removeChild(canvas);
+            createRealQR(element, data);
+        } else {
+            console.log('✅ QR de librería generado');
+        }
+    });
+}
+
+
+
+async function inicializarTodo() {
+    try {
+        console.log('🚀 Iniciando sistema QR mejorado...');
+        
+        // Cargar librería QRCode (opcional)
+        await loadQRCodeLibrary();
+        
+        // GENERAR CÓDIGO ÚNICO
+        const newCode = generateUniqueCode();
+        console.log('📝 Código generado:', newCode);
+        
+        // Actualizar elementos del código
+        const uniqueCodeElement = document.getElementById('uniqueCode');
+        const codeDisplayElement = document.getElementById('codeDisplay');
+        
+        if (uniqueCodeElement) {
+            uniqueCodeElement.textContent = newCode;
+            console.log('✅ uniqueCode actualizado');
+        }
+        
+        if (codeDisplayElement) {
+            codeDisplayElement.textContent = newCode;
+            console.log('✅ codeDisplay actualizado');
+        }
+        
+        // Actualizar fechas
+        const today = new Date();
+        const genDateElement = document.getElementById('genDate');
+        if (genDateElement) {
+            genDateElement.textContent = formatDate(today);
+        }
+        
+        // GENERAR QR CON SISTEMA DE RESPALDO
+        const qrElement = document.getElementById('qrcode');
+        if (qrElement) {
+            console.log('Iniciando generación de QR...');
+            qrElement.innerHTML = '<div style="text-align: center; padding: 20px;">Generando QR...</div>';
+            
+            const qrData = `https://www.sgapa.edu.co/verificar?code=${newCode}`;
+            
+            // Prioridad 1: Librería QRCode (si está disponible)
+            if (typeof QRCode !== 'undefined') {
+                createLibraryQR(qrElement, qrData);
+            } 
+            // Prioridad 2: Servicio online (siempre intentar)
+            else {
+                qrElement.innerHTML = '';
+                createRealQR(qrElement, qrData);
+            }
+        } else {
+            console.error('❌ Elemento QR no encontrado');
+        }
+
+    } catch (error) {
+        console.error('💥 Error en inicialización:', error);
+    }
+}
+
+// Ejecutar cuando la página esté lista
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializarTodo);
+} else {
+    inicializarTodo();
+}
 </script>
 {% endblock %}
+
+
 {% endblock %}

@@ -1843,6 +1843,72 @@ def ver_actividades():
     return render_template('secciones/ver_actividades.html')
 
 
+@secciones.route('/docente-generar-pdf-from-form', methods=['POST'])
+def docente_generarPDF_from_form():
+    # Obtener los datos enviados desde el formulario
+    docente = {
+        'registration_date_teacher': request.form.get('registration_date_teacher'),
+        'first_name': request.form.get('first_name', ''),
+        'last_name': request.form.get('last_name', ''),
+        'document_number': request.form.get('document_number', ''),
+        'email': request.form.get('email', ''),
+        'phone': request.form.get('phone', ''),
+        'profession': request.form.get('profession', ''),
+        'subject_area': request.form.get('subject_area', ''),
+        'age': request.form.get('age', ''),
+        'gender': request.form.get('gender', ''),
+        'document_type': request.form.get('document_type', ''),
+        'birth_place': request.form.get('birth_place', ''),
+        'birth_date': request.form.get('birth_date', ''),
+        'code': request.form.get('code', ''),
+        'resolution_number': request.form.get('resolution_number', ''),
+        'scale': request.form.get('scale', '')
+    }
+    
+    return render_template('secciones/docente_generarPDF.html', docente=docente)
+
+
 @secciones.route('/docente-generar-pdf')
 def docente_generarPDF():
-    return render_template('secciones/docente_generarPDF.html')
+    try:
+        conn = get_db()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        
+        # Obtener el último docente registrado
+        cursor.execute("""
+            SELECT 
+                first_name,
+                last_name,
+                document_number,
+                email,
+                profession,
+                subject_area,
+                phone,
+                age,
+                gender,
+                document_type,
+                birth_place,
+                birth_date,
+                code,
+                resolution_number,
+                scale
+            FROM docentes_datos 
+            ORDER BY teacher_id DESC 
+            LIMIT 1
+        """)
+        
+        docente = cursor.fetchone()
+        
+        return render_template('secciones/docente_generarPDF.html', docente=docente)
+        
+    except Exception as e:
+        print(f"Error al obtener datos del docente: {e}")
+        return render_template('secciones/docente_generarPDF.html', docente=None)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@secciones.route('/ver_docente')
+def ver_docente():
+    return render_template('secciones/ver_docente.html')        
