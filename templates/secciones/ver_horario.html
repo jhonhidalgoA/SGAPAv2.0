@@ -12,7 +12,7 @@
     <div class="schedule__title">
         <span class="close" onclick="closeGradeModal()">&times;</span>
         <h1>Grado: {{ grado_id }}</h1>
-        <p>Sistema de Gestión Administrativa y Procesos Academémicos (SGAPA)</p>       
+        <p>Sistema de Gestión Administrativa y Procesos Academémicos (SGAPA)</p>
     </div>
     <table id="tabla-horario" class="schedule-table" data-horario='{{ horario | tojson if horario else "[]" | safe }}'>
         <thead>
@@ -29,7 +29,6 @@
             <!-- Las filas se generarán dinámicamente -->
         </tbody>
     </table>
-
 </div>
 
 {% block extra_js %}
@@ -86,7 +85,14 @@
         });
 
         tbody.appendChild(tr);
-    }); 
+    });
+
+    function closeGradeModal() {
+        window.location.href = "/secciones/horario";
+    }
+
+
+
 </script>
 {% endblock %}
 {% endblock %}

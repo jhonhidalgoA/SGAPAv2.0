@@ -7,16 +7,16 @@ body {
     font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    padding: 20px;
+    padding: 10px;
 }
 
 .schedule__container {
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
     max-width: 1200px;
-    padding: 20px;
+    padding: 10px;
     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    min-height: 80vh;
+    min-height: 100vh;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
@@ -25,8 +25,7 @@ body {
     position: relative; 
     text-align: center;
     color: white;
-    font-size: 1.0rem;
-    font-weight: 600;
+    font-size: 1.0rem;    
     margin-bottom: 20px;
 }
 
@@ -35,16 +34,84 @@ body {
 }
 
 .schedule__title .close {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2rem;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
+    position: relative; 
+    float:right; 
+    margin-right:30px;  
+    transform: translateY(50%);
+    font-size: 28px;
+    font-weight: 300;   
     z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+    transition: all 0.2s ease;  
+    color: #ffff;
+    border: none;
+    border-radius: 1000px;    
+    transition: all 0.3s ease-in-out 0s;
+    outline: none;
+    cursor:pointer;
+    font-weight: bold;
 }
+
+.close::before {
+    content: '';
+    border-radius: 1000px;
+    min-width: calc(300px + 12px);
+    min-height: calc(60px + 12px);
+    border: 6px solid #ffff;
+    box-shadow: 0 0 60px rgba(0,255,203,.64);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all .3s ease-in-out 0s;
+}
+
+.close:hover, .close:focus {
+    color: #f6f6faff;
+    background-color: #ff0400ff;    
+}
+
+
+.close::after{
+    content: '';
+    width: 30px; height: 30px;
+    border-radius: 100%;
+    border: 6px solid #ffff;
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: ring 1.5s infinite;
+
+}
+
+.close:hover::after, 
+.close:focus::after {
+  animation: none;
+  display: none;
+}
+
+@keyframes ring {
+  0% {
+    width: 30px;
+    height: 30px;
+    opacity: 1;
+  }
+  100% {
+    width: 50px;
+    height: 50px;
+    opacity: 0;
+  }
+}
+
+
+
 
 .schedule-table {
     width: 100%;

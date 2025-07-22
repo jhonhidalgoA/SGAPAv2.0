@@ -130,17 +130,14 @@ body{
   url('../img/planeacion.webp') center/cover;
 }
 
-.card__group .card__item:nth-child(5) {
-  background: linear-gradient(rgba(52, 73, 94, 0.9), rgba(52, 73, 94, 0.9)),
-  url('../img/evaluaciones.webp') center/cover;
-}
 
-.card__group .card__item:nth-child(6) {
+
+.card__group .card__item:nth-child(5) {
   background: linear-gradient(rgba(230, 136, 34, 0.9), rgba(230, 136, 34, 0.9)),
   url('../img/horario.webp') center/cover;
 }
 
-.card__group .card__item:nth-child(7) {
+.card__group .card__item:nth-child(6) {
   background: linear-gradient(rgba(156, 39, 176, 0.9), rgba(156, 39, 176, 0.9)),
   url('../img/restaurante.jpg') center/cover;
 }

@@ -12,14 +12,14 @@
 {% block content %}
 <div class="tabs">
     {{ header(titulo="Registro Matrícula Estudiante", color__fondo="var(--color-blue-card)") }}
-   
+
     <ul class="tab-nav">
         <li class="active" data-tab="tab1">Datos del Estudiante</li>
         <li data-tab="tab2">Información Académica</li>
         <li data-tab="tab3">Datos Familiares</li>
     </ul>
 
-    <!-- Llamada a campos vacíos desde Flask -->    
+    <!-- Llamada a campos vacíos desde Flask -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -48,7 +48,7 @@
                     <div class="field__row">
                         <div class="group">
                             <label for="registration_date">Fecha de Matrícula:</label>
-                            <input type="date" id="registration_date" name="registration_date">
+                            <input type="date" id="registration_date" name="registration_date" readonly>
                         </div>
                         <div class="group">
                             <label for="codigo">Código:</label>
@@ -324,16 +324,15 @@
                     <input type="checkbox" id="father_is_guardian" name="father_is_guardian" value="1">
                 </div>
             </div>
-        </div>        
+        </div>
         <div class="ratings__buttons">
-             {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }} 
-             {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }} 
-             {{ btn(icono="delete", texto="Borrar", color="delete") }}  
-             {{ btn(icono="print", texto="Imprimir", color="print") }}   
+            {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }}
+            {{ btn(icono="edit", texto="Editar", color="edit") }}
+            {{ btn(icono="delete", texto="Borrar", color="delete") }}
+            {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }}
         </div>
     </form>
 </div>
-
 {% block extra_js %}
 <script src="{{ url_for('static' , filename='js/form-validation.js')}}"></script>
 <script src="{{ url_for('static', filename='js/student-age.js') }}"></script>
@@ -341,7 +340,7 @@
 <script src="{{url_for('static', filename='js/photo-student.js' ) }}"></script>
 
 
-<script>     
+<script>
     // === 1. Función confirmLogout() - Salir
     function confirmLogout() {
         window.location.href = "{{ url_for('auth.logout') }}";
@@ -407,6 +406,9 @@
             });
         });
     });
+
+    // === 6. Establecer fecha automática ===
+    document.getElementById('registration_date').value = new Date().toISOString().split('T')[0];
 </script>
 {% endblock %}
 
