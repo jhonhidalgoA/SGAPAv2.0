@@ -278,7 +278,144 @@ def guardar_matricula():
         db.rollback()
         flash(f"❌ Error al guardar: {str(e)}", "danger")
         return redirect(url_for('secciones.matricula'))
+
+
+@secciones.route('/editar_estudiante/<int:student_id>', methods=['GET', 'POST'])
+def editar_estudiante(student_id):
+    """
+    Ruta para editar un estudiante específico
+    """
+    db = get_db()
+    cursor = db.cursor(pymysql.cursors.DictCursor)
     
+    if request.method == 'GET':
+        try:
+            # Obtener datos del estudiante
+            cursor.execute("""
+                SELECT 
+                    e.*,
+                    g.name as grado_nombre,
+                    me.group_name,
+                    me.shift,
+                    me.academic_year
+                FROM estudiantes e
+                LEFT JOIN matricula_estudiantes me ON e.student_id = me.student_id
+                LEFT JOIN grados g ON me.grade_id = g.grade_id
+                WHERE e.student_id = %s
+            """, (student_id,))
+            
+            estudiante = cursor.fetchone()
+            
+            if not estudiante:
+                flash("❌ Estudiante no encontrado", "danger")
+                return redirect(url_for('secciones.matricula'))
+            
+            # Obtener contactos familiares
+            cursor.execute("""
+                SELECT * FROM contactos_familiares 
+                WHERE student_id = %s
+            """, (student_id,))
+            
+            contactos = cursor.fetchall()
+            
+            # Obtener lista de grados para el select
+            cursor.execute("SELECT * FROM grados ORDER BY name")
+            grados = cursor.fetchall()
+            
+            return render_template('secciones/editar_estudiante.html', 
+                                 estudiante=estudiante, 
+                                 contactos=contactos, 
+                                 grados=grados)
+                                 
+        except Exception as e:
+            flash(f"❌ Error al cargar estudiante: {str(e)}", "danger")
+            return redirect(url_for('secciones.matricula'))
+    
+    elif request.method == 'POST':
+        try:
+            # Actualizar datos del estudiante
+            nombres = request.form.get('student_name')
+            apellidos = request.form.get('student_lastname')
+            full_name = f"{nombres} {apellidos}"
+            
+            # Validaciones básicas
+            if not nombres or not apellidos:
+                flash("❌ Nombres y apellidos son obligatorios", "danger")
+                return redirect(url_for('secciones.editar_estudiante', student_id=student_id))
+            
+            # Actualizar estudiante
+            cursor.execute("""
+                UPDATE estudiantes SET
+                    full_name = %s,
+                    birth_date = %s,
+                    gender = %s,
+                    birth_place = %s,
+                    document_type = %s,
+                    document_number = %s,
+                    phone = %s,
+                    email = %s,
+                    address = %s,
+                    neighborhood = %s,
+                    locality = %s,
+                    socioeconomic_status = %s,
+                    zone = %s,
+                    blood_group = %s,
+                    eps = %s
+                WHERE student_id = %s
+            """, (
+                full_name,
+                request.form.get('student_birth_date'),
+                request.form.get('student_gender'),
+                request.form.get('student_birth_place'),
+                request.form.get('student_document_type'),
+                request.form.get('student_document_number'),
+                request.form.get('student_phone'),
+                request.form.get('student_email'),
+                request.form.get('student_address'),
+                request.form.get('student_neighborhood'),
+                request.form.get('student_locality'),
+                request.form.get('student_socioeconomic_status'),
+                request.form.get('student_zone'),
+                request.form.get('student_blood_group'),
+                request.form.get('student_eps'),
+                student_id
+            ))
+            
+            # Actualizar matrícula si hay cambios de grado
+            grado_nuevo = request.form.get('student_grade')
+            if grado_nuevo:
+                cursor.execute("SELECT grade_id FROM grados WHERE name = %s", (grado_nuevo,))
+                grado_result = cursor.fetchone()
+                
+                if grado_result:
+                    cursor.execute("""
+                        UPDATE matricula_estudiantes SET
+                            grade_id = %s,
+                            group_name = %s,
+                            shift = %s
+                        WHERE student_id = %s
+                    """, (
+                        grado_result['grade_id'],
+                        request.form.get('student_group'),
+                        request.form.get('student_shift'),
+                        student_id
+                    ))
+            
+            db.commit()
+            flash("✅ Estudiante actualizado correctamente", "success")
+            return redirect(url_for('secciones.matricula'))
+            
+        except Exception as e:
+            db.rollback()
+            flash(f"❌ Error al actualizar: {str(e)}", "danger")
+            return redirect(url_for('secciones.editar_estudiante', student_id=student_id))
+    
+        finally:
+            cursor.close()
+            db.close()
+
+
+
 @secciones.route('/limpiar_datos')
 def limpiar_datos():
     db = get_db()
@@ -551,53 +688,322 @@ def circulares():
 def calificaciones():
     return render_template('secciones/calificaciones.html')
 
+# REEMPLAZAR la función api_estudiantes con esta versión corregida
+
+@secciones.route('/api/estudiantes', methods=['GET'])
 @secciones.route('/api/estudiantes/<string:grupo>', methods=['GET'])
-def api_estudiantes(grupo):
+def api_estudiantes(grupo=None):
+    """
+    API endpoint con formato de nombres y grados corregido
+    """
     db = get_db()
     cursor = db.cursor(pymysql.cursors.DictCursor)
+    
     try:
-        cursor.execute("""
-            SELECT 
-                e.student_id,
-                e.full_name,
-                SUBSTRING_INDEX(e.full_name, ' ', 2) AS nombres,
-                SUBSTRING_INDEX(e.full_name, ' ', -2) AS apellidos
-            FROM matricula_estudiantes m
-            JOIN estudiantes e ON m.student_id = e.student_id
-            WHERE m.grade_id = %s
-              AND m.academic_year = YEAR(CURRENT_DATE)
-            ORDER BY  e.full_name ASC
-        """, (grupo,))
+        # Obtener parámetro de búsqueda si existe
+        search = request.args.get('search', '').strip()
+        print(f"🔍 Búsqueda: '{search}', Grupo: '{grupo}'")
+        
+        # Query según los parámetros (mismo código anterior)
+        if grupo:
+            if search:
+                query = """
+                    SELECT 
+                        e.student_id,
+                        e.full_name,
+                        e.document_number,
+                        e.email,
+                        e.phone,
+                        g.name as grado_nombre,
+                        m.group_name,
+                        m.shift
+                    FROM matricula_estudiantes m
+                    JOIN estudiantes e ON m.student_id = e.student_id
+                    LEFT JOIN grados g ON m.grade_id = g.grade_id
+                    WHERE m.grade_id = %s
+                      AND m.academic_year = YEAR(CURRENT_DATE)
+                      AND (e.full_name LIKE %s OR e.document_number LIKE %s)
+                    ORDER BY e.full_name ASC
+                """
+                search_param = f"%{search}%"
+                cursor.execute(query, (grupo, search_param, search_param))
+            else:
+                query = """
+                    SELECT 
+                        e.student_id,
+                        e.full_name,
+                        e.document_number,
+                        e.email,
+                        e.phone,
+                        g.name as grado_nombre,
+                        m.group_name,
+                        m.shift
+                    FROM matricula_estudiantes m
+                    JOIN estudiantes e ON m.student_id = e.student_id
+                    LEFT JOIN grados g ON m.grade_id = g.grade_id
+                    WHERE m.grade_id = %s
+                      AND m.academic_year = YEAR(CURRENT_DATE)
+                    ORDER BY e.full_name ASC
+                """
+                cursor.execute(query, (grupo,))
+        else:
+            if search:
+                query = """
+                    SELECT 
+                        e.student_id,
+                        e.full_name,
+                        e.document_number,
+                        e.email,
+                        e.phone,
+                        g.name as grado_nombre,
+                        m.group_name,
+                        m.shift
+                    FROM estudiantes e
+                    LEFT JOIN matricula_estudiantes m ON e.student_id = m.student_id 
+                        AND m.academic_year = YEAR(CURRENT_DATE)
+                    LEFT JOIN grados g ON m.grade_id = g.grade_id
+                    WHERE (e.full_name LIKE %s 
+                           OR e.document_number LIKE %s 
+                           OR g.name LIKE %s
+                           OR m.group_name LIKE %s)
+                    ORDER BY e.full_name ASC
+                    LIMIT 100
+                """
+                search_param = f"%{search}%"
+                cursor.execute(query, (search_param, search_param, search_param, search_param))
+            else:
+                query = """
+                    SELECT 
+                        e.student_id,
+                        e.full_name,
+                        e.document_number,
+                        e.email,
+                        e.phone,
+                        g.name as grado_nombre,
+                        m.group_name,
+                        m.shift
+                    FROM estudiantes e
+                    LEFT JOIN matricula_estudiantes m ON e.student_id = m.student_id 
+                        AND m.academic_year = YEAR(CURRENT_DATE)
+                    LEFT JOIN grados g ON m.grade_id = g.grade_id
+                    ORDER BY e.full_name ASC
+                    LIMIT 100
+                """
+                cursor.execute(query)
+
         estudiantes = cursor.fetchall()
+        print(f"📊 Estudiantes encontrados: {len(estudiantes)}")
 
         if not estudiantes:
+            message = f"No se encontraron estudiantes para el grupo {grupo}" if grupo else "No se encontraron estudiantes"
             return jsonify({
+                "success": True,
                 "data": [],
-                "message": f"No se encontraron estudiantes para el grupo {grupo}"
+                "total": 0,
+                "message": message
             })
 
+        # FUNCIÓN CORREGIDA para separar nombres y apellidos
+        def separar_nombres_apellidos_correcto(nombre_completo):
+            """
+            Función que separa correctamente nombres de apellidos
+            Ejemplos:
+            - "Andrea del Pilar Cardona Morales" → nombres: "Andrea del Pilar", apellidos: "Cardona Morales"
+            - "Daniela Cárdenas López" → nombres: "Daniela", apellidos: "Cárdenas López"
+            - "Juan David Torres Mejía" → nombres: "Juan David", apellidos: "Torres Mejía"
+            """
+            if not nombre_completo:
+                return "", ""
+            
+            # Limpiar espacios extra
+            partes = [parte.strip() for parte in nombre_completo.strip().split() if parte.strip()]
+            total_partes = len(partes)
+            
+            if total_partes == 0:
+                return "", ""
+            elif total_partes == 1:
+                return partes[0], ""
+            elif total_partes == 2:
+                # Solo 2 palabras: asumimos nombre + apellido
+                return partes[0], partes[1]
+            elif total_partes == 3:
+                # 3 palabras: primer nombre + dos apellidos
+                return partes[0], f"{partes[1]} {partes[2]}"
+            elif total_partes == 4:
+                # 4 palabras: dos nombres + dos apellidos
+                return f"{partes[0]} {partes[1]}", f"{partes[2]} {partes[3]}"
+            elif total_partes == 5:
+                # 5 palabras: tres nombres + dos apellidos (ej: Andrea del Pilar Cardona Morales)
+                return f"{partes[0]} {partes[1]} {partes[2]}", f"{partes[3]} {partes[4]}"
+            else:
+                # 6+ palabras: mitad nombres, mitad apellidos
+                mitad = total_partes // 2
+                nombres = " ".join(partes[:mitad])
+                apellidos = " ".join(partes[mitad:])
+                return nombres, apellidos
+
+        # FUNCIÓN para formatear grados con guión
+        def formatear_grado_con_guion(grado_nombre, group_name):
+            """
+            Formatea grados como "septimo - 701" o "sexto - 601"
+            """
+            if not grado_nombre:
+                return "Sin asignar"
+            
+            # Mantener el nombre del grado original (septimo, sexto, etc.)
+            grado_formateado = grado_nombre.lower()
+            
+            # Si tiene group_name, agregarlo con guión y espacios
+            if group_name:
+                return f"{grado_formateado} - {group_name}"
+            else:
+                return grado_formateado
+
+        # Procesar datos para el frontend
         data = []
         for est in estudiantes:
-            nombres_completos = est["full_name"].split(" ")
-            nombres = " ".join(nombres_completos[:2])       # Primeros dos elementos como nombres
-            apellidos = " ".join(nombres_completos[-2:])   # Últimos dos como apellidos
+            # USAR LA FUNCIÓN CORREGIDA para nombres y apellidos
+            nombres, apellidos = separar_nombres_apellidos_correcto(est["full_name"])
+            
+            # USAR LA FUNCIÓN para formatear grados con guión
+            grado_completo = formatear_grado_con_guion(est.get('grado_nombre'), est.get('group_name'))
 
             data.append({
+                "id": est["student_id"],
                 "student_id": str(est["student_id"]),
                 "full_name": est["full_name"],
                 "nombres": nombres,
-                "apellidos": apellidos
+                "apellidos": apellidos,
+                "documento": est.get("document_number"),
+                "email": est.get("email"),
+                "telefono": est.get("phone"),
+                "grado": grado_completo,
+                "jornada": est.get("shift")
             })
 
-        return jsonify({"data": data})
-            
+        # Log para debugging
+        print("📋 Ejemplos de formato:")
+        for i, item in enumerate(data[:3]):  # Mostrar solo los primeros 3
+            print(f"  {i+1}. '{item['full_name']}' → nombres: '{item['nombres']}', apellidos: '{item['apellidos']}', grado: '{item['grado']}'")
+
+        return jsonify({
+            "success": True,
+            "data": data,
+            "total": len(data),
+            "message": f"Se encontraron {len(data)} estudiantes"
+        })
 
     except Exception as e:
         print(f"❌ Error al cargar estudiantes: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        
         return jsonify({
+            "success": False,
+            "data": [],
+            "total": 0,
             "error": "No se pudieron cargar los estudiantes",
-            "details": str(e)
+            "message": f"Error interno: {str(e)}"
         }), 500
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if db:
+            db.close()
+
+
+
+@secciones.route('/api/estudiante/<int:student_id>', methods=['GET'])
+def obtener_estudiante_detalle(student_id):
+    """
+    Obtener detalles completos de un estudiante específico
+    """
+    db = get_db()
+    cursor = db.cursor(pymysql.cursors.DictCursor)
+    
+    try:
+        # Obtener estudiante con todos sus datos
+        cursor.execute("""
+            SELECT 
+                e.*,
+                g.name as grado_nombre,
+                m.group_name,
+                m.shift,
+                m.academic_year
+            FROM estudiantes e
+            LEFT JOIN matricula_estudiantes m ON e.student_id = m.student_id
+                AND m.academic_year = YEAR(CURRENT_DATE)
+            LEFT JOIN grados g ON m.grade_id = g.grade_id
+            WHERE e.student_id = %s
+        """, (student_id,))
+        
+        estudiante = cursor.fetchone()
+        
+        if not estudiante:
+            return jsonify({
+                'success': False,
+                'message': 'Estudiante no encontrado'
+            }), 404
+        
+        # Obtener contactos familiares si existen
+        cursor.execute("""
+            SELECT * FROM contactos_familiares 
+            WHERE student_id = %s
+            ORDER BY relationship, full_name
+        """, (student_id,))
+        
+        contactos = cursor.fetchall()
+        
+        return jsonify({
+            'success': True,
+            'data': {
+                'estudiante': estudiante,
+                'contactos_familiares': contactos
+            },
+            'message': 'Estudiante encontrado correctamente'
+        })
+        
+    except Exception as e:
+        print(f"❌ Error al obtener estudiante {student_id}: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error al obtener estudiante: {str(e)}'
+        }), 500
+    
+    finally:
+        if cursor:
+            cursor.close()
+        if db:
+            db.close()
+
+# TAMBIÉN AGREGAR RUTA PARA EDITAR (si quieres esa funcionalidad)
+@secciones.route('/editar_estudiante/<int:student_id>', methods=['GET'])
+def editar_estudiante_form(student_id):
+    """
+    Mostrar formulario de edición de estudiante
+    """
+    # Aquí renderizarías un template para editar el estudiante
+    # Por ahora solo un mensaje de confirmación
+    return f"<h1>Editar Estudiante ID: {student_id}</h1><p>Aquí iría el formulario de edición</p>"
+
+# ENDPOINT DE TEST PARA VERIFICAR QUE TODO FUNCIONA
+@secciones.route('/api/test', methods=['GET'])
+def test_endpoint():
+    """
+    Endpoint de prueba
+    """
+    return jsonify({
+        'success': True,
+        'message': 'API funcionando correctamente',
+        'timestamp': datetime.now().isoformat(),
+        'endpoints_disponibles': [
+            '/api/estudiantes - Obtener todos los estudiantes',
+            '/api/estudiantes/<grupo> - Obtener estudiantes de un grupo',
+            '/api/estudiante/<id> - Obtener detalles de un estudiante',
+            '/api/test - Este endpoint de prueba'
+        ]
+    })
 
 # Guardar nuevas notas
 @secciones.route('/api/guardar-notas', methods=['POST'])

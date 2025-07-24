@@ -349,6 +349,11 @@ body{
     font-weight: 400;
 }
 
+.teacher-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border-radius: 12px;
+}
 
 .teacher-table {
     width: calc(100% - 80px);
@@ -360,13 +365,6 @@ body{
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     table-layout: fixed;
 }
-
-.teacher-table-container {
-    max-height: 400px;
-    overflow-y: auto;
-    border-radius: 12px;
-}
-
 
 .teacher-table thead {
     background:var(--color-primary-blue) ;
@@ -444,7 +442,7 @@ body{
     box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
 }
 
-/* Botones de opciones */
+
 .teacher-table .btn-option {
     background: red;
     color: red;
@@ -484,7 +482,7 @@ body{
     background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
 }
 
-/* Estado vacío */
+
 .teacher-table tbody tr.no-results {
     text-align: center;
     color: #94a3b8;

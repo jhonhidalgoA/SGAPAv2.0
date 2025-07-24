@@ -5,13 +5,12 @@
             <h2 class="modal-title">Lista de Estudiantes</h2>
             <p class="modal-subtitle">Sistema de Gestión Administrativa y Procesos Académicos (SGAPA)</p>
         </div>
-        
         <div class="search-container">
-            <input type="text" class="search-box" id="searchInput" placeholder="Buscar por nombre, apellido o grado..."
-                oninput="filterEstudiantes()">
-        </div>
-
-        <!-- Table Container -->
+            <input type="text"
+            class="search-box" id="searchInput" 
+            placeholder="Buscar por nombre, apellido, documento o grado..."
+            autocomplete="off">
+        </div>        
         <div class="table-container">
             <table class="estudiantes-table">
                 <thead class="table-header">
@@ -24,7 +23,7 @@
                     </tr>
                 </thead>
                 <tbody id="estudiantesTableBody">
-                    <!-- Loading state -->
+                      <!-- El contenido se carga dinámicamente -->
                     <tr>
                         <td colspan="5" class="loading">
                             <div class="loading-spinner"></div>
@@ -33,6 +32,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </div>        
     </div>
 </div>
