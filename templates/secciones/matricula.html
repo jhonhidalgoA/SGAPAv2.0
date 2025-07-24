@@ -1,5 +1,6 @@
 {% extends "main.html" %}
 {% include "components/modal.html" %}
+{% include "components/modal_buscar_estudiante.html" %}
 {% from "macros/macros.j2" import header %}
 {% from "macros/buttons.j2" import btn with context %}
 {% block title %} M. ADMINISTRADOR | SGAPA {% endblock %}
@@ -7,6 +8,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/matricula.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal_buscar_estudiante.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -327,7 +329,7 @@
         </div>
         <div class="ratings__buttons">
             {{ btn(icono="save", texto="Guardar", color="save", tipo="submit") }}
-            {{ btn(icono="edit", texto="Editar", color="edit") }}
+            {{ btn(icono="edit", texto="Editar", color="edit", tipo="button", onclick="showEditEstudianteModal()") }}
             {{ btn(icono="delete", texto="Borrar", color="delete") }}
             {{ btn(icono="picture_as_pdf", texto="Generar", color="generate") }}
         </div>
@@ -338,6 +340,7 @@
 <script src="{{ url_for('static', filename='js/student-age.js') }}"></script>
 <script src="{{url_for('static', filename='js/tabs-modal.js') }}"></script>
 <script src="{{url_for('static', filename='js/photo-student.js' ) }}"></script>
+<script src="{{ url_for('static', filename='js/modal_buscar_estudiante.js') }}"></script>
 
 
 <script>

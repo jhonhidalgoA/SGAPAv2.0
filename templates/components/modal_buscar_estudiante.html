@@ -1,0 +1,38 @@
+<div class="modal-overlay" id="estudiantesModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <span class="close-btn" onclick="closeEstudiantesModal()">&times;</span>
+            <h2 class="modal-title">Lista de Estudiantes</h2>
+            <p class="modal-subtitle">Sistema de Gestión Administrativa y Procesos Académicos (SGAPA)</p>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchInput" placeholder="Buscar por nombre, apellido o grado..."
+                oninput="filterEstudiantes()">
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <table class="estudiantes-table">
+                <thead class="table-header">
+                    <tr>
+                        <th>#</th>
+                        <th>NOMBRES</th>
+                        <th>APELLIDOS</th>
+                        <th>GRADO</th>
+                        <th>OPCIONES</th>
+                    </tr>
+                </thead>
+                <tbody id="estudiantesTableBody">
+                    <!-- Loading state -->
+                    <tr>
+                        <td colspan="5" class="loading">
+                            <div class="loading-spinner"></div>
+                            Cargando estudiantes...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

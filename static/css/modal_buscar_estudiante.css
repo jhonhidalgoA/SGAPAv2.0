@@ -1,0 +1,339 @@
+@import url("variables.css"); 
+@import url('https://fonts.googleapis.com/css2?family=Coming+Soon&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+body {
+    font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;    
+}
+
+
+.modal-header {
+    background: var(--color-primary-blue);
+    color: var(--color-white);
+    padding: 25px 30px;
+    position: relative;
+}
+
+.modal-title {
+    font-size: 24px;    
+    margin-bottom: 8px;
+    color: var(--color-text-btn);
+    text-align:center;
+}
+
+.modal-subtitle {
+    font-size: 1.2em;    
+    color: var(--color-text-btn);
+    text-align:center;
+}
+
+.close-btn {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    font-size: 28px;
+    font-weight: 300;   
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+    transition: all 0.2s ease;  
+    color: #ffffff;
+    border: none;
+    border-radius: 1000px;    
+    transition: all 0.3s ease-in-out 0s;
+    outline: none;    
+    padding: 10px;
+    cursor:pointer;
+    font-weight: bold;
+}
+
+.close-btn::before{
+    content: '';
+    border-radius: 1000px;
+    min-width: calc(300px + 12px);
+    min-height: calc(60px + 12px);
+    border: 6px solid #ff0400ff;
+    box-shadow: 0 0 60px rgba(0,255,203,.64);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all .3s ease-in-out 0s;
+}
+
+
+.close-btn:hover {
+    color:var(--color-white-pearl);
+    background-color: var(--color-button-delete);
+    transform: scale(1.10) rotate(90deg);
+}
+
+.close-btn::after{
+    content: '';
+    width: 30px; height: 30px;
+    border-radius: 100%;
+    border: 2px solid #ffffff;
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: ring 1.5s infinite;
+
+}
+
+.close-btn:hover::after, 
+.close-btn:focus::after {
+  animation: none;
+  display: none;
+}
+
+@keyframes ring {
+  0% {
+    width: 30px;
+    height: 30px;
+    opacity: 1;
+  }
+  100% {
+    width: 50px;
+    height: 50px;
+    opacity: 0;
+  }
+}
+
+
+.search-container {
+    padding: 25px 30px 15px;
+    background: #f8fafc;
+}
+
+.search-box {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    background: white;
+    transition: all 0.3s ease;    
+}
+
+.search-box:focus {
+    outline: none;
+    border-color: var(--color-primary-blue);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+
+.table-container {
+    padding: 0 30px 30px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+
+.estudiantes-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.table-header {
+    background: var(--color-primary-blue);
+    color: white;
+}
+
+.table-header th {
+    padding: 18px 20px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table-header th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.table-header th:last-child {
+    border-top-right-radius: 12px;
+}
+
+.table-row {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.table-row:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    transform: translateX(2px);
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-cell {
+    padding: 18px 20px;
+    text-align: center;
+    font-size: 15px;
+    color: #475569;
+}
+
+.student-number {
+    font-weight: 600;
+    color: var(--color-primary-blue);
+    font-size: 16px;
+}
+
+.student-name, .student-apellidos {
+    font-weight: 500;
+    color: var(--color-shadow);
+    font-size: 16px;
+}
+
+.student-grade {  
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-shadow);    
+}
+
+
+.edit-btn {
+    background: var(--color-button-edit);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
+}
+
+.edit-btn:hover {
+    background: var(--color-button-edit-hover);
+    transform: scale(1.10);
+    
+}
+
+.edit-btn:active {
+transform: translateY(0);
+}
+
+/* No results message */
+.no-results {
+text-align: center;
+padding: 40px 20px;
+color: #64748b;
+font-size: 16px;
+}
+
+.no-results-icon {
+font-size: 48px;
+margin-bottom: 15px;
+opacity: 0.5;
+}
+
+/* Loading animation */
+.loading {
+text-align: center;
+padding: 40px 20px;
+color: #64748b;
+}
+
+.loading-spinner {
+width: 40px;
+height: 40px;
+border: 4px solid #f3f4f6;
+border-top: 4px solid #667eea;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin: 0 auto 15px;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+/* Demo button */
+.demo-btn {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+border: none;
+padding: 15px 30px;
+border-radius: 12px;
+cursor: pointer;
+font-size: 16px;
+font-weight: 500;
+box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+transition: all 0.3s ease;
+}
+
+.demo-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+.modal-container {
+    width: 95%;
+    margin: 10px;
+}
+
+.modal-header {
+    padding: 20px;
+}
+
+.modal-title {
+    font-size: 20px;
+}
+
+.search-container,
+.table-container {
+    padding: 20px;
+}
+
+.table-header th,
+.table-cell {
+    padding: 12px 8px;
+    font-size: 13px;
+}
+
+.edit-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+}
+}  
+
+  

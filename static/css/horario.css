@@ -477,7 +477,7 @@ animation: pulse 0.2s ease-in-out;
     border-radius: 1000px;
     min-width: calc(300px + 12px);
     min-height: calc(60px + 12px);
-    border: 6px solid #ffff;
+    border: 6px solid #ff0400ff;
     box-shadow: 0 0 60px rgba(0,255,203,.64);
     position: absolute;
     top: 50%;
@@ -488,10 +488,10 @@ animation: pulse 0.2s ease-in-out;
 
 }
 
-.close:hover, .close:focus {
-    color: #f6f6faff;
-    background-color: #ff0400ff;
-    transform: scale(1.10);
+.close:hover{
+    color:var(--color-white-pearl);
+    background-color: var(--color-button-delete);
+    transform: scale(1.10) rotate(90deg);
 }
 
 
@@ -499,7 +499,7 @@ animation: pulse 0.2s ease-in-out;
     content: '';
     width: 30px; height: 30px;
     border-radius: 100%;
-    border: 6px solid #ffff;
+    border: 2px solid #ffffff;
     position: absolute;
     z-index: -1;
     top: 50%;
@@ -530,8 +530,8 @@ animation: pulse 0.2s ease-in-out;
 
 
 .modal-header {
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    color: white;
+    background: var(--color-primary-blue);
+    color: var(--color-white);
     padding: 2rem;    
     overflow: hidden;
     text-align: center;
@@ -560,14 +560,14 @@ animation: pulse 0.2s ease-in-out;
 }
 
 #gradesTable th {
-    background: linear-gradient(135deg, var(--color-pink), #be185d);
-    color: white;
+    background: var(--color-primary-blue);;
+    color:var(--color-white);
     padding: 1.25rem 1rem;
     text-align: left;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     border: none;
     position: relative;
 }
@@ -589,6 +589,8 @@ animation: pulse 0.2s ease-in-out;
     transition: var(--transition);
     border-left: none;
     border-right: none;
+    font-size:18px;
+    color:var(--color-shadow);
 }
 
 
@@ -639,13 +641,3 @@ animation: pulse 0.2s ease-in-out;
     transform:scale(1.1);
 } 
 
-
-#gradeModal {
-    /* ... existing styles for positioning and background ... */
-    z-index: 9990; /* A high z-index, but lower than confirmModal */
-}
-
-#gradeModal .modal-content {
-    /* ... existing content styles ... */
-    z-index: 9991; /* Content can be slightly higher within its own modal */
-}
